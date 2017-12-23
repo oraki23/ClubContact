@@ -1,0 +1,72 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LES CRITÈRES DE BASE POUR LA RECHERCHE DE MEMBRES
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@  
+
+@model ProjetSiteDeRencontre.ViewModel.RechercheViewModel
+
+<div class="recherchePropriete">
+    @Html.LabelFor(Model => Model.homme)
+    @Html.DropDownListFor(Model => Model.homme, (List<SelectListItem>)ViewBag.sexeRecherche, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+</div>
+
+<div class="recherchePropriete">
+    @Html.LabelFor(Model => Model.chercheHomme)
+    @Html.DropDownListFor(Model => Model.chercheHomme, (List<SelectListItem>)ViewBag.sexeRecherche2, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+</div>
+
+<div class="rechercheValeurMaxMin">
+    @Html.LabelFor(Model => Model.ageMin)
+    <p>Entre&nbsp;</p>
+    @Html.EditorFor(Model => Model.ageMin, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+    <p>&nbsp;et&nbsp;</p>
+    @Html.EditorFor(Model => Model.ageMax, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+    <p>&nbsp;ans.&nbsp;</p>
+</div>
+
+@if (!ViewBag.rechercheAvancee)
+{
+    <div class="recherchePropriete">
+        @Html.LabelFor(Model => Model.noRaisonsSite)
+        @Html.DropDownListFor(Model => Model.noRaisonsSite, (SelectList)ViewBag.raisonsSurSite, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+    </div>
+}
+
+@if (Request.IsAuthenticated)
+{
+    @:<div class="rechercheGeographique">
+    }
+else
+{
+    @:<div class="rechercheGeographique disableddiv" title="Inscrivez-vous aujourd'hui et profitez de la recherche par emplacement!'">
+    }
+
+@if (!Request.IsAuthenticated)
+{
+    @:<p class="etrePremium">
+        @:<a onclick="location.href='@Url.Action("Create", "Membres")'">Inscrivez-vous</a>
+            @:aujourd'hui et profitez de la recherche par emplacement!
+            @:</p>
+     }
+
+<div class="recherchePropriete">
+    @Html.LabelFor(Model => Model.noProvince)
+    @Html.DropDownListFor(Model => Model.noProvince, (SelectList)ViewBag.listeProvince, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+</div>
+<div class="recherchePropriete">
+    @Html.LabelFor(Model => Model.noVille)
+    @Html.DropDownListFor(Model => Model.noVille, Enumerable.Empty<SelectListItem>(), "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+</div>
+
+<div class="recherchePropriete distanceEntreNous">
+    @Html.LabelFor(Model => Model.distanceKmDeMoi)
+    @Html.EditorFor(Model => Model.distanceKmDeMoi, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+    <p>&nbsp;km.</p>
+</div>
+
+</div>

@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "Content/LesBaseStyle.css",
+    "inputFile": "Content/LesBaseStyle.scss"
+  },
+  {
+    "outputFile": "Content/LesBaseStyles.css",
+    "inputFile": "Content/LesBaseStyles.scss"
+  },
+  {
+    "outputFile": "Content/IndexActivite.css",
+    "inputFile": "Content/IndexActivite.scss"
+  },
+  {
+    "outputFile": "Content/SectionAdmin.css",
+    "inputFile": "Content/SectionAdmin.scss"
+  }
+]

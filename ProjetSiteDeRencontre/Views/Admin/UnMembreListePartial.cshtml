@@ -1,0 +1,98 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE POUR AFFICHER LES DÉTAILS D'UN MEMBRE DANS UN FORMAT DE "LISTE"
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using ProjetSiteDeRencontre.Models
+@using System.Data.Entity
+
+<div oncontextmenu="@(ViewBag.gestion == true ? "ShowMenu('contextMenu', event, " + Model.noMembre + "); return false;" : "")" class="unMembreGestion @(Model.dateSuppressionDuCompte != null ? "compteDeleted" : "")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" title="@(Model.compteSupprimeParAdmin == true ? "Compte bloqué le " + Model.dateSuppressionDuCompte : "Compte désactivé le " + Model.dateSuppressionDuCompte)">
+    <div class="premiumMembre">
+        @if (Model.premium == true)
+        {
+            <img class="couronne couronneGestion" src="@Url.Content("~/Photos/couronne.png")" />
+        }
+    </div>
+    <div class="surnomMembre">
+        @Model.surnom
+    </div>
+    <div class="nomMembre">
+        @Model.nom
+    </div>
+    <div class="prenomMembre">
+        @Model.prenom
+    </div>
+    <div class="courrielMembre">
+        @Model.courriel
+    </div>
+    <div class="dateInscriptionMembre">
+        @Model.dateInscription.Value.ToShortDateString()
+    </div>
+    <div class="dateDerniereConnexion">
+        @{ 
+            ClubContactContext db = new ClubContactContext();
+            DateTime? derniereConnexion = Model.listeConnexions.OrderByDescending(m => m.dateConnexion).Select(m => (DateTime?)m.dateConnexion).FirstOrDefault();
+        }
+        @if (derniereConnexion != null)
+        {
+           @:@derniereConnexion.Value.ToShortDateString()
+        }
+        else
+        {
+            @:Jamais
+        }
+    </div>
+    <div class="sexeMembre">
+        @if (Model.homme)
+        {
+            @:H
+        }
+        else
+        {
+            @:F
+        }
+    </div>
+    <div class="ageMembre">
+        @Model.age
+    </div>
+    <div class="raisonSurSiteMembre">
+        @foreach (RaisonsSurSite r in Model.listeRaisonsSurSite)
+        {
+            <p>@r.raison</p>
+        }
+    </div>
+    <div class="habitationMembre">
+        @Model.ville.nomVille, @Model.province.nomProvince
+    </div>
+</div>
+
+@if (ViewBag.gestion == true)
+{
+    <div style="display:none; " id="contextMenu@(Model.noMembre)" class="contextMenu">
+        <table border="0" cellpadding="0" cellspacing="0"
+               style="border: thin solid #808080; cursor: default;" width="200px" bgcolor="White">
+            <tr>
+                @if (Model.dateSuppressionDuCompte != null)
+                {
+                    <td>
+                        <div class="ContextItem" onmousedown="reactiverCompte(@(Model.noMembre))">Réactiver le compte</div>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <div class="ContextItem" onmousedown="desactiverCompte(@(Model.noMembre))">Désactiver le compte</div>
+                    </td>
+                }
+            </tr>
+        </table>
+    </div>
+}
+

@@ -1,0 +1,24 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE AFFICHÉ À LA FIN DE L'INITIALISE DE DONNÉES ET AFFICHE LES ERREURS S'IL Y EN AS EU
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+<h2>Initialisation des données</h2>
+
+@if (ViewBag.reussi == true)
+{
+    <p style="color:green">L'initialisation des données a été réussi!</p>
+}
+else
+{
+    <p style="color:red">L'initialisation des données n'a pas fonctionnée.</p>
+
+        <h3>Description de l'erreur:</h3>
+        <p>@Html.Raw(ViewBag.messageErreur)</p>
+}
+

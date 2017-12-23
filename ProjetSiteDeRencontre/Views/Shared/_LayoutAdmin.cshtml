@@ -1,0 +1,141 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE LAYOUT DE LA PARTIE ADMINISTRATEUR DU SITE, CONTENANT LA BARRE DE NAVIGATION PROPRE
+    AUX ADMINISTRATEURS AINSI QUE LE FOOTER
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@using System.Security.Claims
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="@Url.Content("~/Photos/logo.png")" type="image/x-icon" />
+    <title>@ViewBag.Title - Club Contact</title>
+    @Styles.Render("~/Content/cssGeneral")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/utilitaire")
+    @RenderSection("Scripts", required: false)
+</head>
+<body onmouseup="HideMenu('contextMenu')" onmousedown="HideMenu('contextMenu')">
+
+    <div class="contenuSansFooter">
+
+        <div id="barreHaut">
+            <a href='@Url.Action("Gestion", "Admin")' id="lienLogo">
+                <img src='@Url.Content("~/Photos/logo.png")' alt="Club Contact" class="logo" />
+            </a>
+            <div class="titreSite">
+                <p>Administrateur</p>
+            </div>
+
+            <nav>
+                <ul id="menu">
+                    @if (Request.IsAuthenticated)
+                    {
+                        ClaimsIdentity claimIdentity = (ClaimsIdentity)User.Identity;
+                        if (claimIdentity != null)
+                        {
+                            <li>
+                                <a href='@Url.Action("Gestion", "Admin")'>
+                                    <p class="texteMenu">Gestion |</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("Statistique", "Admin")'>
+                                    <p class="texteMenu">Statistiques |</p>
+                                </a>
+                            </li>
+                            if (Request.Cookies["Admin"]["niveauDePermission"].ToLower() == "Complet".ToLower())
+                            {
+                                <li>
+                                    <a href='@Url.Action("Index", "CompteAdmin")'>
+                                        <p class="texteMenu">Comptes Administrateurs |</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href='@Url.Action("Index", "ForfaitsPremium")'>
+                                        <p class="texteMenu">Prix forfaits |</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href='@Url.Action("SendGlobal", "Messagerie")'>
+                                        <p class="texteMenu">Envoyer Message Global |</p>
+                                    </a>
+                                </li>
+                            }
+
+                            var userName = claimIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                            <li>
+                                <a href='@Url.Action("ModifierMotDePasse", "CompteAdmin", new { id = userName })'>
+                                    @*<img src='@Url.Content("~/Photos/ico/messagerie.svg")' alt="Messagerie" class="icones" />*@
+                                    <p class="texteMenu">@userName</p>
+                                </a>
+
+                                <ul id="menuCompte">
+                                    <li>
+                                        <a href='@Url.Action("Logout", "Authentification")'>
+                                            <p class="lienDropdown">Déconnexion</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    }
+
+                </ul>
+
+            </nav>
+        </div>
+
+        @RenderBody()
+
+    </div>
+
+    <footer>
+        <p>
+            @Html.ActionLink("Aide", "FAQ", "Home")
+            @*@Html.ActionLink("Nous Contacter", "MyAction", "MyController")
+            @Html.ActionLink("Confidentialité", "MyAction", "MyController")
+            @Html.ActionLink("À propos", "MyAction", "MyController")*@
+        </p>
+    </footer>
+</body>
+</html>
+
+@*<div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Nom d'application", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
+                    <li>@Html.ActionLink("À propos de", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>*@

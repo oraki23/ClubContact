@@ -1,0 +1,58 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT L'AFFICHAGE DES COMPTES ADMINISTRATEURS DU SITE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model IEnumerable<ProjetSiteDeRencontre.Models.CompteAdmin>
+
+<div class="bodyGestionAdmin">
+    <p id="btnGestion">
+        @Html.ActionLink("Créer un nouvel administrateur", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.nomCompte)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.noPermission)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nomCompte)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.permission.nomNiveauDePermissionAdmin)
+                </td>
+                <td>
+                    @if (item.nomCompte != User.Identity.Name)
+                    {
+                        <text>
+                            @Html.ActionLink("Modifier", "Edit", new { id = item.noCompteAdmin }) |
+                        </text>
+                    }
+                    @Html.ActionLink("Voir les détails", "Details", new { id = item.noCompteAdmin })
+                    @if (item.nomCompte != User.Identity.Name)
+                    {
+                        <text>
+                            |
+                            @Html.ActionLink("Supprimer", "Delete", new { id = item.noCompteAdmin })
+                        </text>
+                    }
+
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

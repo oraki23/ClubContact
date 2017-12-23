@@ -1,0 +1,317 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT DE VOIR UN MESSAGE QUI NOUS A ÉTÉ ENVOYÉ
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Message
+
+@using ProjetSiteDeRencontre.Models
+
+
+@using (Html.BeginForm("EnvoyerCorbeilleMessage", "Messagerie", FormMethod.Post, new { @id = "formSendMessage" }))
+{
+    <h1 class="titreMessagerie">Messagerie Club Contact</h1>
+
+    <div class="divPrincipalMessage">
+
+        <div class="sideBar">
+            @if (ViewBag.ViewMessageAdminOnly == null || ViewBag.ViewMessageAdminOnly == false)
+            {
+                @Html.Partial("NavBarMessageriePartial")
+                @Html.Partial("ListeDeContactsPartial", ViewData["listeContacts"])
+            }
+        </div>
+
+        @Html.HiddenFor(m => m.noMessage)
+
+        @if((ViewBag.ViewMessageAdminOnly != null && ViewBag.ViewMessageAdminOnly == true))
+        {
+            <div class="retourArriere" style="display:block;width:90%;margin:10px auto;font-size:20px;cursor:pointer;color:dodgerblue;" onclick="window.history.back()">
+                Retour à la page précédente
+                @*@Html.ActionLink("Retour à la page précédente", "Gestion", "Admin", new { tab = 2 }, null)*@
+            </div>
+        }
+
+        <div class="divListeMessageAvecActions"  style="@((ViewBag.ViewMessageAdminOnly != null && ViewBag.ViewMessageAdminOnly == true) ? "display:block;width:97%;margin:0 auto;" : "")">
+            @if (ViewBag.ViewMessageAdminOnly == null || ViewBag.ViewMessageAdminOnly == false)
+            {
+                <div class="lesBoutonsMessagerie">
+                    @if (Model.membreEnvoyeur != null)
+                    {
+                        <div class="boutonRepondre">
+                            <button type="button" onclick="location.href='@Url.Action("Send", "Messagerie", new { id = Model.noMembreEnvoyeur, noMessageRepondu = Model.noMessage })';return false;"><img src="@Url.Content("~/Photos/ico/replyBlanche.png")" />Répondre</button>
+                        </div>
+                        if (Model.noMembreEnvoyeur != int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                        {
+                            <div class="boutonSignaler">
+                                <button type="button" onclick="signalerMessage()"><img src="@Url.Content("~/Photos/ico/Signaler.png")" />Signaler</button>
+                            </div>
+                        }
+                    }
+                    <div class="boutonDelete">
+                        <button type="button" onclick="deleteMessage()"><img src="@Url.Content("~/Photos/ico/poubelleBlanche.png")" />Supprimer</button>
+                    </div>
+                </div>
+            }
+                
+            
+
+            <div class="messageRecu">
+                <div class="leMessageRecu">
+                    @if (Model.sujetMessage == null || Model.sujetMessage == "")
+                    {
+                        <h3><i>(Sans objet)</i></h3>
+                    }
+                    else
+                    {
+                        <h3>@Model.sujetMessage</h3>
+                    }
+
+
+                    <div class="enTeteMessage">
+                        @if (Model.membreEnvoyeur != null)
+                        {
+                            <div class="envoyeurEtReceveur">
+                                <div class="envoyeur">
+                                    @{
+                                        Photo photoProfil = Model.membreEnvoyeur.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                                    }
+
+                                    <div class="photoProfilMessage">
+                                        @if (Model.noMembreEnvoyeur != int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                        {
+                                            if (!Model.membreReceveur.listeNoire.Contains(Model.membreEnvoyeur))
+                                            {
+                                                if (Model.membreReceveur.listeFavoris.Contains(Model.membreEnvoyeur))
+                                                {
+                                                    <a title="Supprimer des favoris" class="ajouterFavorisEtoileMessagerie" onclick="location.href='@Url.Action("SupprimerDeListeFavoris", "Membres", new { id = Model.membreEnvoyeur.noMembre, noMessageOrigine = Model.noMessage })';return false;">
+                                                        <img title="Supprimer des favoris" alt="Supprimer des favoris" class="etoileFavorisMessagerie" src="@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")"
+                                                             onmouseenter="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")'"
+                                                             onmouseleave="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")'" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a title="Ajouter aux favoris" class="ajouterFavorisEtoileMessagerie" onclick="location.href='@Url.Action("AjouterAListeFavoris", "Membres", new { id = Model.membreEnvoyeur.noMembre, noMessageOrigine = Model.noMessage })';return false;">
+                                                        <img title="Ajouter aux favoris" alt="Ajouter aux favoris" class="etoileFavorisMessagerie" src="@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")"
+                                                             onmouseenter="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")'"
+                                                             onmouseleave="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")'" />
+                                                    </a>
+                                                }
+                                            }
+                                        }
+                                        @if (photoProfil != null)
+                                        {
+                                            <img class="photoEnvoyeurMessage" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembreEnvoyeur })';return false;" />
+                                        }
+                                        else
+                                        {
+                                            if (Model.membreEnvoyeur.homme)
+                                            {
+                                                <img class="photoEnvoyeurMessage" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembreEnvoyeur })';return false;" />
+                                            }
+                                            else
+                                            {
+                                                <img class="photoEnvoyeurMessage" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembreEnvoyeur })';return false;" />
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="envoyeurEtReceveurReal">
+                                        <div class="envoyeur">
+                                            <h4>De: @Html.ActionLink(Model.membreEnvoyeur.surnom, "Details", "Membres", new { id = Model.membreEnvoyeur.noMembre }, null)</h4>
+                                            @if (Model.membreReceveur != Model.membreEnvoyeur)
+                                            {
+                                                if (Model.noMembreEnvoyeur != int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                                {
+                                                    <div class="ajouterOuSupprimerContactsDiv">
+                                                        @if (Model.membreReceveur.listeContacts.Contains(Model.membreEnvoyeur))
+                                                        {
+                                                            <button class="ajouterOuSupprimerContacts" type="button" value="supprimer" title="Retirer des contacts">-</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="ajouterOuSupprimerContacts" type="button" value="ajouter" title="Ajouter aux contacts">+</button>
+                                                        }
+                                                    </div>
+
+                                                }
+                                            }
+                                        </div>
+
+                                        @if (Model.noMembreEnvoyeur == int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                        {
+                                            <div class="receveur">
+                                                <h4>À: @Html.DisplayFor(model => model.membreReceveur.surnom)</h4>
+                                                @if (Model.membreReceveur != Model.membreEnvoyeur)
+                                                {
+                                                    if (Model.noMembreReceveur != int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                                    {
+                                                        <div class="ajouterOuSupprimerContactsDiv">
+                                                            @if (Model.membreEnvoyeur.listeContacts.Contains(Model.membreReceveur))
+                                                            {
+                                                                <button class="ajouterOuSupprimerContactsVenantDeA" type="button" value="supprimer" title="Retirer des contacts">-</button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button class="ajouterOuSupprimerContactsVenantDeA" type="button" value="ajouter" title="Ajouter aux contacts">+</button>
+                                                            }
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                                        }
+                                        else if(ViewBag.ViewMessageAdminOnly == null || ViewBag.ViewMessageAdminOnly == false)
+                                        {
+                                            <div class="envoyeurEtReceveur">
+                                                <div class="envoyeur">
+                                                    <div class="photoProfilMessage">
+                                                        <img class="photoEnvoyeurMessage" style="cursor:default;" src="@Url.Content("~/Photos/logo.png")" />
+                                                    </div>
+
+                                                    <div class="envoyeurEtReceveurReal">
+                                                        <div class="envoyeur">
+                                                            <h4>De: Administrateurs Club Contact</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <div class="envoyeurEtReceveur">
+                                                <div class="envoyeur">
+                                                    <div class="photoProfilMessage">
+                                                        <img class="photoEnvoyeurMessage" style="cursor:default;" src="@Url.Content("~/Photos/logo.png")" />
+                                                    </div>
+
+                                                    <div class="envoyeurEtReceveurReal">
+                                                        <div class="envoyeur">
+                                                            <h4>De: @(((Signalement)ViewBag.signalementLie).adminQuiTraite.nomCompte)</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                        <div class="dateEnvoieMessage">
+                            <p>@Model.dateEnvoi</p>
+                        </div>
+                    </div>
+
+
+                    <div class="contenuMessage">
+                        @if (Model.contenuMessage == "" || Model.contenuMessage == null)
+                        {
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Sans Contenu)</i></p>
+                        }
+                        else
+                        {
+                            <p>@Html.Raw(Model.contenuMessage.Replace(Environment.NewLine, "<br/>"))</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', true);
+            });
+        });
+
+
+        function deleteMessage() {
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer ce message?");
+            if (supprimerConfirmation == true)
+            {
+                $('#formSendMessage').submit();
+            }
+        }
+        @if(ViewBag.ViewMessageAdminOnly == null || ViewBag.ViewMessageAdminOnly == false)
+        {
+            <text>
+        $(document).ready(function () {
+            getNbMessageDansBoite("inbox", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+            getNbMessageDansBoite("deleted", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+        });
+            </text>
+        }
+        
+        @if(Model.membreEnvoyeur != null)
+        {
+            <text>
+        function signalerMessage(){
+            var noMembreFaisantPlainte = @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]));
+            var noMembreContreQuiEstPlainte = @Model.noMembreEnvoyeur;
+            var raisonDeLaPlainte = prompt("Quel est la raison du signalement? (Le message sera inclut dans la plainte)", "");
+            var noMessageJoint = @(Model.noMessage);
+
+            if(raisonDeLaPlainte !== null)
+            {
+                $.ajax({
+                    url: '@Url.Action("SignalerMembre", "Utilitaire")',
+                    type: 'POST',
+                    data: { noMembreFaisantPlainte: noMembreFaisantPlainte, noMembreContreQuiEstPlainte: noMembreContreQuiEstPlainte, raisonDeLaPlainte: raisonDeLaPlainte, noMessageJoint: noMessageJoint },
+                    success: function(results){
+                        alert("Votre plainte a bien été envoyé.");
+                    }
+                });
+            }
+        }
+            </text>
+        }
+
+    </script>
+    
+    @if (ViewBag.ViewMessageAdminOnly == null || ViewBag.ViewMessageAdminOnly == false)
+    {
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('.ajouterOuSupprimerContacts').on('click', function(){
+                var ajouterOuSupprimer = $('.ajouterOuSupprimerContacts').val();
+
+                if(ajouterOuSupprimer == "supprimer")
+                {
+                    location.href = '@Html.Raw(Url.Action("AjouterOuSupprimerContacts", "Messagerie", new { noMessageBase = Model.noMessage, noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]), noMembreAAjouterOuSupprimer = Model.noMembreEnvoyeur, ajouter = false }))';
+                    return false;
+                }
+                else if(ajouterOuSupprimer == "ajouter")
+                {
+                    location.href = '@Html.Raw(Url.Action("AjouterOuSupprimerContacts", "Messagerie", new { noMessageBase = Model.noMessage, noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]), noMembreAAjouterOuSupprimer = Model.noMembreEnvoyeur, ajouter = true}))';
+                    return false;
+                }
+            });
+
+            $('.ajouterOuSupprimerContactsVenantDeA').on('click', function(){
+                var ajouterOuSupprimer = $('.ajouterOuSupprimerContactsVenantDeA').val();
+
+                if(ajouterOuSupprimer == "supprimer")
+                {
+                    location.href = '@Html.Raw(Url.Action("AjouterOuSupprimerContacts", "Messagerie", new { noMessageBase = Model.noMessage, noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]), noMembreAAjouterOuSupprimer = Model.noMembreReceveur, ajouter = false }))';
+                    return false;
+                }
+                else if(ajouterOuSupprimer == "ajouter")
+                {
+                    location.href = '@Html.Raw(Url.Action("AjouterOuSupprimerContacts", "Messagerie", new { noMessageBase = Model.noMessage, noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]), noMembreAAjouterOuSupprimer = Model.noMembreReceveur, ajouter = true}))';
+                    return false;
+                }
+            });
+        });
+        </script>
+    }
+}

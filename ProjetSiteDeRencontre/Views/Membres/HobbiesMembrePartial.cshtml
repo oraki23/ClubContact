@@ -1,0 +1,72 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE GÉNÉRANT TOUS LES HOBBIES POSSIBLES AFIN D'EN PERMETTRE LA MODIFICATION
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using ProjetSiteDeRencontre.Models
+
+@Html.ValidationSummary(true, "", new { @class = "messageErreur" })
+
+<div class="section">
+
+    @foreach (Types type in ViewBag.listeType)
+    {
+        List<Hobbie> ceType = ((List<Hobbie>)ViewBag.listeHobbie).FindAll(delegate (Hobbie e) { return e.type.nomType == type.nomType; });
+
+        <a class="barreSection" href="#@type.nomType" data-toggle="collapse">
+            <h3>@type.nomType</h3> <img class="iconesTitre" src='@Url.Content("~/Photos/ico/Sections/" + type.nomType + ".png")' />
+        </a>
+
+        <div id="@type.nomType" class="refermable collapse in">
+            @for (int i = (ceType.Count / 2); i <= ceType.Count; i += (ceType.Count / 2))
+            {
+                <div class="column-mixed">
+                    <table>
+                        <tbody>
+                            @for (int j = (i - (ceType.Count / 2)); j < i; j++)
+                            {
+                                <tr>
+                                    <td class="colonne1 colonne">
+                                        @if (type.nomType != "Musique")
+                                        {
+                                            <img class="iconesLabel" src='@Url.Content("~/Photos/ico/FormulaireHobbies/" + type.nomType +  "/" + ceType[j].nomHobbie + ".png")' />
+                                        }
+                                    </td>
+                                    <td class="colonne2 colonne">
+                                        @Html.Label("hobbie", ((Hobbie)ceType[j]).nomHobbie, new { @class = "labelHobbies" })
+                                    </td>
+                                    <td class="colonne3 colonne">
+                                        @if (Model.noMembre != 0)
+                                        {
+                                            if (ViewBag.listeHobbiesMembre.Contains(((Hobbie)ceType[j])))
+                                            {
+                                                <input type="checkbox" class="checkboxHobbies" name="@(((Hobbie)ceType[j]).nomHobbie)" value="@(((Hobbie)ceType[j]).nomHobbie)" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" class="checkboxHobbies" name="@(((Hobbie)ceType[j]).nomHobbie)" value="@(((Hobbie)ceType[j]).nomHobbie)" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" name="@(((Hobbie)ceType[j]).nomHobbie)" value="@(((Hobbie)ceType[j]).nomHobbie)" />
+                                        }
+                                        @*@Html.CheckBox(((Hobbie)ceType[j]).nomHobbie, htmlAttributes: new { @class = "checkboxHobbies" })*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+
+</div>

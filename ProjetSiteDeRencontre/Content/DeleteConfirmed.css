@@ -1,0 +1,40 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    DELETECONFIRMED
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+#formDelete{
+    text-align:center;
+    margin:1%;
+    display:block;
+}
+
+h2{
+    font-size:30px;
+    color:#3f4db8;
+    margin-top:5%;
+}
+
+h3{
+    margin-top:3%;
+}
+
+.btnSupp{
+    background-color:#C826C8;
+    width:20%;
+    height:40px;
+    border-radius: 10px;
+    color: white;
+    text-shadow: none;
+    font-size: 15px;
+    display:inline-block;
+    margin-top:2%;
+    margin-bottom:1%;
+}

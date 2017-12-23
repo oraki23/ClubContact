@@ -1,0 +1,23 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    LISTENOIRE DU CONTRÔLEUR MEMBRES
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+body {
+}
+
+h2{
+    text-align:center;
+}
+
+.conteneurMembresRejetes{
+    font-size:20px;
+    text-align:center;
+}

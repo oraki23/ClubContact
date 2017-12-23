@@ -1,0 +1,289 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE QUI AFFICHE LA LISTE DES MEMBRES ET QUI EN PERMET LA RECHERCHE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.RechercheViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+@{ 
+    //critères de tri
+    List<SelectListItem> triPar = new List<SelectListItem>() {
+        new SelectListItem() { Value = "age", Text = "Âge" }
+    };
+
+    if(Request.IsAuthenticated)
+    {
+        triPar.Add(new SelectListItem() { Value = "distance", Text = "Distance" });
+    }
+    }
+
+    @functions{
+    decimal calcDistance(decimal latA, decimal longA, decimal latB, decimal longB)
+    {
+        double theDistance = (Math.Sin(DegreesToRadians(latA)) *
+                Math.Sin(DegreesToRadians(latB)) +
+                Math.Cos(DegreesToRadians(latA)) *
+                Math.Cos(DegreesToRadians(latB)) *
+                Math.Cos(DegreesToRadians(longA - longB)));
+
+        return Math.Round(Convert.ToDecimal((RadiansToDegrees(Math.Acos(theDistance)))) * 69.09M * 1.6093M, 0);
+    }
+
+    double DegreesToRadians(decimal angle)
+    {
+        return (Math.PI / 180) * (double)angle;
+    }
+
+    double RadiansToDegrees(double angle)
+    {
+        return angle * (180.0 / Math.PI);
+    }
+}
+
+@*Possibilité de mettre un champ pour afficher les erreurs*@
+
+@using (Html.BeginForm("Index", "Membres", FormMethod.Post, new { @class = "formIndex" }))
+{
+    if(ViewBag.rechercheAvancee)
+    {
+        @Html.Partial("RechercheMembreAvancePartial")
+    }
+    else
+    {
+        @Html.Partial("RechercheMembrePartial")
+    }
+
+
+    @Html.AntiForgeryToken()
+    if (Model.membres.Count == 0)
+    {
+        <div class="resultatRecherche">
+            <h3>Votre recherche n'a retournée aucun résultats.</h3>
+        </div>
+    }
+    else
+    {
+        <div class="resultatRecherche">
+            <div class="barreDuHaut">
+                <div class="nbResultatsRecherche">
+                    <p>@ViewBag.nbResultatsRecherche membres correspondant aux critères</p>
+                </div>
+                <div class="triPar">
+                    <p>Trier par</p>
+                    @Html.DropDownListFor(model => model.triPar, (List<SelectListItem>)triPar, "", new { @class = "", @onchange = "this.form.submit()" })
+                </div>
+            </div>
+
+        @foreach (var item in Model.membres)
+        {
+            @Html.HiddenFor(m => item.noMembre)
+
+            <div class="unePersonne">
+                <div class="photoProfilRecherche">
+                    @{
+                        Photo photoProfil = item.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                        //List<Photo> photos = item.listePhotosMembres.Where(p => p.photoProfil == false).ToList();
+                    }
+                    @if (photoProfil != null)
+                    {
+                        <img class="photoAffiche" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                    }
+                    else
+                    {
+                        if (item.homme)
+                        {
+                            <img class="photoAffiche" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                        }
+                        else
+                        {
+                            <img class="photoAffiche" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                        }
+                    }
+                </div>
+                <div class="informations">
+                    @if (item.premium == true)
+                    {
+                        <h3>@Html.DisplayFor(m => item.surnom) <img class="couronne" src="@Url.Content("~/Photos/couronne.png")" /></h3>
+                    }
+                    else
+                    {
+                        <h3>@Html.DisplayFor(m => item.surnom)</h3>
+                    }
+                    <p>@Html.DisplayFor(m => item.age) ans</p>
+                    <p>De: @Html.DisplayFor(m => item.ville.nomVille)</p>
+                    @if(item.ville.lat != null && item.ville.lng != null &&
+                        Model.latMembreConnectee != null && Model.lngMembreConnectee != null)
+                    {
+                        <p>@calcDistance((decimal)item.ville.lat, (decimal)item.ville.lng, (decimal)Model.latMembreConnectee, (decimal)Model.lngMembreConnectee) Km</p>
+                    }
+
+                    <div>
+                        <button class="boutonVoirProfilRecherche" onclick="location.href='@Url.Action("Details", "Membres", new { id = item.noMembre })';return false;" type="button">Voir le profil</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+        
+    <!-- pager -->
+    <div class="pagi">
+
+        <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+        @if (ViewBag.EndPage > 1)
+        {
+        <ul class="page">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li>
+                    @Html.ActionLink("Premier", "Index", "Membres", new { vientDePagination = 1, rechercheAvancee = ViewBag.rechercheAvancee }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Précédent", "Index", "Membres", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1, rechercheAvancee = ViewBag.rechercheAvancee }, new { @class = "backPage" })
+                </li>
+            }
+
+            @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+            {
+                <li>
+                    @Html.ActionLink((string)(page.ToString()), "Index", "Membres", new { page = page, vientDePagination = 1, rechercheAvancee = ViewBag.rechercheAvancee }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li>
+                    @Html.ActionLink("Suivant", "Index", "Membres", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1, rechercheAvancee = ViewBag.rechercheAvancee }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Dernier", "Index", "Membres", new { page = ViewBag.TotalPages, vientDePagination = 1, rechercheAvancee = ViewBag.rechercheAvancee }, null)
+                </li>
+            }
+        </ul>
+        }
+    </div>
+
+    }
+}
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        function gestionRechercheAvancee(){
+
+            $('#rechercheActivite').hide();
+            $('#rechercheAmour').hide();
+
+            if($('#noRaisonsSite option:selected').text() == "Trouver l'amour")
+            {
+                $('#rechercheActivite').find('input, textarea, button, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                $('#rechercheActivite').hide();
+
+                $('#rechercheAmour').find('input, textarea, button, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $('#rechercheAmour').show();
+            }
+            else if($('#noRaisonsSite option:selected').text() == "Faire une activité")
+            {
+                $('#rechercheActivite').find('input, textarea, button, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $('#rechercheActivite').show();
+
+                $('#rechercheAmour').find('input, textarea, button, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                $('#rechercheAmour').hide();
+            }
+        }
+
+        $(document).ready(function() {
+
+            gestionRechercheAvancee();
+
+            $(document).on('change', '#noRaisonsSite', function(){
+                gestionRechercheAvancee();
+            });
+
+            //Remplissage de la ville au début
+            if($('#noTypeActiviteRecherche').val() != 0)
+            {
+                @if(Model.noTypeInterets != null)
+                {
+                    <text>
+                    RemplirHobbiesDebutRecherche(@Model.noTypeInterets, '@Url.Action("TrouverHobbiesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    RemplirHobbiesDebutRecherche(-1, '@Url.Action("TrouverHobbiesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+            }
+
+            //Lorsqu'on change de province, on met à jour la liste de villes
+            $(document).on('change',  '#noTypeActiviteRecherche', function(){
+                if($('#noTypeActiviteRecherche').val() != "")
+                {
+                    RemplirHobbiesRecherche('@Url.Action("TrouverHobbiesAPartirDeNoProvince", "Utilitaire")');
+                }
+                else{
+                    $('#noTypeInterets').html("");
+                    $('#noTypeInterets').append(
+                            $('<option value=\'\'></option>').html("Sans importance"));
+                }
+
+            });
+
+
+            @*$('.dernierePage').on('click', function(){
+                $('#page').val(@(ViewBag.TotalPages));
+                document.forms[0].submit();
+                return false;
+            });*@
+
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', true);
+            });
+
+            //Remplissage de la ville au début
+            if($('#noProvince').val() != 0)
+            {
+                @if(Model.noVille != null)
+                {
+                    <text>
+                        RemplirVillesDebutRecherche(@Model.noVille, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        RemplirVillesDebutRecherche(-1, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+            }
+
+            //Lorsqu'on change de province, on met à jour la liste de villes
+            $(document).on('change',  '#noProvince', function(){
+                if($('#noProvince').val() != "")
+                {
+                    RemplirVillesRecherche('@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                }
+                else{
+                    $('#noVille').html("");
+                    $('#noVille').append(
+                            $('<option value=\'\'></option>').html("Sans importance"));
+                }
+            });
+        })
+    </script>    
+}

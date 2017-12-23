@@ -1,0 +1,230 @@
+﻿@*------------------------------------------------------------------------------------
+
+VUE PARTIELLE AFFICHANT LES INFORMATIONS D'UNE ACTIVITÉ LORS DE LA CRÉATION OU DE L'ÉDITION
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*@
+
+@model ProjetSiteDeRencontre.Models.Activite
+
+@using ProjetSiteDeRencontre.Models
+
+@Styles.Render("~/Content/cssActivite")
+
+@Html.ValidationSummary(true, "", new { @class = "messageErreur" })
+
+<h3 class="titreOrganiseActivite text-center" style="font-weight:bold">J'organise une activité</h3>
+
+@Html.HiddenFor(m => m.noActivite)
+@Html.HiddenFor(m => m.noMembreOrganisateur)
+@Html.HiddenFor(m => m.annulee)
+
+<div class="section">
+    <a class="barreSection" href="#nousFerons" data-toggle="collapse">
+        <h3>Nous ferons</h3>
+    </a>
+
+    <div id="nousFerons" class="refermable collapse in">
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.nom, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.EditorFor(model => model.nom, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.nom, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.TextAreaFor(model => model.description, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.description, "", new { @class = "messageErreur" })
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <a class="barreSection" href="#informationDeBase" data-toggle="collapse">
+        <h3>Information de base</h3>
+    </a>
+
+    <div id="informationDeBase" class="refermable collapse in">
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.date, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "datePlusGrandeQueNow datePlusPetiteQueFinAbonnement editeurs", @placeholder = "aaaa-mm-jj hh:mm", data_val_date = "Veuillez entrer la date dans le format suivant: aaaa-mm-jj hh:mm" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.date, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.cout, htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeurDifferent">
+                @Html.EditorFor(model => model.cout, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            <p id="coutAEntre">$</p>
+            @Html.ValidationMessageFor(model => model.cout, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.ageMin, htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeurDifferent">
+                @Html.EditorFor(model => model.ageMin, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            <p id="age">ans</p>
+            @Html.ValidationMessageFor(model => model.ageMin, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.ageMax, htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeurDifferent">
+                @Html.EditorFor(model => model.ageMax, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            <p id="age">ans</p>
+            @Html.ValidationMessageFor(model => model.ageMax, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.hommeSeulement, "Seulement pour", htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.hommeSeulement, (List<SelectListItem>)ViewBag.sexe, "Sans importance", new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.hommeSeulement, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.nbParticipantsMax, htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeur">
+                @Html.EditorFor(model => model.nbParticipantsMax, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.nbParticipantsMax, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.theme, "Thème", htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noTheme, (SelectList)ViewBag.listeThemes, "", new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noTheme, "", new { @class = "messageErreur" })
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <a class="barreSection" href="#aCetEndroit" data-toggle="collapse">
+        <h3>À cet endroit</h3>
+    </a>
+
+    <div id="aCetEndroit" class="refermable collapse in">
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.adresse, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.EditorFor(model => model.adresse, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.adresse, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.noProvince, "Province", htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noProvince, (SelectList)ViewBag.listeProvinces, "--Choisir--", new { @class = "editeurs", @onchange = "RemplirVilles()" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noProvince, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.noVille, "Ville", htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noVille, Enumerable.Empty<SelectListItem>(), "--Choisir--", new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noVille, "", new { @class = "messageErreur" })
+        </div>
+    </div>
+</div>
+
+    <div class="section">
+        <a class="barreSection" href="#photos" data-toggle="collapse">
+            <h3>Importer la photo principale</h3>
+        </a>
+
+        @for (int i = 0; i < Model.listePhotosActivites.Count; i++)
+        {
+            @Html.HiddenFor(h => h.listePhotosActivites[i].noActivite)
+            @Html.HiddenFor(h => h.listePhotosActivites[i].noPhotoActivite)
+            @Html.HiddenFor(h => h.listePhotosActivites[i].photoPrincipale)
+        }
+
+        <div id="photos" class="alignCenter refermable collapse in">
+            @*<a class="ajouterPhotos photo30x30">
+                <img src="~/Photos/ico/addPictures.png" alt="Ajouter des photos" class="w100h100" />
+            </a>*@
+            @*<p id="nbPhotosAffiche"></p>*@
+            <div class="conteneurPhotos">
+                @{ 
+                    PhotosActivite laPhotoPrincipale = Model.listePhotosActivites.Where(p => p.photoPrincipale == true).FirstOrDefault();
+                }
+                @*@Html.HiddenFor(h => laPhotoPrincipale.noActivite)
+                @Html.HiddenFor(h => h.listePhotosActivites[i].nomFichierPhoto)
+                @Html.HiddenFor(h => h.listePhotosActivites[i].noMembreQuiPublie)
+                @Html.HiddenFor(h => h.listePhotosActivites[i].noPhotoActivite)
+                @Html.HiddenFor(h => h.listePhotosActivites[i].photoPrincipale)*@
+                <input id="imgUploadPhotoPrincipale" type="file" name="fichierPhotos" class="inputPhotoActiviteEdit" onchange="PreviewImage(@(ViewBag.i))" />
+                @if (laPhotoPrincipale != null)
+                {
+                    <img id="imgShowPhotoPrincipale" class="photo150x150" src="~/Upload/PhotosActivites/@laPhotoPrincipale.nomFichierPhoto" alt="" />
+                }
+                else
+                {
+                    <img id="imgShowPhotoPrincipale" class="photo150x150" />
+                }
+
+
+                @*@Html.EditorFor(m => m.listePhotosActivites[0])*@
+            </div>
+            @*@Html.ValidationMessageFor(model => model.listePhotosActivites[0])*@
+        </div>
+    </div>
+@if (ViewBag.titre == "edit")
+{
+    <div class="section">
+        <a class="barreSection" href="#annulation" data-toggle="collapse">
+            <h3>Annulation</h3>
+        </a>
+
+        <div id="annulation" class="alignCenter refermable collapse annulation">
+            <p>Si vous désirez annuler d'activité pour quelques raisons que ce soit, appuyez sur le bouton</p>
+            <p><b>Attention, l'activité annulée ne pourra pas être réactivée.</b></p>
+            <button class="boutonAnnulerActivite" type="button" onclick="supprimerActivite(@(Model.noActivite))">Annulation de l'activité</button>
+        </div>
+    </div>
+}

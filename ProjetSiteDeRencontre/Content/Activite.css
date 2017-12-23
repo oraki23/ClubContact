@@ -1,0 +1,168 @@
+﻿/*------------------------------------------------------------------------------------
+
+FICHIER CSS POUR TOUT CE QUI EST DANS LE CONTRÔLEUR ACTIVITÉ.
+ATTENTION: CE FICHIER EST DÉSUET ET EST REMPLACÉ SOIT PAR:
+    INDEXACTIVITE.SCSS
+    OU
+    LESBASESTYLES.SCSS
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+
+/*Création activite*/
+#formulaireCreerActivite{
+    width:80%;
+    margin:auto;
+    max-width:800px;
+    background-color:rgba(245, 255, 192, 0.89);/*rgba(248, 255, 169, 0.48)*/
+}
+
+.barreSection{
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px 0 10px 25px;
+    box-shadow:5px 4px #62c3f5;
+    border: 1px solid #2f528f;
+    display:block;
+}
+.barreSection h3{
+    margin:0;
+    font-size:23px;
+    font-weight: bold;
+    text-decoration:none;
+    color:#075aa9;
+    vertical-align:middle;
+}
+.barreSection:hover, .barreSection:enabled{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+.labels{
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:30px;
+    font-weight:bold;
+    color:#84197d;
+}
+.labels label{
+    margin:0;
+}
+.labels p{
+    font-weight:bold;
+    display:inline-block;
+    margin:0;
+}
+
+.champ{
+    width:70%;
+    margin:auto;
+    margin-right:25%;
+    text-align:right;
+}
+
+.editeurs{
+    width:100%;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+.editeurDifferent{
+    width:20%;
+    display:inline-block;
+    margin: .5em 0;
+}
+
+.editeur{
+    vertical-align:middle;
+    width:40%;
+    display:inline-block;
+    margin: .5em 0;
+}
+
+#coutAEntre{
+    margin-right:100px;
+    display:inline-block;
+    font-weight:bold;
+}
+
+#description{
+    margin-left:0px;
+    margin-right:60px;
+    width:100%;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+    max-height:200px;
+    resize:vertical;
+    min-height:30px;
+}
+
+#age{
+    margin-right:79px;
+    display:inline-block;
+    font-weight:bold;
+    margin-left:5px;
+}
+
+.messageErreur{
+    display:block;
+    padding:0px 5px 0px 0px;
+    color:red;
+}
+
+.deletePhotos{
+    cursor:pointer;
+}
+
+.text-center{
+    margin:15px;
+    color:#075aa9;
+}
+
+.section{
+    margin-bottom:10px;
+}
+.refermable{
+    margin-top:2%;
+    margin-bottom:2%;
+}
+.bouton{
+    margin: 2% 10%;
+    width:13%;
+    padding:1%;
+    background-color:#00b0f0;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:16px;
+}
+
+.validationMessage{
+    margin:2% 7%;
+}
+
+.conteneurPhotos{
+    text-align:center;
+    display:inline-block;
+}
+
+.inputPhotoActiviteEdit{
+    display:inline-block;
+    width:144px;
+    overflow:hidden;
+}
+
+#imgUploadPhotoPrincipale{
+    margin-bottom:10px;
+}
+
+.alignCenter refermable collapse in{
+    text-align:center;
+}

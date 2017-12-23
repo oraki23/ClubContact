@@ -1,0 +1,53 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE CONTENANT LES INFORMATIONS DU COMPTE ADMINISTRATEUR QU'ON EST APRÈS REGARDÉ
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.Models.CompteAdmin
+
+@Html.HiddenFor(model => model.noCompteAdmin)
+
+<div class="form-horizontal editAdmin">
+    <div class="@(ViewBag.disabled != null ? "disableddiv" : "")">
+        <div class="form-group">
+            @Html.LabelFor(model => model.nomCompte, htmlAttributes: new { @class = "control-label col-md-2 editGroup" })
+            <div class="col-md-10 editCol">
+                @Html.EditorFor(model => model.nomCompte, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nomCompte, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (ViewBag.disabled == null)
+        {
+            <div class="form-group">
+                @if (ViewBag.Create == true)
+                {
+                    @:@Html.LabelFor(model => model.motDePasse, htmlAttributes: new { @class = "control-label col-md-2 editGroup" })
+            }
+                else
+                {
+                    <label class="control-label col-md-2 editGroup">Nouveau mot de passe</label>
+                }
+                <div class="col-md-10 editCol">
+                    @Html.EditorFor(model => model.motDePasse, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.motDePasse, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.noPermission, htmlAttributes: new { @class = "control-label col-md-2 editGroup" })
+            <div class="col-md-10 editCol">
+                @Html.DropDownListFor(model => model.noPermission, (SelectList)ViewBag.niveauxPermission, null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.noPermission, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>
+
+

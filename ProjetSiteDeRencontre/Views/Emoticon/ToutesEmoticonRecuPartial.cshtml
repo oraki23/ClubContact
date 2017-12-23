@@ -1,0 +1,69 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE DE TOUS LES CADEAUX RECUS, QUI EST RELOADER CHAQUE FOIS QU'ON SUPPRIME UN CADEAU POUR
+    LE METTRE À JOUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using ProjetSiteDeRencontre.Models
+
+@{
+    List<Gift> cadeauxRecusPremium = Model.listeCadeauxRecus.Where(m => m.vientDePremium == true && m.supprimeDeReceveur == false).OrderByDescending(m => m.dateEnvoi).ToList();
+    List<Gift> cadeauxRecusGratuits = Model.listeCadeauxRecus.Where(m => m.vientDePremium == false && m.supprimeDeReceveur == false).OrderByDescending(m => m.dateEnvoi).ToList();
+}
+@if (cadeauxRecusPremium.Count > 0 || cadeauxRecusGratuits.Count > 0)
+{
+    <div class="cadeauxPremium" style="@(cadeauxRecusPremium.Count == 0 ? "display:none" : "")">
+
+        <input type="hidden" value="0" id="idNumeroUnPremium" />
+        <input type="hidden" value="@cadeauxRecusPremium.Count" id="nbCadeauxRecusPremium" />
+
+        @for (int i = 0; i < cadeauxRecusPremium.Count; i++)
+        {
+            {
+                ViewBag.i = i;
+                ViewBag.CadeauPremium = true;
+            }
+            @Html.Partial("~/Views/Emoticon/EmoticonRecuPartial.cshtml", cadeauxRecusPremium);
+        }
+        @if (cadeauxRecusPremium.Count > 3)
+        {
+            <div class="boutonNavigationEmoticon">
+                <a class="boutonNavReculer retourArriereEmoticonPremium" onclick="avancerEmoji(-1, 1)">&#10094;</a>
+                <a class="boutonNavAvancer prochainEmoticonPremium" onclick="avancerEmoji(1, 1)">&#10095;</a>
+            </div>
+        }
+    </div>
+    <hr style="@((cadeauxRecusPremium.Count == 0 || cadeauxRecusGratuits.Count == 0) ? "display:none" : "")" />
+    <div class="cadeauxGratuits" style="@(cadeauxRecusGratuits.Count == 0 ? "display:none" : "")">
+
+        <input type="hidden" value="0" id="idNumeroUnGratuit" />
+        <input type="hidden" value="@cadeauxRecusGratuits.Count" id="nbCadeauxRecusGratuit" />
+        @for (int i = 0; i < cadeauxRecusGratuits.Count; i++)
+        {
+            {
+                ViewBag.i = i;
+                ViewBag.CadeauPremium = false;
+            }
+            @Html.Partial("~/Views/Emoticon/EmoticonRecuPartial.cshtml", cadeauxRecusGratuits);
+        }
+        @if (cadeauxRecusGratuits.Count > 5)
+        {
+            <div class="boutonNavigationEmoticon">
+                <a class="boutonNavReculer retourArriereEmoticonGratuit" onclick="avancerEmoji(-1, 0)">&#10094;</a>
+                <a class="boutonNavAvancer prochainEmoticonGratuit" onclick="avancerEmoji(1, 0)">&#10095;</a>
+            </div>
+        }
+    </div>
+}
+else{
+    <div class="cadeauxPremium">
+        <p class="recuAucunCadeau" style="font-size:17px;margin:0 20px"><em>Vous n'avez reçu<br />aucun cadeau.</em></p>
+    </div>
+}

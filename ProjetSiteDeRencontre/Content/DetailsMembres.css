@@ -1,0 +1,165 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    DETAILS.cshtml DU CONTRÔLEUR MEMBRE
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+.contenu{
+    text-align:center;
+}
+
+
+#photoProfil{
+    position:relative;
+    margin: 2% 0px;
+    height:430px;
+    width:430px;
+    border-radius:150px;
+    z-index:2;
+}
+.lesTabs{
+    width:70%;
+    margin:0 auto;
+    background-color:#f2f2f2;
+}
+
+#Description{
+    text-align:left;
+}
+
+/*Les tabs*/
+.tab{
+    text-align:center;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+div.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+div.tab button:hover {
+    background-color: #ddd;
+}
+
+div.tab button.active {
+    background-color: #ccc;
+}
+
+.tabcontent {
+    padding:5% 15% 4% 15%;
+    display: none;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/*Marie Afficher détails membre*/
+
+#aCoterPhoto{
+    height:200px;
+    display:block;
+}
+#image{
+    width:190px;
+    display:inline-block;
+    padding-right:5px;
+    position:absolute;
+}
+
+#imageBouton{
+    width:25px;
+    padding:0px;
+}
+
+#texteCoterPhoto{
+    padding-left:225px;
+    text-align:left;
+    display:inline-block;
+    font-size:large;
+}
+
+#titre1{
+    display:inline-block;
+    margin-left:940px;
+    padding:0px;
+    margin-bottom:0px;
+    font-size:large;
+    margin-top:10px;
+}
+
+#commentJeMeVoit{
+    display:inline-block;
+    height:100px;
+    margin-left:750px;
+    margin-top:20px;
+    background-color:#DAE3F3;
+    border-radius:10px;
+}
+
+#commentJeMeVoit,text{
+    padding-top:35px;
+    text-align:center;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+#ceAQuoiJeRessemble{
+    display:inline-block;
+    height:250px;
+    margin-left:750px;
+    margin-top:30px;
+    background-color:#DAE3F3;
+    border-radius:10px;
+    width:527px;
+    margin-bottom:30px;
+}
+
+#ceAQuoiJeRessemble,text{
+    padding-top:35px;
+    text-align:center;
+    padding-left:5px;
+    padding-right:5px;
+
+}
+
+
+#bouton{
+    display:inline-block;
+    position:absolute;
+    margin-top:50px;
+    margin-right:50px;
+}
+
+.p{
+    margin:0px;
+    display:inline-block;
+}
+
+#surnom{
+    font-weight:bold;
+    font-size:large;
+    text-align:left;
+}
+
+#Photos{
+    padding: 15px 0;
+}
+
+.informationNonEntre{
+    text-align:center;
+    font-style:italic;
+    font-size:19px;
+}
+

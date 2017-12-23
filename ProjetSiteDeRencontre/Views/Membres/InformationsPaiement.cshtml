@@ -1,0 +1,42 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE DANS LAQUELLE ON DEMANDE LES INFORMATIONS DE CARTE DE CRÉDIT AFIN DE 
+    PROCÉDER À L'ACHAT D'UN ABONNEMENT
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.PaiementViewModel
+
+@using (Html.BeginForm("InformationsPaiement", "Membres", FormMethod.Post, new { @id = "formPaiement" })) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="passerAPremium">
+
+        <p class="messageErreurPaiementNonFonctionne">@TempData["MessagePaiementErreur"]</p>
+        @{ 
+            TempData.Remove("MessagePaiementErreur");
+        }
+
+        <h3>Passer à Premium</h3>
+
+        @Html.HiddenFor(p => p.nbMois)
+
+        @{ 
+            ViewBag.disabled = false;
+        }
+        @Html.Partial("InformationsCarteCreditPartial")
+
+        <div class="divBtnPaiement">
+            <input type="submit" value="Suite" class="btnPaiement" />
+        </div>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

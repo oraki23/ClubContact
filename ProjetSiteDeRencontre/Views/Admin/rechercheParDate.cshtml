@@ -1,0 +1,29 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE CONTENANT LA RECHERCHE PAR DATE POUR LES DIFFÉRENTES PARTIE DE GESTION 
+    DU SITE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.GestionViewModel
+
+<div class="rechercheDate">
+    <div class="dateDebut">
+        <h3>Date début:</h3>
+        @Html.EditorFor(m => m.jourDebut, new { htmlAttributes = new { @class = "editeurJourRecherche" } })
+        @Html.DropDownListFor(m => m.moisDebut, (SelectList)ViewBag.moisDebutViewBag, "", new { @class = "editeurMoisRecherche" })
+        @Html.DropDownListFor(m => m.anneeDebut, (SelectList)ViewBag.anneeDebutViewBag, "", new { @class = "editeurMoisRecherche" })
+    </div>
+
+    <div class="dateFin">
+        <h3>Date fin:</h3>
+        @Html.EditorFor(m => m.jourFin, new { htmlAttributes = new { @class = "editeurJourRecherche" } })
+        @Html.DropDownListFor(m => m.moisFin, (SelectList)ViewBag.moisFinViewBag, "", new { @class = "editeurMoisRecherche" })
+        @Html.DropDownListFor(m => m.anneeFin, (SelectList)ViewBag.anneeFinViewBag, "", new { @class = "editeurMoisRecherche" })
+    </div>
+    <button type="submit">Rechercher</button>
+</div>

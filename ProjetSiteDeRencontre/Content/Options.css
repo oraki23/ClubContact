@@ -1,0 +1,386 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    OPTIONS DU CONTRÔLEUR MEMBRES
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+/*DÉBUT OPTIONS*/
+.pageOptions{
+    text-align:center;
+    margin:10px;
+}
+
+.pageOptionsAbonnement{
+    margin:10px;
+    display:block;
+    text-align:center;
+}
+
+.optionsAbonnements{
+    height:600px;
+    display:inline-block;
+    width:675px;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+}
+
+
+.navigationOptions{
+    vertical-align:top;
+    display:inline-block;
+    float:left;
+    width:20%;
+    border:2px solid #C826C8;
+    border-radius:15px;
+    min-height:400px;
+}
+.navigationOptions h3{
+    margin:10% 0;
+    font-weight:bold;
+    font-size:30px;
+    color:#3f4db8;
+}
+
+/*.navigationOptions .parametre{
+    background-color:grey;
+    transition: background-color 0.1s ease;
+    cursor:pointer;
+}
+.navigationOptions .parametre:hover{
+    background-color:lightgrey;
+}*/
+
+/*.lesOptions{
+    vertical-align:top;
+    display:inline-block;
+    width:75%;
+}*/
+
+.divOptions{
+    display:block;
+    width:79%;
+    background-color:#f6ffc7;
+    font-size:20px;
+    vertical-align:top;
+    margin-left:21%;
+    padding-bottom:0.5%;
+}
+
+.divOptions2{
+    display:block;
+    width:100%;
+    font-size:20px;
+    text-align:center;
+    vertical-align:top;
+    padding-bottom:0.5%;
+}
+
+.UNmois h3, .SIXmois h3, .DOUZEmois h3{
+    margin: 2% 0;
+    font-weight:bold;
+    font-size:30px;
+    color:#3f4db8;   
+}
+
+.divOptions h3{
+    text-align:center;
+    margin: 2% 0;
+    padding:4% 0;
+    font-weight:bold;
+    font-size:30px;
+    color:#3f4db8;  
+}
+
+.divOptions h4{
+    text-align:center;
+    margin: 2% 0;
+    font-size:25px;
+}
+
+.divOptions2 h3{
+    text-align:center;
+    padding:1% 0;
+    font-weight:bold;
+    font-size:30px;
+    color:#3f4db8;  
+}
+
+.divOptions2 h4{
+    text-align:center;
+    margin: 2% 0;
+    font-size:25px;
+}
+
+.dejaAbonnee{
+    font-size:20px;
+}
+
+.titreAbonnement{
+    font-size:30px;
+    font-weight:bold;
+    color:#3f4db8;
+}
+
+.optionsAbonnements h4{
+    font-size:25px;
+    margin-bottom:2%
+}
+
+.champOPT{
+    position:relative;
+    width:70%;
+    margin:auto;
+    margin-right:25%;
+    text-align:right;
+}
+
+.labelsOPT{
+    color:#84197d;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:30px;
+    font-weight:bold;
+}
+.labelsOPT label{
+    margin:0;
+}
+.labelsOPT p{
+    font-weight:bold;
+    display:inline-block;
+    margin:0;
+}
+
+.boutonMDP{
+    width:15%;
+    margin: 3% 43%;
+    display:block;
+    height:40px;
+    background-color:#C826C8;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px; 
+}
+
+.editeursOPT{
+    width:100%;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+
+.editeurOPT{
+    vertical-align:middle;
+    width:40%;
+    display:inline-block;
+    margin: .5em 0;
+}
+.messageErreur{
+    display:block;
+    padding:0px 5px 0px 0px;
+    color:red;
+}
+.confirmationMDPModifier{
+    color:green;
+}
+
+.boutonSupp{
+    width:20%;
+    margin: 3% 40%;
+    display:block;
+    height:40px;
+    background-color:#C826C8;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px; 
+}
+
+.avantagesPremium{
+    list-style-type:none;
+    display:inline-block;
+    margin:2%;
+    font-size:18px;
+}
+
+
+.avantagesPremium2{
+    list-style-type:none;
+    display:inline-block;
+    margin:2%;
+    font-size:18px;
+}
+
+/*FIN OPTIONS*/
+/*DÉBUT ABONNEMENT*/
+
+.UNmois, .SIXmois, .DOUZEmois{
+    text-align:left;
+    display:inline-block;
+    height:190px;
+    width:650px;
+    font-size:18px;
+    border:solid #808080;
+    margin-bottom:15px;
+    border-radius:10px;
+}
+
+.conteneur1mois,.conteneur6mois,.conteneur12mois{
+    display:inline-block;
+}
+
+.SIXmois{
+    overflow:hidden;
+    position:relative;
+}
+
+.DOUZEmois{
+    overflow:hidden;
+    position:relative;
+}
+
+.banderole p{
+    transform:rotate(40deg);-moz-transform:rotate(40deg);-webkit-transform:rotate(40deg);
+    background-color:red;
+    border-radius:5px;
+    text-align:center;
+    color:white;
+    display:inline-block;
+    right:-40px;
+    position:absolute;
+    top:40px;
+    width:200px;
+    font-size:15px;
+    overflow:hidden;
+}
+
+.banderole2{
+    transform:rotate(40deg);-moz-transform:rotate(40deg);-webkit-transform:rotate(40deg);
+    background-color:red;
+    border-radius:5px;
+    text-align:center;
+    color:white;
+    display:inline-block;
+    position:absolute;
+    right:-40px;
+    top:40px;
+    width:200px;
+    font-size:15px;
+}
+
+.rectangleDroite{
+    display:inline-block;
+    height:605px;
+    width:550px;
+    border-radius:10px;
+    color:black;
+    vertical-align:top;
+    border:solid #808080;
+    text-align:left;
+}
+
+.rectangleDroite img{
+    height:30px;
+    width:30px;
+    margin:8px;
+}
+
+.titreRectangle{
+    font-size:35px;
+
+    margin:5px;
+
+    text-align:center;
+}
+
+.texteRectangle{
+    font-size:20px;
+    font-weight:bold;
+    margin:0px 0px 0px 0px;
+    height:35px;
+
+}
+
+.textePetitRectangle{
+    margin-left:45px;  
+    color:darkgray;
+}
+
+.SIXmois h5, .DOUZEmois h5, .UNmois h5{
+    font-size: 20px;
+    font-weight:bold;
+    display:inline-block;
+}
+
+.image{
+    width:75px;
+    height:75px;
+    display:inline-block;
+    vertical-align:top;
+    margin-top:15px;
+}
+
+.economie{
+    display:inline-block;
+    width:150px;
+    height:80%;
+    color:red;
+    margin-top:0.5%;
+    font-family:'Baskerville Old Face';
+    left:2%;
+}
+
+.economie h5{
+    margin:0px;
+    margin-top:5px;
+    padding:0px;
+}
+
+.economie p{
+    font-size:45px;
+    margin:0px;
+    padding:0px;
+}
+
+.troisBout{
+    display:inline-block;
+    width:150px;
+    height:60%;
+    vertical-align:top;
+    margin-left:5px;
+    margin-top:15px;
+}
+
+#prix{
+    font-size:18px;
+    margin:0px;
+}
+
+#btn1mois {
+    background-color:#3f4db8;
+    color:white;
+    border-radius:25px;
+    height:50px;
+    width:200px;
+    display:inline-block;
+    top:100px;
+}
+
+#btn6mois, #btn12mois{
+    background-color:#3f4db8;
+    color:white;
+    border-radius:25px;
+    height:50px;
+    width:200px;
+    display:inline-block;
+    position:absolute;
+    top:115px;
+}
+/*FIN ABONNEMENT*/

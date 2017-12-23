@@ -1,0 +1,2437 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE COMMUNE POUR TOUS LES PAGES,
+    CONTIENT DIVERS STYLE POUR CERTAINS ÉLEMENTS
+    ET CARRÉMENT DES STYLES DE PAGE COMPLÈTES (PAS TROP COMPLEXE) AFIN D'ÉVITER
+    D'AVOIR TROP DE FICHIERS CSS.
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+$vertLime: #f6ffc7;
+$couleurBoutonMauve: #C826C8;
+$couleurMauvePlusFonce:#881983;
+
+@mixin user-select{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+body {
+    min-width:930px;
+    position:relative;
+    min-height:1024px; /*Solution temporaire*/
+}
+
+
+/*Le logo*/
+.logo{
+    display:inline-block;
+    width: 100%;
+    height:100%;
+}
+
+#lienLogo{
+    width:180px;
+    height:100%;
+    display:inline-block;
+    padding-bottom:15px;
+    margin:10px 5px 0px 15px;
+}
+
+.titreSite{
+    position:relative;
+    display:inline-block;
+    margin-left:10px;
+    vertical-align:middle;
+    p{
+        font-size:30px;
+        color:#84197d;
+        height:100%;
+        width:100%;
+        padding-bottom:3px;
+        margin:0;
+    }
+}
+
+@media screen and (max-width: 920px)
+{
+    .titreSite{
+        display:none;
+    }
+}
+
+/*---------*/
+/*700px max de largeur?*/
+
+#barreHaut{
+    position:relative;
+    display:block;
+    width:100%;
+    padding: 3px 6px 0px 3px;
+    background-color:#a4d555;
+    /*height: 120px;*/
+}
+
+nav{
+    text-align:right;
+    width:1000px;
+    margin-right:10px;
+    position: absolute;
+    bottom:0;
+    right:0;
+}
+
+#menu{
+    padding:0;
+    display:inline;
+
+    li{
+        &:hover ul{
+            display:block;
+            background-color:#ffffff;
+        }
+
+        display: inline-block;
+        list-style-type:none;
+        position: relative;
+        margin-right:5px;
+
+        a{
+            text-decoration:none;
+        }
+
+        ul{
+            display:none;
+            position:absolute;
+            z-index:1;
+            padding:0;
+            margin:0;
+            left:0;
+            top:32px;
+            width:120%;
+        }
+        li{
+            border-bottom:5px solid #a4d555;
+            display:block;
+            padding:0;
+            margin:0;
+            &:hover{
+                background-color:#a4d555;
+            }
+        }
+    }
+
+    p{
+        text-align:left;
+        font-size: 16px;
+    }
+}
+.texteMenu{
+    text-align:center !important;
+    display:inline-block;
+    color: #841983;
+}
+
+.icones{
+    margin:1px;
+    width:21px;
+}
+.imgProfil{
+    margin: 1px;
+    max-width:25px;
+    max-height:25px;
+}
+
+/*Menu secondaire (dropdown)*/
+.lienDropdown{
+    color: #841983;
+    margin: 0 15px;
+    &:hover{
+        color:#841983;
+    }
+}
+
+#menuCompte{
+    left:-60px !important;
+    width:140px !important;
+}
+
+
+/*Footer*/
+
+.contenuSansFooter{
+    padding-bottom:80px;
+}
+
+footer{
+    background-color:#a4d555;
+    height:80px;
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    text-align:center;
+    line-height:80px;
+
+    p{
+        margin: auto;
+    }
+
+    a{
+        margin: 0 45px;
+        font-size: 16px;
+        color:#852181;
+
+        &:hover{
+            color:#a444d7;
+            text-decoration:none;
+        }
+    }
+}
+
+/*@media screen and (max-width: 700px)
+{
+    footer a{
+        margin:0 15px;
+    }
+}
+@media screen and (max-width: 460px)
+{
+    footer{
+        background-color:#a4d555;
+        height:90px;
+        width: 100%;
+        position: absolute;
+        bottom:0;
+        line-height:28px;
+    }
+
+    footer a{
+        font-size:15px;
+        padding: 0;
+        width:auto;
+        height:20px;
+        display:block;
+    }
+}*/
+
+
+
+/*Common Stuff*/
+
+.colorText{
+    color:#84197d;
+}
+
+.centerW60H40px{
+    width:60%;
+    height:40px;
+    margin: 0 auto;
+}
+
+.floatRight{
+    float:right;
+}
+
+.floatLeft{
+    float:left;
+}
+
+.alignCenter{
+    text-align:center;
+}
+
+.alignRight{
+    text-align:right;
+}
+
+.w100h100{
+    width:100%;
+    height:100%;
+}
+
+.w5{
+    display:inline-block;
+    width:5%;
+}
+
+.photo240x240{
+    display:inline-block;
+    width:240px;
+    height:240px;
+    margin-bottom:15px;
+}
+
+.photo150x150{
+    display:inline-block;
+    max-width:150px;
+    max-height:150px;
+    min-height:25px;
+    min-width:25px;
+}
+
+.photo30x30{
+    display:inline-block;
+    width:30px;
+    height:30px;
+}
+
+.lignePhoto{
+    display:inline-block;
+    width:100%;
+}
+.divRadioButton{
+    display:inline-block;
+    width:20%;
+    padding:0;
+    margin:0;
+}
+.inputPhoto{
+    display:inline-block !important;
+    width:145px;
+    margin-right:5%;
+}
+
+.padding0{
+    padding:0 !important;
+}
+
+.ajouterPhotos{
+    cursor:pointer;
+}
+
+/*----------Slideshow---------*/
+.entetePhoto{
+    position:relative;
+    overflow:hidden;
+    background-color:lightblue;
+    border-radius:106px;
+    height:650px;
+}
+
+.slideshow-container{
+    max-width:1200px;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    margin:60px auto 0 auto;
+    padding: 0 50px;
+}
+
+.mySlides{
+    position:relative;
+    z-index:1;
+    display:none;
+}
+
+.prev, .next{
+    @include user-select;
+    cursor:pointer;
+    position:absolute;
+    top:50%;
+    width:auto;
+    margin-top:-22px;
+    padding:16px;
+    color:white;
+    font-weight:bold;
+    font-size:18px;
+    transition:0.6s ease;
+    border-radius:0 3px 3px 0;
+
+    &:hover{
+        text-decoration:none;
+        background-color: rgba(0,0,0,0.8);
+    }
+}
+
+.prev{
+    left:0;
+}
+
+.next{
+    right:0;
+    border-radius: 3px 0 0 3px;
+}
+
+.text{
+    color: #f2f2f2;
+    font-size:15px;
+    padding:8px 12px;
+    position:absolute;
+    bottom:8px;
+    width:100%;
+    text-align:center;
+}
+
+.numberText{
+    color: #f2f2f2;
+    font-size:12px;
+    padding:8px 12px;
+    position:absolute;
+    top:0;
+}
+
+.active{
+    background-color: #717171;
+}
+
+.fade{
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name:fade;
+    animation-duration: 1.5s;
+    animation-fill-mode:forwards;
+}
+
+@-webkit-keyframes fade{
+    from{opacity: .4}
+    to{opacity: 1}
+}
+@keyframes fade{
+    from{opacity: .4}
+    to{opacity: 1}
+}
+
+
+.photoDetailLaPhoto{
+    display:block;
+    margin:0 auto;
+    height:auto;
+    width:auto;
+    min-width:100px;
+    min-height:100px;
+
+    max-width:500px;
+    max-height:500px;
+}
+
+.nextPhotoCarousel, .prevPhotoCarousel{
+    position:absolute;
+    top:40%;
+    z-index:0 !important;
+}
+
+.prevPhotoCarousel{
+    margin-left:50px;
+    left:0;
+} 
+    
+.nextPhotoCarousel{
+    margin-right:50px;
+    right:0;
+}
+
+.nextPrevPhoto{
+    opacity:0.7;
+}
+
+.photoDetailPrincipale{
+    padding-top:0 !important;
+}
+
+.photoDetail{
+    padding-top:49px;
+}
+
+.photoProfil{
+    max-height:500px;
+    border: 10px solid green !important;
+}
+
+.titrePhotoProfil{
+    font-size:35px;
+    font-weight:bold;
+    margin:0 0 11px 0;
+}
+.col2{
+    display:inline-block;
+    vertical-align:top;
+    width:49%;
+}
+.textRaisonSite{
+    list-style-type:none;
+}
+
+.sectionPresentation{
+    background-color:beige;
+}
+
+/*Nouvelle version Page détails*/
+.raisonsSite{
+    margin-bottom:6%;
+    margin-top:6%;
+}
+
+.colDroite{
+    display:inline-block;
+    margin:1%;
+    text-align:center;
+    min-width:260px;
+    width:17%;
+    float:left;
+    vertical-align:top;
+}
+
+.presentation, .interactions, .progressBar{
+    border-radius:10px;
+    border:5px solid #881983;
+}
+
+.presentation{
+    padding-top: 10%;
+    img{
+        max-width:100%;
+        max-height:100%;
+    }
+}
+.imageProfilEtoile{
+    margin: 0 auto;
+    max-width:90%;
+    max-height:90%;
+    position:relative;
+}
+.ajouterFavorisEtoile{
+    position:absolute;
+    bottom:0;
+    right:0;
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    background-repeat:no-repeat;
+    background-position:right;
+}
+.etoileFavoris{
+    width:100%;
+    height:100%;
+}
+
+
+.informationsBase, .interactions .nonConnecte h3, .cadeauxRecus{
+    border-bottom:1px solid #881983;
+}
+
+.informationsBase{
+    padding: 10% 0;
+    padding:13px;
+
+    h2, h1{
+        margin:4% 0;
+    }
+    h1{
+        font-size:35px;
+        font-weight:bold;
+        padding:7%;
+    }
+    h2{
+        font-size:25px;
+    }
+}
+
+.raisonsSite{
+    h3,h4{
+        font-weight:bold;
+    }
+    h3{
+        margin: 5% 0;
+    }
+    h4{
+        font-size:17px;
+    }
+}
+
+.listeRaisonsSite{
+    padding:0;
+    margin:0;
+    font-size:17px;
+
+    li{
+        margin:1%;
+    }
+}
+
+.interactions{
+    margin-top:10%;
+
+    h3{
+        margin:0;
+        padding: 7% 0 17% 0;
+        font-weight:bold;
+        font-size:30px;
+    }
+    h4{
+        margin-top:8%;
+        font-size:20px;
+        font-weight:bold;
+    }
+}
+
+.navigation{
+    margin: 5%;
+}
+
+.boutonProprieteGenerales{
+    width:70%;
+    margin: 3% auto;
+    display:block;
+    text-align:center;
+    height:40px;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+}
+
+.boutonBloquerActive, .boutonBloquerNonActive, .boutonInteraction{
+    @extend .boutonProprieteGenerales;
+    img{
+        height:20px;
+        width:20px;
+        margin-right:5px;
+    }
+}
+
+.boutonInteraction{
+    background-color:$couleurBoutonMauve;
+}
+
+.boutonBloquerNonActive{
+    background-color:#a7a7a7;
+
+    &:hover{
+        background-color:red;
+    }
+}
+
+.boutonBloquerActive{
+    background-color:red;
+    
+    &:hover{
+        background-color:#a7a7a7;
+    }
+}
+
+.boutonSuggestionNonPremium{
+    @extend .boutonProprieteGenerales;
+    background-color:grey;
+}
+
+.boutonNavigation{
+    @extend .boutonProprieteGenerales;
+    background-color:#e245ff;
+    font-size:15px; 
+}
+
+.cadeauxRecus{
+    padding: 10% 0;
+}
+
+.lienVersPages{
+    color: #C826C8;
+    text-decoration:none;
+    font-size:20px;
+    display:block;
+
+    &:visited, &:focus, &:hover{
+        text-decoration:none;
+    }
+    &:visited, &:focus{
+        color:#C826C8;
+    }
+    &:hover{
+        color:blue;
+    }
+}
+
+.progressBar{
+    margin-bottom: 10%;
+    padding:5% 0;
+
+    progress{
+        border-radius:5px;
+        background-color:red;
+        vertical-align:middle;
+        &::-webkit-progress-bar{
+            border-radius:5px;
+            background-color:grey;
+        }
+        &::-webkit-progress-value{
+            border-radius:5px;
+            background-color:#22b8ee;
+        }
+        &::-moz-progress-bar{
+            border-radius:5px;
+            background-color:#22b8ee;
+        }
+    }
+
+    h3{
+        font-size:20px;
+        margin: 0 0 5% 0;
+        padding: 0;
+        font-weight:bold;
+    }
+    p{
+        height:100%;
+        display:inline-block;
+        font-size:15px;
+        margin:0;
+    }
+}
+
+.colPrincipale{
+    overflow:hidden;
+    min-height:1200px;
+    display:inline-block;
+    width:68%;
+    background-color:#f6ffc7;
+    margin:1%;
+    h2{
+        padding: 0 0 3% 0;
+        font-weight:bold;
+        font-size:3em;
+        border-bottom:1px solid #881983;
+        margin:3% 0 0 0;
+        color: #3f4db8;
+    }
+}
+
+.col1{
+    display:inline-block;
+    vertical-align:top;
+    width:47%;
+    height:100%;
+    min-width:370px;
+    margin: 0.2% 0.9% 0 0.9%;
+}
+.border{
+    vertical-align:top;
+    display:inline-block;
+    padding-bottom:9999px;
+    margin-bottom:-9999px;
+    width:1px;
+    border: 1px dotted #881983;
+    background-repeat: repeat;
+}
+
+@media screen and (max-width: 1161px)
+{
+    .border{
+        border:none;
+        width:3px;
+        margin-bottom:0;
+        padding-bottom:0;
+    }
+}
+
+@media screen and (max-width: 1150px)
+{
+    .border{
+        display:none;
+    }
+}
+
+.description{
+    text-align:left;
+    h3{
+        text-align:center;
+        font-size:26px;
+        font-weight:bold;
+        margin: 5% 0 6% 0;
+    }
+    p{
+        font-size:19px;
+    }
+}
+
+.physique h3{
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+    margin: 0 0 6% 0;
+}
+
+.labels{
+    display:inline-block;
+    width:49%;
+}
+
+.propriete{
+    font-size:18px;
+    margin-bottom:10px;
+
+    p{
+        display:inline-block;
+        text-align:left;
+        margin:0;
+        float:right;
+        max-width:2000px;
+        width:40%;
+    }
+}
+
+.labels{
+    text-align:right;
+}
+
+.mesInterets h3{
+    font-size:26px;
+    font-weight:bold;
+}
+.labelHobbiesMusique{
+    display:list-item;
+    font-size:15px;
+    text-align:left;
+    list-style-type:circle;
+}
+
+.iconesLabel, .labelHobbies{
+    display:block;
+}
+
+#Hobbies{
+    text-align:left;
+    .iconesLabel{
+        width:40px;
+        height:40px;
+        margin:0 auto;
+    }
+    .labelHobbies{
+        font-size:15px;
+        text-align:center;
+    }
+    h3{
+        vertical-align:middle;
+        margin:0 0 0 15px;
+        display:inline-block;
+        font-size:25px;
+    }
+}
+
+.unHobbie{
+    display:inline-block;
+    margin: 15px 15px;
+    width:25%;
+    height:25%;
+}
+.unHobbieMusique{
+    display:block;
+    margin: 15px 40px;
+}
+
+.unType{
+    margin-bottom:45px;
+}
+.iconesTitre{
+    vertical-align:middle;
+    display:inline-block;
+    width:7%;
+    height:100%;
+    position:relative;
+}
+.titre{
+    margin-bottom:2%;
+    width:100%;
+    height:25%;
+    vertical-align:middle;
+    display:block;
+    position:relative;
+    color:#3f4db8;
+    h4{
+        vertical-align: middle;
+        margin: 0 0 0 15px;
+        display: inline-block;
+        font-size: 24px;
+        font-weight:bold;
+    }
+    h2{
+        color:black;
+    }
+}
+
+.endroit h3{
+    font-size:26px;
+    font-weight:bold;
+    margin: 8% 0 6% 0;
+}
+
+.autresDetails h3{
+    font-size:26px;
+    font-weight:bold;
+    margin: 8% 0 6% 0;
+}
+
+.proprieteEnfants{
+    text-align:left;
+    margin-left:15%;
+    font-size:18px;
+}
+
+.colLeft > div{
+    margin-bottom: 15%;
+}
+
+.contenu h3{
+    color:#3f4db8;
+}
+
+.boutonCompleterProfil{
+    margin-top: 10%;
+}
+#googleMaps{
+    width:100%;
+    height:400px;
+    margin-top:15%;
+}
+
+/*INDEX*/
+
+.unePersonne{
+    vertical-align:top;
+    width:510px;
+    display:inline-block;
+    background-color:#f6ffc7;
+    border: 5px solid #881983;
+    height:250px;
+    margin:1%;
+    border-radius:50px;
+}
+
+@media screen and (max-width:1161px)
+{
+    .unePersonne{
+        margin-left: auto;
+        margin-right:auto;
+    }
+}
+
+.photoProfilRecherche{
+    margin: 0 auto;
+    vertical-align:top;
+    display:inline-block;
+    margin:5%;
+    vertical-align:top;
+    max-width:169px;
+    max-height:220px;
+}
+.photoAffiche{
+    max-width:100%;
+    max-height:170px;
+
+    min-height:169px;
+    min-width:169px;
+}
+.informations{
+    margin: 5% 0;
+    text-align:left;
+    width:45%;
+    height:100%;
+    display:inline-block;
+    max-height:200px;
+    h3{
+        font-size:36px;
+        font-weight:bold;
+        margin:0;
+        margin-bottom:3%;
+    }
+    p{
+        font-size:20px;
+        margin:0;
+    }
+}
+
+.boutonVoirProfilRecherche{
+    margin-top:8%;
+    width:80%;
+    display:block;
+    height:30px;
+    background-color:#e245ff;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px;
+}
+
+.resultatRecherche{
+    display:inline-block;
+    width:100%;
+    margin: 2% 0;
+    text-align:center;
+}
+.pagi{
+    text-align:center;
+}
+
+.page {
+  padding-left: 0;
+  margin: 20px 0;
+  border-radius: 4px;
+  li{
+      margin:0; 
+      display:inline-block;
+      a{
+          border:1px solid #881983;
+        border-radius: 4px;
+        text-decoration:none;
+        padding:10px 15px;
+        color:#00b0f0;
+
+        &:hover{
+            background-color:#881983;
+            color:#00b0f0;
+        }
+      }
+  }
+}
+.activePage{
+    background-color:#881983;
+}
+
+.couronne{
+    vertical-align:middle;
+    width:25px;
+    height:25px;
+}
+.couronneDetails{
+    width:55px;
+    height:55px;
+}
+/*FIN INDEX*/
+
+/*DÉBUT TRIPAR*/
+.barreDuHaut{
+    margin-left:20%;
+    width:75%;
+}
+.nbResultatsRecherche{
+    vertical-align:middle;
+    display:inline-block;
+    width:74%;
+
+    p{
+        margin:0;
+        font-size:27px;
+        font-weight:bold;
+    }
+}
+
+.triPar{
+    vertical-align:middle;
+    width:24%;
+    display:inline-block;
+    margin:1% 0 1% 0;
+    text-align:right;
+    p{
+        vertical-align:middle;
+        margin:0 11px 0 0;
+        display:inline-block;
+        font-size:20px;
+    }
+    select{
+        vertical-align:middle;
+        height:30px;
+        border: 1px solid black;
+        border-radius:4px;
+        padding:5px;
+    }
+}
+/*FIN TRIPAR*/
+
+/*RECHERCHE*/
+.recherchePropriete, .rechercheValeurMaxMin{
+    margin: 10px 0;
+    label{
+        display:block;
+    }
+}
+
+.rechercheAutres .etrePremium{
+    text-align:center;
+}
+
+.lesBoutonsRecherche{
+    text-align:right;
+    button{
+        margin: 10px 1%;
+        display:inline-block;
+        background-color:#C826C8;
+        border-radius:10px;
+        color:white;
+        text-shadow:none;
+        font-size:16px;
+    }
+}
+.boutonRecherche{
+    width:20%;
+    height:40px;
+}
+.boutonEfface{
+    width:10%;
+    height:30px;
+}
+
+.recherchePropriete{
+    display:inline-block;
+    width:11%;
+    margin:0 1%;
+    label{
+        margin-bottom:7%;
+    }
+    .criteresEditeurs{
+        width:100%;
+        display:block;
+
+        height:25px;
+        border: 1px solid black;
+        border-radius:4px;
+        padding:3px;
+    }
+    p{
+        display:inline-block;
+    }
+}
+.distanceEntreNous .criteresEditeurs{
+    max-width:35%;
+    display:inline-block;
+    margin-right:2%;
+}
+
+.lesEditeursModele{
+    max-width:20%;
+    display:inline-block;
+
+    height:25px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+    margin:0 1%;
+}
+
+.rechercheValeurMaxMin{
+    display:inline-block;
+    width:18%;
+    min-width:203px;
+    .criteresEditeurs{
+        @extend .lesEditeursModele;
+    }
+    p{
+        display:inline-block;
+        font-size:15px;
+        margin:3% 0;
+    }
+}
+
+
+
+.laRecherche{
+    margin:2% 0 0 1%;
+    padding:1% 1.5%;
+    display:block;
+    width:97%;
+    border:5px solid #881983;
+
+    h3, h4{
+        text-align:center;
+        font-weight:bold;
+        color:#22b8ee;
+    }
+
+    h3{
+        margin:3px 0 20px 0;
+        padding:0;
+        font-size:30px;
+    }
+
+    h4{
+        text-align:left;
+        font-size:18px;
+    }
+
+    .rechercheGeographique{
+        display:inline-block;
+        width:35%;
+
+        .recherchePropriete{
+            width:30.5%;
+        }
+    }
+
+    .criteresAmour, .criteresDeBase, .criteresActivites{
+        margin-bottom:30px;
+    }
+
+    .rechercheVisiteur{
+        display:inline-block;
+    }
+
+    .jeRechercheQuoi{
+        h4{
+            display:inline-block;
+            margin-bottom:30px;
+        }
+        .criteresEditeurs{
+            @extend .lesEditeursModele;
+            height:30px;
+        }
+    }
+}
+@media screen and (max-width:1284px)
+{
+    .laRecherche .rechercheGeographique{
+        display:block;
+        margin-top:10px;
+        width:70%;
+    }
+
+    .laRecherche{
+        .recherchePropriete{
+            width:20%;
+        }
+    }
+}
+
+.messageErreurRecherche{
+    color:red;
+    display:inline-block;
+    float:left;
+}
+
+.formIndex{
+    margin-bottom:1%;
+    min-width:10px;
+}
+/*FIN RECHERCHE*/
+
+.boutonAnnulerActivite{
+    width:25%;
+    margin:0 auto;
+    display:block;
+    height:40px;
+    background-color:red;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px; 
+}
+.annulation{
+    font-size:18px;
+}
+
+/*Liste Noire ET listeFavoris*/
+.boutonSauvegarderListeNoireFavoris{
+    width:20%;
+    margin: 3% 25%;
+    display:block;
+    float:right;
+    height:40px;
+    background-color:#C826C8;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px; 
+}
+
+.conteneurMembresListe{
+    text-align:center;
+
+    .messageSiVideListe{
+        font-size:15px;
+        font-style:italic;
+    }
+}
+
+.messageConfirmationListe{ 
+    font-size:18px;
+    font-style:italic;
+    text-align:center;
+    color:green;
+    margin-bottom:3%;
+}
+/*Fin liste Noire ET listeFavoris*/
+
+/*Début VuePartial MembresListe*/
+
+.titreListe{
+    margin:4%;
+    font-weight:bold;
+    font-size:26px;
+}
+
+.membreListe{
+    .infoMembre{
+        display:inline-block;
+        cursor:pointer;
+        width:80%;
+    }
+
+    .photoProfilMembreListeDiv{
+        width:40px;
+        height:40px;
+
+        display:inline-block;
+        img{
+            width:100%;
+            height:100%;
+        }
+    }
+
+    width:50%;
+    margin: 2% auto;
+    border: 2px solid #22b8ee/*#C826C8*/;
+    border-radius:30px;
+    padding:1%;
+
+    p{
+        display:inline-block;
+        font-size:30px;
+        height:50%;
+        margin:0 4%;
+        vertical-align:middle;
+    }
+}
+
+.removeMembre{
+    cursor:pointer;
+}
+/*Fin VuePartial MembresListe*/
+
+/*Début PAIEMENT*/
+.passerAPremium{
+    min-height:900px;
+    background-color:#f6ffc7;
+    width:50%;
+    margin: 0 auto;
+
+    h3{
+        text-align:center;
+        margin:0;
+        padding:0 0 5% 0;
+        font-size:25px;
+        font-weight:bold;
+        color:#075aa9;
+    }
+}
+.divLabelPaiement{
+    margin-right:15%;
+    text-align:right;
+    display:block;
+}
+.labelPaiement{
+    width:50%;
+    color:#84197d;
+    margin-right:30px;
+    margin-bottom:0;
+}
+
+.divEditeurPaiement{
+    display:inline-block;
+    width:40%;
+    margin:0.5em 0;
+    vertical-align:middle;
+}
+
+.editeurPaiement{
+    width:100%;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+.editeurMoisDateExpirationPaiement{
+    width: 55%;
+    display:inline-block;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+.editeurAnneeDateExpirationPaiement{
+    width: 38.5%;
+    display:inline-block;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+.separationDateExpiration{
+    display:inline-block;
+    font-size:25px;
+    margin:0;
+    vertical-align:middle;
+}
+
+.divBtnPaiement{
+    text-align:right;
+    width:100%;
+    padding-right:15%;
+}
+.btnPaiement {
+    width:30%;
+    margin: 4% 0;
+    height:40px;
+    background-color:#C826C8;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:15px; 
+}
+
+.messageErreurPaiement{
+    display:block;
+    padding:0px 5px 0px 0px;
+    color:red;
+}
+.messageErreurPaiementNonFonctionne{
+    display:block;
+    padding:0px 5px 0px 0px;
+    color:red;
+    text-align:center;
+    padding:5% 0 0 0;
+}
+.informationsPaiement{
+    text-align:center;
+
+    h4{
+        font-size:21px;
+        font-weight:bold;
+        margin-bottom:5%;
+    }
+}
+
+.factureDetaillee{
+    font-size:18px;
+    margin-bottom:4.5%;
+    display:block;
+}
+
+.nbMois{
+    display:inline-block;
+    text-align:left;
+}
+
+.prixFacture{
+    display:inline-block;
+    text-align:right;
+}
+
+
+.presentationOptions{
+    width:100%;
+    text-align:center;
+    margin-bottom:7%;
+    h4{
+        font-size:21px;
+        font-weight:bold;
+        margin-bottom:5%;
+    }
+    .choixMoisPaiement{
+        display:inline-block;
+        width:25%;
+
+        .prixTotal{
+            display:inline-block;
+            margin: 1% 10% 1% 1%;
+        }
+    }
+    .radioButtonChoixNbMois{
+        vertical-align:middle;
+        margin:0;
+        margin:6px 6px;
+        height:15px;
+        width:15px;
+    }
+    .labelChoixMois{
+        margin:0;
+        vertical-align:middle;
+        font-size:15px;
+    }
+}
+.choixMoisPaiement p{
+    display:inline-block;
+    margin: 1% 10% 1% 1%;
+}
+
+@media screen and (max-width:1347px)
+{
+    .passerAPremium{
+        width:55%;
+    }
+}
+@media screen and (max-width:1226px)
+{
+    .passerAPremium{
+        width:60%;
+    }
+}
+@media screen and (max-width:1126px)
+{
+    .passerAPremium{
+        width:65%;
+    }
+}
+@media screen and (max-width:1040px)
+{
+    .passerAPremium{
+        width:70%;
+    }
+}
+@media screen and (max-width:967px)
+{
+    .passerAPremium{
+        width:75%;
+    }
+}
+
+/*Fin PAIEMENT*/
+
+/*Début VuProfil*/
+
+.dernieresVisiteSurSonProfil{
+    width:60%;
+    margin:0 auto;
+    padding:1%;
+    background-color:#f6ffc7;
+    min-height:815px;
+    text-align:center;
+
+    .dateVisiteDivider{
+        width:100%;
+        label{
+            display:inline-block;
+            width:30%;
+            font-size:20px;
+        }
+        .videProfil{
+            display:inline-block;
+            width:65%;
+            min-height:1px;
+        }
+    }
+    
+    .aucuneVisiteP{
+        font-size:20px;
+        font-weight:bold;
+    }
+
+    .photoProfilVuProfil{
+        display:inline-block;
+        width:40%;
+        img{
+            max-width:100px;
+            max-height:100px;
+        }
+    }
+
+    .uneVisite{
+        margin-bottom:20px;
+
+        p{
+            font-size:16px;
+        }
+    }
+
+    .dateVisite{
+        display:inline-block;
+        width:25%;
+    }
+
+    h2{
+        font-size:25px;
+        font-weight:bold;
+        text-align:center;
+        margin-bottom:30px;
+    }
+    .laPersonneLien{
+        text-align:left;
+        width:25%;
+        display:inline-block;
+    }
+
+    a{
+        font-size:20px;
+        margin: 1% 1% 1% 1%;
+        cursor:pointer;
+
+        &:hover{
+            text-decoration:none;
+            color:#881983;
+        }
+    }
+}
+
+/*Fin VuProfil*/
+
+/*Début Messagerie*/
+
+/*Début SEND*/
+.divPrincipalMessage{
+    .divEnvoyerMessageAvecActions{
+        border:1px solid #881983;
+        border-radius:10px;
+        margin:0 10px;
+        padding:20px 10px;
+        background-color:$vertLime;
+        display:inline-block;
+        width:76%;
+
+        .envoyerMessage{
+            width:70%;
+            margin: 0 auto;
+
+            .validationSummary{
+                margin:10px;
+                .messageErreur{
+                    display:block;
+                    color:red;
+                }
+            }
+            
+
+            .sujetMessage{
+                width:100%;
+                .labelEtEditeur{
+                    label{
+                        width:17%;
+                        font-size:20px;
+                    }
+                    .editeurSujet{
+                        border: 1px solid black;
+                        border-radius:4px;
+                        height:30px;
+                        padding:8px;
+                        font-size:15px;
+                        width:80%;
+                        margin-bottom:20px;
+                    }
+                }
+            }
+
+            .contenuMessage{
+                width:95%;
+                margin: 0 auto;
+                
+                
+                .contenuMessageTextArea{
+                    width:100%;
+                    min-height:100px;
+                    min-width:100%;
+                    max-width:100%;
+                    border:1px solid black;
+                    border-radius:4px;
+                    padding:8px;
+                }
+            }
+
+            h3{
+                font-weight:bold;
+                font-size:30px;
+                text-align:center;
+                margin:20px 0 50px 0;
+                padding:0;
+            }
+        }
+
+        .lesBoutonsMessagerie{
+            margin:20px auto;
+            text-align:right;
+            width:65%;
+        }
+        .boutonEnvoyer{
+            display:inline-block;
+            width:30%;
+            button{
+                width:100%;
+                margin: 3% auto;
+                text-align:center;
+                height:40px;
+                border-radius:10px;
+                color:white;
+                text-shadow:none;
+                background-color:$couleurBoutonMauve;
+            }
+        }
+
+        .boutonEnvoyer{
+            img{
+                vertical-align:middle;
+                width:25px;
+                height:20px;
+                margin-right:5px;
+                margin-bottom:2px;
+            }
+        }
+
+    }
+}
+/*Fin SEND*/
+
+.boutonsMessageCocher{
+    width:78%;
+    text-align:left;
+    margin-right:0;
+    margin-left:auto;
+
+    div{
+        display:inline-block;
+    }
+
+    button {
+            width: 210px;
+            margin: 0 30px 10px auto;
+            text-align: center;
+            height: 40px;
+            border-radius: 10px;
+            color: white;
+            text-shadow: none;
+            background-color: $couleurBoutonMauve;
+
+            &:disabled{
+               background-color:grey;
+            }
+
+            img{
+                vertical-align:middle;
+                width:25px;
+                height:20px;
+                margin-right:5px;
+                margin-bottom:2px;
+            }
+        }
+    .boutonSupprimerInbox .boutonSupprimerBouton{
+        background-color:red;
+        &:disabled{
+               background-color:grey;
+            }
+    }
+}
+
+@mixin vertical-align($position: relative) {
+  position: $position;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.envoyeur{
+    position:relative;
+}
+
+.ajouterOuSupprimerContactsDiv{
+    margin-left:10px;
+    display:inline-block;
+    width: 25px;
+    height: 25px;
+    vertical-align:middle;
+}
+
+.ajouterOuSupprimerContacts, .ajouterOuSupprimerContactsVenantDeA{
+    position:relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size:20px;
+    padding:0;
+    line-height:100%;
+    margin:0;
+    border-radius: 4px;
+    color: white;
+    text-shadow: none;
+    background-color: $couleurBoutonMauve;
+}
+
+.boutonToutSupprimer {
+        text-align: right;
+
+        button {
+            width: 240px;
+            margin: 0 30px 10px auto;
+            text-align: center;
+            height: 40px;
+            border-radius: 10px;
+            color: white;
+            text-shadow: none;
+            background-color: red;
+        }
+}
+
+.divPrincipalMessage {
+
+    .lesMessagesEtActions{
+        width:76%;
+        display:inline-block;
+    }
+
+    .lesMessages {
+        display: inline-block;
+        width: 100%;
+        border: 1px solid #881983;
+        border-radius: 10px;
+        margin: 0 10px;
+        padding: 20px 10px;
+        font-size: 18px;
+
+        .nonLu {
+            p {
+                font-weight: bold;
+            }
+        }
+
+        .boiteVide {
+            text-align: center;
+            font-style: italic;
+            margin: 10% 0;
+        }
+
+        hr {
+            margin: 20px -10px;
+            border: 0;
+            border-top: 1px solid #881983;
+        }
+
+        .unSeulMessage{
+            display:block;
+            width:100%;
+
+            background-color: $vertLime;
+            padding: 10px 0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .cocher{
+            margin:5px 0px 5px 15px;
+            padding:0;
+            display:inline-block;
+            width:2%;
+
+            text-align:center;
+            input{
+                margin:0;
+                padding:0;
+
+                width:15px;
+                height:15px;
+            }
+        }
+
+        .unMessage {
+            display:inline-block;
+            width:95%;
+            cursor: pointer;
+            
+
+            div {
+                text-align: center;
+                display: inline-block;
+            }
+
+            p {
+                margin: 0;
+                padding: 0;
+            }
+
+            .sender {
+                width: 25%;
+            }
+
+            .objet {
+                text-align: left;
+                width: 40%;
+            }
+
+            .dateEnvoie {
+                width: 30%;
+            }
+        }
+    }
+}
+
+
+.titreBarreNavMessage{
+
+    text-align:center;
+    padding:20px 0;
+    border-bottom:1px solid $couleurMauvePlusFonce;
+    width:100%;
+    p{
+        font-weight:bold;
+        margin:0;
+        font-size:20px;
+    }
+}
+
+.sideBar{
+    vertical-align:top;
+    display:inline-block;
+    width:20%;
+    margin-left:10px;
+}
+
+.listeContacts{
+    border:2px solid $couleurMauvePlusFonce;
+    border-radius:5px;
+    width:100%;
+    font-size:17px;
+}
+
+.barreNavMessage{
+    border:2px solid $couleurMauvePlusFonce;
+    border-radius:5px;
+    width:100%;
+    font-size:17px;
+
+    .elementActuel{
+        background-color:lightgrey;
+
+        p{
+            font-weight:bold;
+        }
+    }
+
+    .unElement{
+        &:hover{
+            background-color:lightgrey;
+        }
+        padding:10px 2px 10px 10px;
+
+        border-radius:4px;
+        margin: 10px 0;
+
+        cursor:pointer;
+
+        p{
+            margin:0;
+            padding:0;
+        }
+
+        a{
+            color:black;
+
+            &:hover{
+                text-decoration:none;
+            }
+        }
+    }
+}
+
+/*Début VoirMessage*/
+.tousLesTitre{
+    width:100%;
+}
+.cocherTous {
+    margin: 5px 0px 5px 15px;
+    padding: 0;
+    display: inline-block;
+    width: 2%;
+    text-align: center;
+
+    input {
+        margin: 0;
+        padding: 0;
+        width: 15px;
+        height: 15px;
+    }
+}
+.titreListeMessage{
+    display:inline-block;
+    font-size:20px;
+    width:95%;
+    //text-align:right;
+    .senderTitle, .objetTitle, .dateEnvoieTitle{
+        display:inline-block;
+    }
+    .senderTitle{
+        text-align:center;
+        width:25%;
+    }
+    .objetTitle{
+        text-align:left;
+        width:40%;
+    }
+    .dateEnvoieTitle{
+        text-align:center;
+        width:30%;
+    }
+}
+
+.titreMessagerie{
+    text-align:center;
+    font-weight:bold;
+    font-size:40px;
+    color:#881983;
+    margin:30px 0;
+}
+
+.liensAvecHoverDisabled{
+    a{
+        color:black;
+        &:hover, &:active, &:focus{
+               color:#881983;
+               text-decoration:none;
+        }
+    }
+}
+
+.photoProfilMessage{
+    display:inline-block;
+    position:relative;
+    width:100px;
+    height:100px;
+    margin-right:30px;
+    vertical-align:top;
+}
+.ajouterFavorisEtoileMessagerie{
+    z-index:1;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: right;
+    
+    .etoileFavorisMessagerie{
+        vertical-align: top;
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+}
+
+.divPrincipalMessage{
+    .divListeMessageAvecActions{
+        border:1px solid #881983;
+        border-radius:10px;
+        margin:0 10px;
+        padding:20px 10px;
+        background-color:$vertLime;
+
+        .lesBoutonsMessagerie{
+            margin:0 auto;
+            text-align:center;
+            width:80%;
+        }
+        display:inline-block;
+        width:76%;
+
+        .boutonDelete, .boutonRepondre, .boutonSignaler{
+            display:inline-block;
+            width:30%;
+            button{
+                width:100%;
+                margin: 3% auto;
+                text-align:center;
+                height:40px;
+                border-radius:10px;
+                color:white;
+                text-shadow:none;
+                background-color:red;
+            }
+        }
+
+        .boutonRepondre, .boutonSignaler{
+            button{
+                background-color:$couleurBoutonMauve;
+            }
+        }
+
+        .boutonDelete, .boutonRepondre{
+            img{
+                vertical-align:middle;
+                width:25px;
+                height:20px;
+                margin-right:5px;
+                margin-bottom:2px;
+            }
+        }
+        .boutonSignaler{
+            img{
+                vertical-align:middle;
+                width:20px;
+                height:20px;
+                margin-right:5px;
+            }
+        }
+
+    }
+
+    .messageRecu{
+        width:100%;
+        background-color:$vertLime;
+
+        .leMessageRecu{
+            width:80%;
+            margin:10px auto;
+            padding:20px;
+            h3{
+                @extend .liensAvecHoverDisabled;
+                margin:0 0 10px 0;
+                padding:0;
+                font-weight:bold;
+            }
+            .enTeteMessage{
+                margin:0 0;
+                padding:10px 0;
+                border-bottom:5px solid grey;
+                .envoyeurEtReceveur{
+                    display:inline-block;
+                    width:60%;
+                    h4{
+                        @extend .liensAvecHoverDisabled;
+                        display:inline-block;
+                        vertical-align:top;
+                    }
+                    .envoyeurEtReceveurReal{
+                        display:inline-block;
+                    }
+
+                    .envoyeur{
+                        position:relative;
+                        .photoEnvoyeurMessage{
+                            vertical-align:middle;
+                            /*margin-right:30px;*/
+                            max-width:100%;
+                            max-height:100%;
+                            display:inline-block;
+                            cursor:pointer;
+                            position:relative;
+                            top:50%;
+                            transform: translateY(-50%);
+                        }
+                    }
+
+                    .receveur{
+                    }
+                }
+                .dateEnvoieMessage{
+                    text-align:right;
+                    width:39%;
+                    font-size:17px;
+                    vertical-align:bottom;
+                    display:inline-block;
+                    p{
+                        margin:0;
+                        padding:0;
+                    }
+                }
+            }
+
+            .sujetMessage{
+                label{
+                    vertical-align:middle;
+                    display:inline-block;
+                    margin:0;
+                    /*margin-top:10px;
+                    margin-bottom:20px;*/
+                    margin-left:-15px;
+                    font-size:20px;
+                }
+                p{
+                    vertical-align:middle;
+                    margin:0;
+                    display:inline-block;
+                    font-size:17px;
+                }
+                margin:25px 0;
+            }
+            .contenuMessage{
+                margin-top:10px;
+                p{
+                    margin:30px 0;
+                    font-size:18px;
+                }
+                margin-bottom:25px;
+            }
+            
+        }
+    }
+}
+/*Fin VoirMessage*/
+
+/*Début LISTE DE CONTACTS*/
+
+.listeContacts{
+    margin:15px 0 15px 0;
+
+    cursor:pointer;
+
+    h4{
+        text-align:center;
+        font-weight: bold;
+        padding: 20px 0;
+        margin:0;
+        border-bottom: 1px solid #881983;
+        font-size: 20px;
+    }
+
+    .unContact{
+        margin: 10px 20px;
+        .photoProfilContact{
+            display:inline-block;
+            
+            margin:0 10px;
+
+            width:40px;
+            height:40px;
+
+            img{
+                max-width:40px;
+                max-height:40px;
+            }
+        }
+        .nomContact{
+            vertical-align:middle;
+            display:inline-block;
+            font-size:17px;
+
+            p{
+                margin:0;
+                padding:0;
+            }
+        }
+    }
+}
+
+/*Début clic droit contact*/
+.ContextItem {
+    background-color: White;
+    color: Black;
+    font-weight: normal;
+    cursor:pointer;
+    padding:10px;
+}
+
+.ContextItem:hover {
+    background-color: #0066FF;
+    color: White;
+    font-weight: bold;
+}
+
+.detailItem {
+    background: transparent;
+}
+
+.detailItem:hover {
+    background-color: #FEE378;
+    border: 1px outset #222222;
+    font-weight: bold;
+    cursor: default;
+}
+/*Fin clic droit contacts*/
+/*Fin LISTE DE CONTACTS*/
+
+/*Fin Messagerie*/
+
+/*Début envoyercadeaux*/
+$tailleEmoji: 42px;
+
+.disabledEmoticon{
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+    filter: grayscale(100%) contrast(30%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%) contrast(30%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.envoyerCadeaux{
+    margin: 30px 0;
+    height:138px;
+    overflow-y:scroll;
+
+    .unEmoticon{
+        display:inline-block;
+        cursor:pointer;
+        margin:2px 0;
+    }
+
+    img{
+        height:$tailleEmoji;
+        width:$tailleEmoji;
+    }
+}
+/*.envoyerCadeaux button{
+    height:45px;
+}*/
+/*Fin envoyercadeaux*/
+/*Début recevoirCadeaux*/
+.listeCadeauxRecus{
+    .unEmoticonPremium{
+        display:inline-block;
+        img{
+            width:70px;
+            height:70px;
+        }
+    }
+    .unEmoticonGratuit{
+        display:inline-block;
+        img{
+            width:42px;
+            height:42px;
+        }
+    }
+}
+
+$hauteurHoverCadeau: 100px;
+
+.unEmoticonGratuit, .unEmoticonPremium{
+    position:relative;
+    &:hover{
+        .hoverDunCadeau{
+            display:block;
+        }
+    }
+    .hoverDunCadeau{
+        display:none;
+        z-index:1;
+        border-radius:4px;
+        position:absolute;
+        top:-10px;
+        left:70px;
+        height:$hauteurHoverCadeau;
+        width:350px + 120px; //260px le premier normalement
+        background-color:#add8e6;
+        .quandEtQui{
+            display:inline-block;
+            width:68%;
+            height:100%;
+            .qui{
+                display:block;
+                text-align:left;
+                .photoProfilEnvoyeur{
+                    vertical-align:top;
+                    display:inline-block;
+                    margin: 10px 10px;
+                    img{
+                        width:42px;
+                        height:42px;
+                    }
+                }
+                .nomEnvoyeur{
+                    position:relative;
+                    display:inline-block;
+                    height:42px;
+                    line-height:42px;
+                    margin: 10px 10px;
+                    p{ 
+                        height:100%;
+                        width:100%;
+                        position:relative;
+                        font-size:25px;
+                        margin:0 0;
+                        padding:0;
+                    }
+                }
+            }
+            .quand{
+                padding:0 10px;
+                display:inline-block;
+                p{
+                    font-size:16px;
+                }
+            }
+        }
+
+        .actions{
+            position:relative;
+            height:100%;
+            vertical-align:top;
+            display:inline-block;
+            width:30%;
+            vertical-align:top;
+
+            border-left:2px solid #9ecae1;
+
+            .voirProfil{
+                vertical-align:middle;
+                height:50%;
+            }
+            .voirProfil, .supprimer{
+                line-height:$hauteurHoverCadeau / 2;
+                p{
+                    margin:0;
+                    vertical-align:middle;
+                    font-size:16px;
+                }
+                height:50%;
+                cursor:pointer;
+
+                transition:background-color linear 0.2s;
+                border-radius:4px;
+
+                &:hover{
+                    background-color:rgba(19, 85, 221, 0.4);
+                }
+            }
+
+            a{
+                margin:20px 0;
+                &:hover{
+                    text-decoration:none;
+                }
+            }
+
+        }
+    }
+}
+.unEmoticonGratuit{
+    .hoverDunCadeau{
+        left:30px;
+    }
+}
+.unEmoticonPremium{
+    .hoverDunCadeau{
+        left:60px;
+    }
+}
+
+
+.boutonNavigationEmoticon{
+    height:30px;
+    margin: 5px 0;
+    .boutonNavReculer, .boutonNavAvancer{
+        font-size:20px;
+        cursor:pointer;
+        border-radius:3px 3px 3px 3px;
+        padding:5px 10px;
+        &:hover{
+            text-decoration:none;
+            background-color: rgba(0,0,0,0.8);
+        }
+        @include user-select;
+        
+        font-weight:bold;
+    }
+    .boutonNavReculer{
+        float:left;
+        margin:0 0 0 10px;   
+    }
+    .boutonNavAvancer{
+        float:right;
+        margin:0 10px 0 0;  
+    }
+}
+/*Fin recevoirCadeaux*/
+
+/*Début sendMessageGlobalAdmin*/
+.envoyerMessageTousMembres{
+    h3{
+        display:inline-block;
+    }
+    .choixEnvoieMessageGlobal{
+        width:80px;
+        height:40px;
+        margin:0px 0 50px 35px;
+    }
+}
+/*FIn sendMessageGlobalAdmin*/

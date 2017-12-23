@@ -1,0 +1,54 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT DE RÉINITIALISER SON MOT DE PASSE DANS LE CAS D'UN MOT DE PASSE OUBLIÉ
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model LoginViewModel
+
+@Styles.Render("~/Content/Login.css")
+
+<div>
+    @using (Html.BeginForm("MotDePasseOublier", "Authentification", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="contenu">
+            <div class="centre">
+                <p class="messageInscription">@Html.Raw(TempData["Message"])</p>
+
+                @{ 
+                    TempData.Remove("Message");
+                }
+
+                <h3>Entrez votre courriel et nous vous enverrons un lien pour changer votre mot de passe</h3>
+
+                <div id="carre">
+                    <div class="champ">
+                        <br />
+                        <div class="labels">
+                            <label>Courriel:</label>
+                        </div>
+                        <div class="editeur">
+                            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "editeurs" } })
+                        </div>
+                    </div>
+                    <br />
+
+                </div>
+
+                <div class="conteneurBouton">
+                    <input type="submit" value="Envoyer" id="btn" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+}

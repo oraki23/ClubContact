@@ -1,0 +1,35 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT LA CONFIRMATION DE LA DÉSACTIVATION DU COMPTE CLUB CONTACT
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model  ProjetSiteDeRencontre.Models.Membre
+@Styles.Render("~/Content/DeleteConfirmed.css")
+
+@using (Html.BeginForm("DeleteConfirmed", "Membres", FormMethod.Post, new { @id = "formDelete" }))
+{
+
+<h2>Supprimer mon compte</h2>
+
+<h3>Voulez-vous vraiment supprimer votre compte Club Contact ?</h3>
+<div>
+
+    @using (Html.BeginForm("DeleteConfirmed", "Membres"))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.noMembre)
+
+        <div>
+            <input type="submit" value="Supprimer" class="btnSupp" />
+            <br />
+            @Html.ActionLink("Revenir en arrière", "Options", "Membres", new { id = Model.noMembre } , null)
+        </div>
+    }
+</div>
+}

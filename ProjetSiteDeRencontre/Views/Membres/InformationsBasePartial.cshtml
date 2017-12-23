@@ -1,0 +1,93 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LES INFORMATIONS DE BASE D'UN MEMBRE LORS DE LA MODIFICATION
+    OU LA CRÉATION D'UN PROFIL
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.prenom, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.EditorFor(model => model.prenom, new { htmlAttributes = new { @class = "editeurs" } })
+    </div>
+    @Html.ValidationMessageFor(model => model.prenom, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.nom, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.EditorFor(model => model.nom, new { htmlAttributes = new { @class = "editeurs" } })
+    </div>
+    @Html.ValidationMessageFor(model => model.nom, "", new { @class = "messageErreur" })
+</div>
+
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.surnom, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.EditorFor(model => model.surnom, new { htmlAttributes = new { @class = "editeurs" } })
+    </div>
+    @Html.ValidationMessageFor(model => model.surnom, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.courriel, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.EditorFor(model => model.courriel, new { htmlAttributes = new { @class = "editeurs" } })
+    </div>
+    @Html.ValidationMessageFor(model => model.courriel, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.dateNaissance, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.EditorFor(model => model.dateNaissance, new { htmlAttributes = new { @class = "editeurs"} })
+    </div>
+    @Html.ValidationMessageFor(model => model.dateNaissance, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.homme, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.DropDownListFor(model => model.homme, (List<SelectListItem>)ViewBag.sexe, new { @class = "editeurs" })
+    </div>
+    @Html.ValidationMessageFor(model => model.homme, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ hideSelect">
+    <div class="labels">
+        @Html.LabelFor(model => model.listeRaisonsSurSite, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.DropDownListFor(model => model.listeRaisonsSurSite, (SelectList)ViewBag.raisonsSurSite, new { @class = "raisonsSite", @multiple = "multiple" })
+    </div>
+    @Html.ValidationMessageFor(model => model.listeRaisonsSurSite, "", new { @class = "messageErreur" })
+</div>
+
+<div class="champ">
+    <div class="labels">
+        @Html.LabelFor(model => model.rechercheHomme, htmlAttributes: new { @class = "" })<p>&nbsp;*</p>
+    </div>
+    <div class="editeur">
+        @Html.DropDownListFor(model => model.rechercheHomme, (List<SelectListItem>)ViewBag.sexeRecherche, new { @class = "editeurs" })
+    </div>
+    @Html.ValidationMessageFor(model => model.rechercheHomme, "", new { @class = "messageErreur" })
+</div>

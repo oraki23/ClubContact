@@ -1,0 +1,186 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LES PAGES DU CONTRÔLEUR HOME:
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+
+.ligne1{
+    display:block;
+}
+
+.entete{
+    text-align:center;
+}
+
+.photoHomeProfil{
+    display:block;
+    text-align:center;
+}
+
+.photoHomeProfil img{
+    display:inline-block;
+    max-height:190px;
+    max-width:180px;
+    cursor:pointer;
+}
+
+.box{
+    display:inline-block;
+    width:180px;
+    margin:10px;
+}
+
+.textPhoto{
+    width:100%;
+    padding:0;
+    margin:0;
+    font-size:15px;
+    text-align:center;
+    color:#C826C8;
+    font-weight:bold;
+}
+
+.ligne3Activites{
+    display:block;
+    text-align:center;
+}
+
+.categories{
+    display:inline-block;
+}
+
+.categories img{
+    width:20%;
+    height:20%;
+}
+
+.photoActivite{
+    text-align:center;
+    margin:0px;
+}
+
+.photoActivite img{
+    max-height:250px;
+    max-width:225px;
+    display:inline-block;
+    margin-top:4%;
+    margin-bottom:4%;
+    
+}
+
+#imageSport{
+    display:inline-block;
+    width:20%;
+}
+
+#imageRestaurant{
+    display:inline-block;
+    width:20%;
+}
+
+#imageSocial{
+    display:inline-block;
+    width:20%;
+}
+#imageCulturel{
+    display:inline-block;
+    width:20%;
+}
+
+/*formulaire*/
+
+#formulairePreInscription{
+    text-align:center;
+    background-color:#22b8ee;
+    margin: 0 15%;
+    border-radius:30px;
+}
+
+/*Titre*/
+
+h2{
+    padding: 20px;
+    margin:0;
+}
+
+/*Centre*/
+
+.centre{
+    margin: 3% 0;
+    width:100%;
+    display:inline-block;
+    vertical-align:top;
+}
+
+.champ{
+    vertical-align:top;
+    width:45%;
+    margin: 0 0%;
+    display:inline-block;
+}
+
+.labels{
+    display:inline;
+    font-size:25px;
+    margin:0;
+    vertical-align:middle;
+}
+
+.editeurs{
+    width:50%;
+    margin-left:15px;
+    vertical-align:middle;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+
+.SelectBox{
+    display:inline-block;
+    width:90%;
+    vertical-align:middle;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+
+/*Bouton*/
+.bouton{
+    width:50%;
+    margin: 5px auto 15px auto;
+}
+
+#soumettrePreInscription{
+    background-color:#c826c8;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    width:50%;
+    height:40px;
+    font-size:16px;
+    margin-left:65px;
+}
+
+.bouton a{
+    color: #6e3c9a;
+}
+
+.messageErreur{
+    display:block;
+    text-align:right;
+    color:black;
+    min-height:16px;
+}
+.padding-45{
+    padding-right:45px;
+}
+.padding-10{
+    padding-right:10px;
+}

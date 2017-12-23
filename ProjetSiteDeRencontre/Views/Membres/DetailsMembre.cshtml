@@ -1,0 +1,878 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT L'AFFICHAGE DU PROFIL D'UN MEMBRE AVEC LES TOUS SES INFORMATIONS
+    CETTE VUE PERMET AUSSI D'ENVOYER UN CADEAUX OU D'INTÉRAGIR AVEC LA PERSONNE,
+    ON PEUT AUSSI LA BLOQUER OU LA SIGNALER
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@Styles.Render("~/Content/cssDetailsMembre")
+
+@using ProjetSiteDeRencontre.Models
+
+@Html.ValidationSummary(true, "", new { @class = "messageErreur" })
+
+<div class="contenu">
+    <div class="entetePhoto">
+        @{
+            Photo photoProfil = Model.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+            List<Photo> photos = new List<Photo>();
+            if(Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                if (Request.Cookies["SiteDeRencontre"]["premium"] == "false")
+                {
+                    if (photoProfil == null)
+                    {
+                        photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).Take(5).ToList();
+                    }
+                    else
+                    {
+                        photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).Take(4).ToList();
+                    }
+                }
+                else
+                {
+                    photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).ToList();
+                }
+            }
+            else if(!User.IsInRole("Admin"))
+            {
+                if (photoProfil == null)
+                {
+                    photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).Take(5).ToList();
+                }
+                else
+                {
+                    photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).Take(4).ToList();
+                }
+            }
+            else
+            {
+                photos = Model.listePhotosMembres.Where(p => p.photoProfil == false).ToList();
+            }
+
+        }
+
+        <div id="conteneurPrincipalSlideshow" class="slideshow-container">
+            <div class="mySlides fade">
+                <div class="photoDetail">
+                    @if (photoProfil != null)
+                    {
+                        <img class="photoDetailLaPhoto" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                    }
+                    else
+                    {
+                        if (Model.homme)
+                        {
+                            <img class="photoDetailLaPhoto" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                        }
+                        else
+                        {
+                            <img class="photoDetailLaPhoto" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                        }
+                    }
+                </div>
+                <div class="text"></div>
+            </div>
+
+            @foreach (Photo p in photos)
+            {
+                <div class="mySlides fade">
+                    <div class="photoDetail">
+                        <img class="photoDetailLaPhoto" src="@Url.Content("~/Upload/PhotosMembres/" + p.nomFichierPhoto)" />
+                    </div>
+                    <div class="text"></div>
+                </div>
+            }
+
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+        <br />
+    </div>
+
+    <div class="colDroite">
+        @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+        {
+            if (Model.noMembre.ToString() == Request.Cookies["SiteDeRencontre"]["noMembre"].ToString())
+            {
+                if (ViewBag.pourcentageCompleteProfil < 100)
+                {
+                    <div class="progressBar">
+                        <h3>% du profil complété</h3>
+                        <div class="progressConteneur">
+                            <progress max="100" value="@(ViewBag.pourcentageCompleteProfil)"></progress> <p>@(ViewBag.pourcentageCompleteProfil)%</p>
+                        </div>
+                        <div class="boutonCompleterProfil">
+                            <button class="boutonNavigation" onclick="location.href='@Url.Action("Edit", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })';return false;" type="button">Compléter mon profil</button>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        <div class="presentation">
+            @if (Model.premium == true)
+            {
+                <img class="couronneDetails" src="@Url.Content("~/Photos/couronne.png")" />
+            }
+            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                @*Ce n'est pas ton profil, mais tu es connecté, donc on te montre le piton ajouter Favoris*@
+                if (Model.noMembre.ToString() != Request.Cookies["SiteDeRencontre"]["noMembre"].ToString())
+                {
+                    <div class="imageProfilEtoile">
+                    @if (photoProfil != null)
+                    {
+                        <img class="" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                    }
+                    else
+                    {
+                        if (Model.homme)
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                        }
+                        else
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                        }
+                    }
+
+                    @if (!ViewBag.membreBloquer)
+                    {
+                        if (ViewBag.membreFavoris)
+                        {
+                            <a class="ajouterFavorisEtoile" onclick="location.href='@Url.Action("SupprimerDeListeFavoris", "Membres", new { id = Model.noMembre })';return false;">
+                                <img title="Supprimer des favoris" alt="Supprimer des favoris" class="etoileFavoris" src="@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")"
+                                     onmouseenter="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")'"
+                                     onmouseleave="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")'" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="ajouterFavorisEtoile" onclick="location.href='@Url.Action("AjouterAListeFavoris", "Membres", new { id = Model.noMembre })';return false;">
+                                <img title="Ajouter aux favoris" alt="Ajouter aux favoris" class="etoileFavoris" src="@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")" 
+                                     onmouseenter="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")'"
+                                     onmouseleave="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")'"/>
+                            </a>
+                        }
+                    }
+                    
+                    </div>
+                }
+                else
+                {
+                    if (photoProfil != null)
+                    {
+                        <div class="imageProfilEtoile">
+                            <img class="" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="imageProfilEtoile">
+                            @if (Model.homme)
+                            {
+                                <img class="" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                            }
+                            else
+                            {
+                                <img class="" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                            }
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                if (photoProfil != null)
+                {
+                    <div class="imageProfilEtoile">
+                        <img class="" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                    </div>
+                }
+                else
+                {
+                    <div class="imageProfilEtoile">
+                        @if (Model.homme)
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                        }
+                        else
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                        }
+                    </div>
+                }
+            }
+
+
+
+
+            <div class="informationsBase">
+                <h1 class="alignCenter">@Html.DisplayFor(m => m.surnom)</h1>
+                @if (Model.homme)
+                {
+                    <h2 class="alignCenter">Homme, De @Html.DisplayFor(m => m.ville.nomVille)</h2>
+                }
+                else
+                {
+                    <h2 class="alignCenter">Femme, De @Html.DisplayFor(m => m.ville.nomVille)</h2>
+                }
+
+                <h2 class="alignCenter">@Model.age ans</h2>
+            </div>
+            
+            <div class="raisonsSite">
+                <h3>Je suis ici pour:</h3>
+
+                <div class="contenuSection">
+                    <ul class="listeRaisonsSite">
+                        @for (int i = 0; i < Model.listeRaisonsSurSite.Count; i++)
+                        {
+                            <li class="textRaisonSite">@Model.listeRaisonsSurSite[i].raison</li>
+                        }
+                    </ul>
+                </div>
+
+                @*La condition inversée est TEMPORAIRE à des fins de test,
+                    ne doit pas se retrouvé en production*@
+                @if (Model.listeRaisonsSurSite.Any(m => m.raison == "Amour"))
+                {
+                    if (Model.rechercheHomme)
+                    {
+                        <h4>Je recherche: un homme</h4>
+                    }
+                    else
+                    {
+                        <h4>Je recherche: une femme</h4>
+                    }
+
+                }
+            </div>
+        </div>
+
+        
+            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                <div class="interactions">
+                    @if(Model.noMembre.ToString() == Request.Cookies["SiteDeRencontre"]["noMembre"].ToString())
+                    {
+                    <div class="connecte">
+                        <div class="cadeauxRecus">
+                            <h3>Mes Cadeaux</h3>
+                            <div id="listeCadeauxRecusID" class="listeCadeauxRecus">
+                                @Html.Partial("~/Views/Emoticon/ToutesEmoticonRecuPartial.cshtml")
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class="nonConnecte">
+                        <h3>Interactions</h3>
+
+                        <h4>Envoyer un cadeau</h4>
+                        <div class="envoyerCadeaux">
+                            @{
+                                ClubContactContext db = new ClubContactContext();
+                                List<Emoticon> toutesLesEmoticons = new List<Emoticon>();
+                                if (Request.IsAuthenticated)
+                                {
+                                    toutesLesEmoticons = db.Emoticons.ToList();
+                                }
+                            }
+                            @for (int i = 0; i < toutesLesEmoticons.Count; i++)
+                            {
+                                if (Request.Cookies["SiteDeRencontre"]["premium"] == "false")
+                                {
+                                    if (i > 33)
+                                    {
+                                        <div title="Devenez Premium pour avoir accès à tous les cadeaux!" class="unEmoticon disabledEmoticon" onclick="location.href='@Url.Action("Abonnement", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]) })';return false;">
+                                            <input type="hidden" value="@toutesLesEmoticons[i].noEmoticon" />
+                                            <img src="@(Url.Content("~/Photos/emoticon/" + toutesLesEmoticons[i].nomFichierEmoticon))" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="unEmoticon enabledEmoticon">
+                                            <input type="hidden" value="@toutesLesEmoticons[i].noEmoticon" />
+                                            <img src="@(Url.Content("~/Photos/emoticon/" + toutesLesEmoticons[i].nomFichierEmoticon))" />
+                                        </div>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="unEmoticon enabledEmoticon">
+                                        <input type="hidden" value="@toutesLesEmoticons[i].noEmoticon" />
+                                        <img src="@(Url.Content("~/Photos/emoticon/" + toutesLesEmoticons[i].nomFichierEmoticon))" />
+                                    </div>
+                                }
+
+                            }
+                        </div>
+
+                        <div class="contacterMembre">
+                            <button class="boutonInteraction" onclick="location.href='@Url.Action("Send", "Messagerie", new { id = Model.noMembre })';return false;" type="button"><img src="~/Photos/ico/messagerie.svg" />Envoyer un message</button>
+
+                            <br />
+                            @if (!ViewBag.membreBloquer)
+                            {
+                                <button class="boutonBloquerNonActive" onclick="location.href='@Url.Action("AjouterAListeNoire", "Membres", new { id = Model.noMembre })';return false;" type="button"><img src="~/Photos/ico/Bloquer.png" />Bloquer</button>
+                            }
+                            else
+                            {
+                                <button class="boutonBloquerActive" onclick="location.href='@Url.Action("SupprimerDeListeNoire", "Membres", new { id = Model.noMembre })';return false;" type="button">Débloquer</button>
+                            }
+
+                            <button class="boutonBloquerNonActive" onclick="signalerMembre()" type="button"><img src="~/Photos/ico/Signaler.png" />Signaler</button>
+                        </div>
+                    </div>
+                    }
+                </div>
+            }
+            @*else
+            {
+                <div class="nonConnecte">
+                    <h3>Interactions</h3>
+                    @*<div class="envoyerCadeaux">
+                        <h4>Envoyer des cadeaux</h4>
+                        <div>
+                            <button class="boutonInteraction" onclick="location.href='@Url.Action("MyAction", "MyController")';return false;" type="button">Envoyer un cadeau</button>
+                        </div>
+                    </div>* @
+
+                    <div class="contacterMembre">
+                        <h4>Contacter</h4>
+
+                        <button class="boutonInteraction" onclick="location.href='@Url.Action("Login", "Authentification")';return false;" type="button">Envoyer un message</button>
+                    </div>
+                </div>
+            }*@
+        
+    </div>
+
+    <div class="colPrincipale">
+        <h2>Mes informations</h2>
+        <div class="col1 colLeft">
+            <div class="description">
+                <h3>Description</h3>
+                <div class="contenuSection">
+                    @if (Model.description != null)
+                    {
+                        <p>@Model.description</p>
+                    }
+                    else
+                    {
+                        <p class="informationNonEntre">Ce membre n'a pas entré de description.</p>
+                    }
+                </div>
+            </div>
+            <div class="physique">
+                <h3>Ce à quoi je ressemble</h3>
+                <div class="contenuSection">
+                    @if(Model.yeuxCouleur == null && Model.cheveuxCouleur == null && Model.taille == null && Model.silhouette == null)
+                    {
+                        <p class="informationNonEntre">Ce membre n'a pas fourni d'information sur son physique.</p>
+                    }
+
+                    @if (Model.yeuxCouleur != null)
+                    {
+                        <div class="propriete">
+                            <div class="labels">
+                                @Html.LabelFor(m => m.yeuxCouleur)
+                            </div>
+                            <p>@Model.yeuxCouleur.nomYeuxCouleur</p>
+                        </div>
+                    }
+                    @if (Model.cheveuxCouleur != null)
+                    {
+                        <div class="propriete">
+                            <div class="labels">
+                                @Html.LabelFor(m => m.cheveuxCouleur)
+                            </div>
+                            <p>@Model.cheveuxCouleur.nomCheveuxCouleur</p>
+                        </div>
+                    }
+                    @if (Model.taille != null)
+                    {
+                        <div class="propriete">
+                            <div class="labels">
+                                @Html.LabelFor(m => m.taille)
+                            </div>
+                            <p>@Model.taille.taille</p>
+                        </div>
+                    }
+                    @if (Model.silhouette != null)
+                    {
+                        <div class="propriete">
+                            <div class="labels">
+                                @Html.LabelFor(m => m.silhouette)
+                            </div>
+                            <p>@Model.silhouette.nomSilhouette</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="endroit">
+                <h3>Informations géographiques</h3>
+                @if (Model.origine != null)
+                {
+                    <div class="propriete">
+                        <div class="labels">
+                            @Html.LabelFor(m => m.origine)
+                        </div>
+                        <p>@Model.origine.origine</p>
+                    </div>
+                }
+                <div class="propriete">
+                    <div class="labels">
+                        @Html.LabelFor(m => m.ville)
+                    </div>
+                    <p>@Model.ville.nomVille</p>
+                </div>
+
+                <div class="propriete">
+                    <div class="labels">
+                        @Html.LabelFor(m => m.province)
+                    </div>
+                    <p>@Model.province.nomProvince</p>
+                </div>
+
+                @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+                {
+                    if (Model.noMembre.ToString() != Request.Cookies["SiteDeRencontre"]["noMembre"].ToString())
+                    {
+                        <div class="propriete">
+                            <div class="labels">
+                                <label>Distance entre nous</label>
+                            </div>
+                            <p id="distanceEntreNousTexte"></p>
+                        </div>
+                    }
+                }
+
+                <div id="googleMaps">
+
+                </div>
+            </div>
+
+            @*On n'affiche pas la section si rien n'est provided*@
+            @if (Model.nbEnfants != null || Model.fumeur != null || Model.nbAnimaux != null || Model.religion != null || Model.occupation != null || Model.desirEnfant != null
+                || Model.situationFinanciere != null || Model.niveauEtude != null)
+            {
+                <div class="autresDetails">
+                    <h3>Informations supplémentaires</h3>
+                    @if (Model.nbEnfants != null)
+                    {
+                        if (Model.nbEnfants == 0)
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">Je n'ai pas <b>d'enfants</b>.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">J'ai @(Model.nbEnfants) <b>enfants</b>.</p>
+                            </div>
+                        }
+                    }
+                    @if (Model.nbAnimaux != null)
+                    {
+                        if (Model.nbAnimaux == 0)
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">Je n'ai pas <b>d'animaux</b>.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">J'ai @(Model.nbAnimaux) <b>animaux</b>.</p>
+                            </div>
+                        }
+                    }
+                    @if (Model.desirEnfant != null)
+                    {
+                        <div class="proprieteEnfants">
+                            @if (Model.desirEnfant.desirEnfant == "Oui")
+                            {
+                                <p class="valeurEnfants">Je désire <b>avoir des enfants</b>.</p>
+                            }
+                            else if (Model.desirEnfant.desirEnfant == "Non")
+                            {
+                                <p class="valeurEnfants">Je <b>ne</b> désire <b>pas</b> <b>avoir d'enfants</b>.</p>
+                            }
+                            else if (Model.desirEnfant.desirEnfant == "Peut-être")
+                            {
+                                <p class="valeurEnfants">Je ne sais pas encore si je désire <b>avoir des enfants</b>.</p>
+                            }
+                        </div>
+                    }
+                    @if(Model.fumeur != null)
+                    {
+                        if (Model.fumeur == true)
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">Je <b>fume</b>.</p>
+                            </div>
+                        }
+                        else if (Model.fumeur == false)
+                        {
+                            <div class="proprieteEnfants">
+                                <p class="valeurEnfants">Je ne <b>fume pas</b>.</p>
+                            </div>
+                        }
+                    }
+                    @if (Model.religion != null)
+                    {
+                        <div class="proprieteEnfants">
+                            <p class="valeurEnfants">Ma <b>religion</b> est: @(Model.religion.religion).</p>
+                        </div>
+                    }
+                    @if (Model.occupation != null)
+                    {
+                        <div class="proprieteEnfants">
+                            <p class="valeurEnfants">Mon <b>occupation actuelle</b> est: @(Model.occupation.nomOccupation).</p>
+                        </div>
+                    }
+                    @if (Model.situationFinanciere != null)
+                    {
+                        <div class="proprieteEnfants">
+                            <p class="valeurEnfants">Ma <b>situation financière</b> est: @(Model.situationFinanciere.nomSituationFinanciere).</p>
+                        </div>
+                    }
+                    @if (Model.niveauEtude != null)
+                    {
+                        <div class="proprieteEnfants">
+                            <p class="valeurEnfants">Mon <b>niveau d'étude</b> est: @(Model.niveauEtude.nomNiveauEtude).</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="border"></div>
+
+        <div class="col1">
+            <div class="mesInterets">
+                <h3>Mes Intérêts</h3>
+                @if (Model.listeHobbies.Count != 0)
+                {
+                    foreach (Types t in ViewBag.listeType)
+                    {
+                        if (Model.listeHobbies.Any(h => h.noType == t.noType))
+                        {
+                            <div id="Hobbies">
+                                <div class="unType">
+                                    <div class="titre">
+                                        <img class="iconesTitre" src='@Url.Content("~/Photos/ico/Sections/" + t.nomType + ".png")' /> <h4>@t.nomType</h4>
+                                    </div>
+                                    @foreach (Hobbie h in Model.listeHobbies.Where(m => m.type == t))
+                                    {
+                                        if (t.nomType != "Musique")
+                                        {
+                                            <div class="unHobbie">
+                                                <img class="iconesLabel" src='@Url.Content("~/Photos/ico/FormulaireHobbies/" + t.nomType +  "/" + h.nomHobbie + ".png")' />
+                                                @Html.Label("hobbie", h.nomHobbie, new { @class = "labelHobbies" })
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="unHobbieMusique">
+                                                @Html.Label("hobbie", h.nomHobbie, new { @class = "labelHobbiesMusique" })
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p class="informationNonEntre">Ce membre n'a pas selectionné de hobbies qu'il aime pratiquer.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            showSlides(slideIndex);
+        })
+    </script>    
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPE6RWRq8fXz6TFJ-51Qe0JllsAiwMa9E"
+        type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        var map;
+        var marker;
+
+        function initializeGoogleMaps() {
+
+            var addressInput = "@(Model.ville.nomVille), @(Model.province.nomProvince)";
+
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address: addressInput }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var myResult = results[0].geometry.location; // reference LatLng value
+
+                    var map = new google.maps.Map(document.getElementById("googleMaps"), {
+                        center: myResult,
+                        zoom: 14,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    });
+
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: myResult
+                    });
+                }
+                else {
+                    console.log("Erreur: La localisation sur Google Maps n'a pas fonctionnée.");
+                    //alert("Erreur: La localisation sur Google Maps n'a pas fonctionnée.");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            initializeGoogleMaps();
+
+            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                if (Model.noMembre.ToString() != Request.Cookies["SiteDeRencontre"]["noMembre"].ToString())
+                {
+                    <text>
+                    $.ajax({
+                        url: '@Url.Action("CalculerDistanceAJAX", "Utilitaire")',
+                        type: 'POST',
+                        data: { noMembreDetails: @Model.noMembre },
+                        success: function(results){
+                            $('#distanceEntreNousTexte').text(results);
+                        }
+                    });
+                    </text>
+                }
+             }
+
+            
+        })
+    </script>
+
+    @*Section des cadeaux*@
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.enabledEmoticon').on('click', function(){
+                var noEmoticon = $(this).children().val();
+                $.ajax({
+                    url: '@Url.Action("EnvoyerEmoticon", "Emoticon")',
+                    type: 'POST',
+                    data: { noEmoticon: noEmoticon, noMembreReceveur: @Model.noMembre },
+                    success: function(results){
+                        alert("Votre cadeau a bien été envoyé!");
+                    }
+                });
+
+            });
+
+            $('.supprimerLEmoticon').on('click', function(){
+                var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer ce cadeau?");
+                if(supprimerConfirmation == true)
+                {
+                    var noGift = $(this).prev().val();
+                    var noMembreEnvoyeur = $(this).prev().prev().val();
+                    $.ajax({
+                        url: '@Url.Action("SupprimerGift", "Emoticon")',
+                        type: 'POST',
+                        context:this,
+                        data: { noGift: noGift, noMembreReceveur: @Model.noMembre, noMembreEnvoyeur: noMembreEnvoyeur  },
+                        success: function(data){
+                            $('#listeCadeauxRecusID').html(data);
+                            resetAjax();
+                        }
+                    });
+                }
+            });
+        });
+
+        function resetAjax(){
+            $('.supprimerLEmoticon').off('click');
+
+            $('.supprimerLEmoticon').on('click', function(){
+                var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer ce cadeau?");
+                if(supprimerConfirmation == true)
+                {
+                    var noGift = $(this).prev().val();
+                    var noMembreEnvoyeur = $(this).prev().prev().val();
+                    $.ajax({
+                        url: '@Url.Action("SupprimerGift", "Emoticon")',
+                        type: 'POST',
+                        context:this,
+                        data: { noGift: noGift, noMembreReceveur: @Model.noMembre, noMembreEnvoyeur: noMembreEnvoyeur  },
+                        success: function(data){
+                            $('#listeCadeauxRecusID').html(data);
+                            resetAjax();
+                        }
+                    });
+                }
+            });
+        }
+
+        function avancerEmoji(plusOuMoins, premiumOuGratuit)
+        {
+            var idBaseEmoticon;
+            var nomIdNumeroUn;
+            var nomNbCadeauxRecus;
+            var nbIconeAffiche;
+            if(premiumOuGratuit == 1)
+            {
+                idBaseEmoticon = "#emoticonPremiumRecu";
+                nomIdNumeroUn = "#idNumeroUnPremium";
+                nomNbCadeauxRecus = "#nbCadeauxRecusPremium";
+                nbIconeAffiche = 3;
+            }
+            else{
+                idBaseEmoticon = "#emoticonGratuitRecu";
+                nomIdNumeroUn = "#idNumeroUnGratuit";
+                nomNbCadeauxRecus = "#nbCadeauxRecusGratuit";
+                nbIconeAffiche = 5;
+            }
+
+            var nbCadeauxRecu = parseInt($(nomNbCadeauxRecus).val());
+            var idNumeroUn = parseInt($(nomIdNumeroUn).val());
+            //Avancer
+            if(plusOuMoins > 0)
+            {
+                if(nbCadeauxRecu > nbIconeAffiche)
+                {
+                    if(idNumeroUn < (nbCadeauxRecu - nbIconeAffiche))
+                    {
+                        var idDivACacher = idBaseEmoticon + idNumeroUn.toString();
+                        var idDivAMontrer = idBaseEmoticon + (idNumeroUn + nbIconeAffiche).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) + 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+                //Reculer
+            else if(plusOuMoins < 0)
+            {
+                if(nbCadeauxRecu > nbIconeAffiche)
+                {
+                    if(idNumeroUn > 0)
+                    {
+                        var idDivACacher = idBaseEmoticon + (idNumeroUn + (nbIconeAffiche - 1)).toString();
+                        var idDivAMontrer = idBaseEmoticon + (idNumeroUn - 1).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) - 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+        {
+            <text>
+        function signalerMembre(){
+            var noMembreFaisantPlainte = @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]));
+            var noMembreContreQuiEstPlainte = @Model.noMembre;
+            var raisonDeLaPlainte = prompt("Quel est la raison du signalement envers ce membre?", "");
+            //var noMessageJoint = 0;
+
+            if(raisonDeLaPlainte !== null)
+            {
+                $.ajax({
+                    url: '@Url.Action("SignalerMembre", "Utilitaire")',
+                    type: 'POST',
+                    data: { noMembreFaisantPlainte: noMembreFaisantPlainte, noMembreContreQuiEstPlainte: noMembreContreQuiEstPlainte, raisonDeLaPlainte: raisonDeLaPlainte },
+                    success: function(results){
+                        alert("Votre plainte a bien été envoyé.");
+                    }
+                });
+            }
+
+            
+        }
+            </text>
+        }
+
+    </script>
+
+    @*OnClick pour le HOVER*@
+    <script type="text/javascript">
+        //$(document).ready(function(){
+        //    $('.quandEtQui').on('click', function(){
+        //        $(this).next().toggle();
+        //    });
+        //});
+
+        //$(document).ready(function(){
+        //    $('.quandEtQui').on('click', function(){
+        //        $(this).next().toggle();
+        //        if($(this).parent().width() == 260)
+        //        {
+        //            $(this).width('68%');
+        //            $(this).parent().css('width', 380);
+        //        }
+        //        else{
+        //            $(this).width('100%');
+        //            $(this).parent().css('width', 260);
+        //        }
+        //    });
+        //});
+
+        //Si jamais la cliente tient à ce qu'on doive cliquer
+        //$(document).ready(function(){
+        //    $('.emoticonGeneral').on('click', function(){
+        //        $(this).children().next().next().toggle();
+        //    });
+        //});
+    </script>
+}
+
+@*//function ouvrirInfoMembre(evt, nomInfoMembre) {
+        //    // Declare all variables
+        //    var i, tabcontent, tablinks;
+
+        //    // Get all elements with class="tabcontent" and hide them
+        //    tabcontent = document.getElementsByClassName("tabcontent");
+        //    for (i = 0; i < tabcontent.length; i++) {
+        //        tabcontent[i].style.display = "none";
+        //    }
+
+        //    // Get all elements with class="tablinks" and remove the class "active"
+        //    tablinks = document.getElementsByClassName("tablinks");
+        //    for (i = 0; i < tablinks.length; i++) {
+        //        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        //    }
+
+        //    // Show the current tab, and add an "active" class to the button that opened the tab
+        //    document.getElementById(nomInfoMembre).style.display = "block";
+        //    evt.currentTarget.className += " active";
+        //}
+
+        //document.getElementById("defaultOpen").click();*@

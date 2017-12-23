@@ -1,0 +1,79 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE MAÎTRE PAR RAPPORT À TOUT CE QUI ATTRAIT À LA PARTIE "STATISTIQUE" DE LA PARTIE ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.StatistiqueViewModel
+
+@using (Html.BeginForm("Statistique", "Admin", FormMethod.Post, new { @id = "formStatistique" }))
+{
+    <div class="sectionGestion">
+        <div class="barDuHaut">
+            <div class="tabsActivite">
+                <div class="tabs @(Model.noTabSelected == 1 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Statistique", "Admin", new { tab = 1 })';return false;">
+                    <a>Visites</a>
+                </div>
+                <div class="tabs @(Model.noTabSelected == 2 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Statistique", "Admin", new { tab = 2 })';return false;">
+                    <a>Messagerie</a>
+                </div>
+                <div class="tabs @(Model.noTabSelected == 3 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Statistique", "Admin", new { tab = 3 })';return false;">
+                    <a>Activités</a>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.noTabSelected)
+        @if (Model.noTabSelected == 1)
+        {
+            @Html.Partial("VisiteStatistiquePartial")
+        }
+        else if (Model.noTabSelected == 2)
+        {
+            @Html.Partial("MessagerieStatistiquePartial")
+        }
+        else
+        {
+            @Html.Partial("ActiviteStatistiquePartial")
+        }
+    </div>
+}
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //Remplissage de la ville au début
+            if($('#noProvince').val() != 0)
+            {
+                @if(Model.noVille != null)
+                {
+                    <text>
+                        RemplirVillesDebutRecherche(@Model.noVille, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        RemplirVillesDebutRecherche(-1, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+            }
+
+            $(document).on('change', '#noProvince', function () {
+                if ($('#noProvince').val() != "") {
+                    RemplirVillesRecherche('@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                }
+                else {
+                    $('#noVille').html("");
+                    $('#noVille').append(
+                            $('<option value=\'\'></option>').html(""));
+                }
+            });
+        });
+    </script>    
+}

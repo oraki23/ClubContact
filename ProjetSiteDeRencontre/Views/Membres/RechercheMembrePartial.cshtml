@@ -1,0 +1,186 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE POUR LA RECHERCHE DE MEMBRES AVEC LES CRITÈRES DE BASE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.RechercheViewModel
+
+<div class="laRecherche">
+    <h3>Critères de recherche</h3>
+        
+        @Html.Partial("CriteresBaseCommunRecherchePartial")
+
+        <div class="lesBoutonsRecherche">
+            @Html.ValidationMessageFor(Model => Model.ageMin, "", new { @class = "messageErreurRecherche" })
+            <button class="boutonEfface" type="button" onclick="location.href='@Url.Action("Index", "Membres")'">Effacer</button>
+            <button class="boutonRecherche" type="submit">Rechercher</button>
+        </div>
+</div>
+
+
+@*@model ProjetSiteDeRencontre.ViewModel.RechercheViewModel
+
+<div class="laRecherche">
+    <h3>Critères de recherche</h3>
+    <div class="rechercheBase">
+        <h4>Informations de base</h4>
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.homme)
+            @Html.DropDownListFor(Model => Model.homme, (List<SelectListItem>)ViewBag.sexeRecherche, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.chercheHomme)
+            @Html.DropDownListFor(Model => Model.chercheHomme, (List<SelectListItem>)ViewBag.sexeRecherche, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+
+        <div class="rechercheValeurMaxMin">
+            @Html.LabelFor(Model => Model.ageMin)
+            <p>Entre&nbsp;</p>
+            @Html.EditorFor(Model => Model.ageMin, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+            <p>&nbsp;et&nbsp;</p>
+            @Html.EditorFor(Model => Model.ageMax, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+            <p>&nbsp;ans.&nbsp;</p>
+            @Html.ValidationMessageFor(Model => Model.ageMin, "", new { @class = "messageErreurRecherche" })
+        </div>
+
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.noRaisonsSite)
+            @Html.DropDownListFor(Model => Model.noRaisonsSite, (SelectList)ViewBag.raisonsSurSite, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+    </div>
+
+    @if (Request.IsAuthenticated)
+    {
+        @:<div class="rechercheGeographique">
+    }
+    else
+    {
+        @:<div class="rechercheGeographique disableddiv">
+    }
+    <h4>Informations géographiques</h4>
+
+    @if (!Request.IsAuthenticated)
+    {
+        @:<p class="etrePremium">
+            @:<a onclick="location.href='@Url.Action("Create", "Membres")'">Inscrivez-vous et devenez membre</a>
+                @:aujourd'hui pour profiter de la recherche plus précise!
+            </p>
+        }
+
+    <div class="recherchePropriete">
+        @Html.LabelFor(Model => Model.noProvince)
+        @Html.DropDownListFor(Model => Model.noProvince, (SelectList)ViewBag.listeProvince, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+    </div>
+    <div class="recherchePropriete">
+        @Html.LabelFor(Model => Model.noVille)
+        @Html.DropDownListFor(Model => Model.noVille, Enumerable.Empty<SelectListItem>(), "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        <div class="recherchePropriete distanceEntreNous">
+            @Html.LabelFor(Model => Model.distanceKmDeMoi)
+            @Html.EditorFor(Model => Model.distanceKmDeMoi, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+            <p>&nbsp;km.</p>
+        </div>
+    }
+</div>
+@if (!ViewBag.premium)
+    {
+        @:<div class="recherchePremium disableddiv">
+    }
+    else
+    {
+        @:<div class="recherchePremium">
+    }
+    <div class="recherchePhysique">
+        <h4>Allure physique</h4>
+
+        @if (!ViewBag.premium)
+        {
+            if (Request.IsAuthenticated)
+            {
+                @:<p class="etrePremium">
+                    @:<a onclick="location.href='@Url.Action("Abonnement", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]) })'">Devenez membre Premium</a>
+                    @:aujourd'hui pour profiter de la recherche plus précise!</p>
+            }
+        }
+
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.noYeuxCouleur)
+            @Html.DropDownListFor(Model => Model.noYeuxCouleur, (SelectList)ViewBag.listeYeuxCouleur, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.noCheveuxCouleur)
+            @Html.DropDownListFor(Model => Model.noCheveuxCouleur, (SelectList)ViewBag.listeCheveuxCouleur, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.noSilhouette)
+            @Html.DropDownListFor(Model => Model.noSilhouette, (SelectList)ViewBag.listeSilhouette, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+        <div class="recherchePropriete">
+            @Html.LabelFor(Model => Model.noTaille)
+            @Html.DropDownListFor(Model => Model.noTaille, (SelectList)ViewBag.listeTaille, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+        </div>
+    </div>
+              <div class="rechercheAutres">
+
+
+                  <h4>Informations supplémentaires</h4>
+
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noOrigine)
+                      @Html.DropDownListFor(Model => Model.noOrigine, (SelectList)ViewBag.listeOrigine, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="rechercheValeurMaxMin">
+                      @Html.LabelFor(Model => Model.nbEnfantsMin)
+                      <p>&nbsp;Entre&nbsp;</p>
+                      @Html.EditorFor(Model => Model.nbEnfantsMin, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+                      <p>&nbsp;et&nbsp;</p>
+                      @Html.EditorFor(Model => Model.nbEnfantsMax, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+                      @Html.ValidationMessageFor(Model => Model.nbEnfantsMin, "", new { @class = "messageErreurRecherche" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noDesirEnfant)
+                      @Html.DropDownListFor(Model => Model.noDesirEnfant, (SelectList)ViewBag.listeDesirEnfant, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="rechercheValeurMaxMin">
+                      @Html.LabelFor(Model => Model.nbAnimauxMin)
+                      <p>&nbsp;Entre&nbsp;</p>
+                      @Html.EditorFor(Model => Model.nbAnimauxMin, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+                      <p>&nbsp;et&nbsp;</p>
+                      @Html.EditorFor(Model => Model.nbAnimauxMax, new { htmlAttributes = new { @class = "criteresEditeurs" } })
+                      @Html.ValidationMessageFor(Model => Model.nbAnimauxMin, "", new { @class = "messageErreurRecherche" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.fumeur)
+                      @Html.DropDownListFor(Model => Model.fumeur, (List<SelectListItem>)ViewBag.estFumeur, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noReligion)
+                      @Html.DropDownListFor(Model => Model.noReligion, (SelectList)ViewBag.listeReligion, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noOccupation)
+                      @Html.DropDownListFor(Model => Model.noOccupation, (SelectList)ViewBag.listeOccupation, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noSituationFinanciere)
+                      @Html.DropDownListFor(Model => Model.noSituationFinanciere, (SelectList)ViewBag.listeSituationFinanciere, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+                  <div class="recherchePropriete">
+                      @Html.LabelFor(Model => Model.noNiveauEtude)
+                      @Html.DropDownListFor(Model => Model.noNiveauEtude, (SelectList)ViewBag.listeNiveauEtude, "Sans importance", htmlAttributes: new { @class = "criteresEditeurs" })
+                  </div>
+              </div>
+        </div>
+    </div>
+
+<button class="boutonEfface" type="button" onclick="location.href='@Url.Action("Index", "Membres")'">Effacer</button>
+<button class="boutonRecherche" type="submit">Rechercher</button>
+</div>*@

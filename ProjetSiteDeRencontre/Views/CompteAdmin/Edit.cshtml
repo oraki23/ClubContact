@@ -1,0 +1,58 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT LA MODIFICATION D'UN COMPTE ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.Models.CompteAdmin
+
+@using (Html.BeginForm("Edit", "CompteAdmin", FormMethod.Post, new { @id = "formCompteAdmin" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontale editAdmin">
+        <h4 class="titreEdit">Compte Administrateur</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        @Html.Partial("InfoCompteAdmin")
+
+        @if (ViewBag.Create)
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Créer" class="btn btn-default" />
+                </div>
+            </div>
+        }
+        else if (ViewBag.disabled == null)
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Sauvegarder" class="btnEdit btn-default" />
+                </div>
+            </div>
+        }
+
+        <div class="lienEdit">
+            @Html.ActionLink("Retour en arrière", "Index")
+        </div>
+
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', true);
+            });
+        });
+
+    </script>    
+}

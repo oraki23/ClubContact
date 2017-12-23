@@ -1,0 +1,116 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    LOGIN DU CONTRÔLEUR AUTHENTIFICATION
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+.contenu{
+    margin: 0 auto;
+    max-width:800px;
+    background-color:#f2f2f2;
+    padding:0px;
+    height:850px;
+    text-align:center;
+}
+
+.centre{
+    margin: 0 auto;
+    padding-top:125px;
+    text-align:center;
+    width:50%;
+}
+
+h3{
+    text-align:left;
+    font-weight:bold;
+    margin-bottom:23px;
+}
+
+#carre{
+    display:inline-block;
+    border:solid;
+    padding:3% 16%;
+    font-size:19px;
+    width:100%;
+}
+
+.labels{
+    text-align:left;
+    display:block;
+    width:100%;
+}
+
+.editeur{
+    display:block;
+}
+
+.champ{
+    margin:10% 0;
+}
+
+.conteneurBouton{
+    text-align:right;
+}
+
+#btn{
+    margin: 5% 10%;
+    width:30%;
+    padding:1%;
+    background-color:#00b0f0;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:16px;
+    display:inline-block;
+}
+
+.messageErreur{
+    font-size:15px;
+    display:block;
+    color:red;
+}
+.messageErreur ul{
+    padding:0;
+    margin:0;
+}
+.messageErreur li{
+    list-style:none;
+}
+
+.messageInscription{
+    color: #1dc810;
+}
+
+.divCheckBoxEditeur{
+    vertical-align:middle;
+    width:27%;
+    text-align:center;
+    display:inline-block;
+}
+.checkBoxEditeur{
+    width:18px;
+    height:18px;
+
+}
+.labelsCheckBox{
+    font-size:17px;
+    font-weight:normal;
+    vertical-align:middle;
+    width:70%;
+    text-align:left;
+    display:inline-block;
+}
+.labelCheckBoxPasBold{
+    font-weight: normal;
+}
+
+.mdpOublie{
+    font-size:15px;
+    margin:0px;
+}

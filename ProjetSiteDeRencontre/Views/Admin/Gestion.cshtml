@@ -1,0 +1,136 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE MAÎTRE PAR RAPPORT À TOUT CE QUI ATTRAIT À LA PARTIE "GESTION" DE LA PARTIE ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.GestionViewModel
+
+@using (Html.BeginForm("Gestion", "Admin", FormMethod.Post, new { @id = "formGestion" }))
+{
+    <p>@TempData["Erreur"]</p>
+    {
+        TempData.Remove("Erreur");
+    }
+
+    <div class="sectionGestion">
+        <div class="barDuHaut">
+            <div class="tabsActivite">
+                <div class="tabs @(Model.noTabSelected == 1 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Gestion", "Admin", new { tab = 1 })';return false;">
+                    <a>Membres</a>
+                </div>
+                <div class="tabs @(Model.noTabSelected == 2 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Gestion", "Admin", new { tab = 2 })';return false;">
+                    <a>Signalement</a>
+                </div>
+                <div class="tabs @(Model.noTabSelected == 3 ? "selectedTabActivite" : "")" onclick="location.href='@Url.Action("Gestion", "Admin", new { tab = 3 })';return false;">
+                    <a>Abonnement</a>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.noTabSelected)
+        @if (Model.noTabSelected == 1)
+        {
+            @Html.Partial("MembreGestionPartial")
+        }
+        else if (Model.noTabSelected == 2)
+        {
+            @Html.Partial("SignalementGestionPartial")
+        }
+        else
+        {
+            @Html.Partial("AbonnementGestionPartial")
+        }
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        function desactiverCompteSignalement(noMembre, noSignalementLie)
+        {
+            var supprimerConfirmation = confirm("Voulez-vous réellement désactiver ce compte? (CETTE ACTION EST IRRÉVERSIBLE)");
+            if (supprimerConfirmation == true) {
+                $("#formGestion").append("<input type=\"hidden\" value=\"" + noMembre + "\" name=\"noMembreDesactiver\">");
+                $("#formGestion").append("<input type=\"hidden\" value=\"" + noSignalementLie + "\" name=\"noSignalementLie\">");
+                $("#formGestion").submit();
+            }
+        }
+    </script>    
+
+    @if (Model.noTabSelected == 1)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //Remplissage de la ville au début
+                if($('#noProvince').val() != 0)
+                {
+                    @if(Model.noVille != null)
+                {
+                    <text>
+                    RemplirVillesDebutRecherche(@Model.noVille, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    RemplirVillesDebutRecherche(-1, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    </text>
+                }
+                }
+
+                $(document).on('change', '#noProvince', function () {
+                    if ($('#noProvince').val() != "") {
+                        RemplirVillesRecherche('@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+                    }
+                    else {
+                        $('#noVille').html("");
+                        $('#noVille').append(
+                                $('<option value=\'\'></option>').html(""));
+                    }
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            function desactiverCompte(noMembre)
+            {
+                var supprimerConfirmation = confirm("Voulez-vous vraiment désactiver ce compte?");
+                if (supprimerConfirmation == true)
+                {
+                    $.ajax({
+                        url: '@Url.Action("ActiverDesactiverCompte", "Admin")',
+                        type: 'POST',
+                        data: { noMembre: noMembre },
+                        success: function(results){
+                            location.href='@Url.Action("Gestion", "Admin", new { vientDePagination = 1 })';
+                            return false;
+                        }
+                    });
+                }
+            }
+
+            function reactiverCompte(noMembre)
+            {
+                var supprimerConfirmation = confirm("Voulez-vous vraiment réactiver ce compte?");
+                if (supprimerConfirmation == true)
+                {
+                    $.ajax({
+                        url: '@Url.Action("ActiverDesactiverCompte", "Admin")',
+                        type: 'POST',
+                        data: { noMembre: noMembre },
+                        success: function(results){
+                            location.href='@Url.Action("Gestion", "Admin", new { vientDePagination = 1 })';
+                            return false;
+                        }
+                    });
+                }
+            }
+
+        </script>
+    }
+}

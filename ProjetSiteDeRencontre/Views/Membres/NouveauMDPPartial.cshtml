@@ -1,0 +1,46 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI PERMET LA MODIFICATION DU MOT DE PASSE D'UN MEMBRE SUR LA PAGE
+    OPTIONS
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+<div id="infoConnexion" class="refermable collapse in">
+
+    @if (!ViewBag.Create)
+    {
+        <div class="champ">
+            <div class="labels">
+                Votre mot de passe actuel
+            </div>
+            <div class="editeur">
+                <input type="password" id="motDePasseOLD" name="motDePasseOLD" class="editeurs" />
+            </div>
+        </div>
+    }
+    
+    <div class="champ">
+        <div class="labels">
+            Votre nouveau mot de passe @if (ViewBag.Create) { <p>&nbsp;*</p> }
+        </div>
+        <div class="editeur">
+            <input type="password" id="motDePasse1" name="motDePasse1" class="editeurs" />
+        </div>
+    </div>
+
+    <div class="champ">
+        <div class="labels">
+            Confirmer le mot de passe @if (ViewBag.Create) { <p>&nbsp;*</p> }
+        </div>
+        <div class="editeur">
+            @Html.EditorFor(model => model.motDePasse, new { htmlAttributes = new { @class = "editeurs" } }) 
+        </div>
+        @Html.ValidationMessageFor(model => model.motDePasse, "", new { @class = "messageErreur" })
+    </div>
+</div>

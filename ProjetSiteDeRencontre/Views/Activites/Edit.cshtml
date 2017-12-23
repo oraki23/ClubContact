@@ -1,0 +1,94 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT LA MODIFICATION OU LA CRÉATION D'UNE ACTIVITÉ
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.Models.Activite
+
+@using (Html.BeginForm(Html.BeginForm("Edit", "Activites", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formBase" })))
+{
+    @Html.AntiForgeryToken()
+
+    <p>@TempData["Erreur"]</p>
+    {
+        TempData.Remove("Erreur");
+    }
+
+    <div id="formulaireCreerActivite">
+
+        @Html.Partial("ActiviteInformation")
+
+        @if (ViewBag.titre == "edit")
+        {
+            <div class="alignRight">
+                <input type="submit" value="Sauvegarder" class="bouton" />
+            </div>
+        }
+        else
+        {
+            <div class="alignRight">
+                <input type="submit" value="Créer" class="bouton" />
+            </div>
+        }
+
+    </div>
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function(){
+            //Remplissage de la ville au début
+            if($('#noProvince').val() != 0)
+            {
+                RemplirVillesDebut(@Model.noVille, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+            }
+
+            console.log(@Model.noVille);
+
+            //Lorsqu'on change de province, on met à jour la liste de villes
+            $(document).on('change',  '#noProvince', function(){
+                RemplirVilles('@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+            });
+
+            @if(ViewBag.finAbonnement != null)
+            {
+                <text>
+                $.validator.addMethod("datePlusPetiteQueFinAbonnement", function (value, element) {
+                    var anneeFinAbonnement = @(((DateTime)ViewBag.finAbonnement).Year);
+                    var moisFinAbonnement = @(((DateTime)ViewBag.finAbonnement).Month) - 1;
+                    var jourFinAbonnement = @(((DateTime)ViewBag.finAbonnement).Day);
+
+                    var anneeInput = parseInt(value.substring(0, 4));
+                    var moisInput = parseInt(value.substring(5, 7)) - 1;
+                    var jourInput = parseInt(value.substring(8, 10));
+
+                    /* var heure = parseInt(value.substring(11, 13));
+                     var minute = parseInt(value.substring(14, 16));*/
+
+                    var dateInput = new Date(anneeInput, moisInput, jourInput);
+
+                    var dateFinAbonnement = new Date(anneeFinAbonnement, moisFinAbonnement, jourFinAbonnement);
+
+                    return dateInput <= dateFinAbonnement;
+                }, 'Veuillez choisir une date avant que votre abonnement se termine.');
+                </text>
+            }
+
+        });
+    </script>
+    <script type="text/javascript">
+        function supprimerActivite(noActivite){
+            var supprimerConfirmation = confirm("Voulez-vous vraiment annuler cette activité?");
+            if (supprimerConfirmation == true) {
+                location.href='@Url.Action("Annulation", "Activites", new { id = Model.noActivite })';
+                return false;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,67 @@
+﻿@*------------------------------------------------------------------------------------
+
+    EDITOR TEMPLATE D'UNE PHOTO D'ACTIVITÉ, PERMETTANT LA SUPPRESION ET CETTE VUE EST RECHARCHÉ
+    EN AJAX CHAQUE FOIS QU'UN PHOTO EST AJOUTÉE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.PhotosActivite
+
+@{
+    int x = ViewBag.x;
+    int i = ViewBag.i;
+}
+
+@*@if (ViewBag.i == 0)
+{
+    <div class="centerW60H40px">
+        @Html.LabelFor(model => model.photoProfil, new { @class = "floatLeft colorText" })
+
+        <p class="floatRight colorText">Enlever la photo</p>
+    </div>
+}*@
+<div class="lignePhoto" style="padding-bottom:10px;@(Model.photoPrincipale == true || Model.noMembreQuiPublie != int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]) ? "display:none;" : "")">
+    @Html.HiddenFor(model => model.noPhotoActivite) 
+    @Html.HiddenFor(model => model.nomFichierPhoto)
+    @Html.HiddenFor(model => model.noMembreQuiPublie)
+    @Html.HiddenFor(model => model.noActivite)
+
+    @*<input id="imgUpload" type="file" name="fichiersPhotos[@(Model.noActivite)]" class="inputPhoto" @*onchange="PreviewImage(@(ViewBag.i))" />*@
+    <input id="imgUpload" type="file" name="fichiersPhotos[@(i)]" class="inputPhoto" @*onchange="PreviewImage(@(ViewBag.i))"*@ />
+    <img id="imgShow" class="photo150x150" src="~/Upload/PhotosActivites/@Model.nomFichierPhoto" alt="">
+
+    <div class="w5">
+        @*<input type="hidden" id="deletePhotos[@(Model.noActivite)][@(x)]" name="deletePhotos[@(Model.noActivite)][@(x)]" value="false" />*@
+        <input type="hidden" name="deletePhotos[@(i)].Index" value="@x" />
+        <input type="hidden" id="deletePhotos[@(i)][@(x)]" name="deletePhotos[@(i)][@(x)]" value="false" />
+        <a class="deletePhotos" onclick="deletePhoto.call(this, @(i))">
+            <img src="~/Photos/ico/deletePicture.png" alt="Supprimer la photo" class="photo30x30 cursorPointer" />
+        </a>
+    </div>    
+</div>
+
+@*@Html.HiddenFor(model => model.noPhoto)
+    @Html.HiddenFor(model => model.nomFichierPhoto)
+    @Html.HiddenFor(model => model.noMembre)
+
+    <div class="divRadioButton">
+        @if (Model.photoProfil)
+        {
+            @Html.RadioButtonFor(model => model.photoProfil, t, new { @Name = "selectionPhotoProfil", @checked = "checked" })
+        }
+        else
+        {
+            @Html.RadioButtonFor(model => model.photoProfil, t, new { @Name = "selectionPhotoProfil" })
+        }
+    </div>
+    @Html.ValidationMessageFor(model => model.photoProfil)
+
+    <input id="imgUpload@(ViewBag.i)" type="file" name="fichiersPhotos" class="inputPhoto" onchange="PreviewImage(@(ViewBag.i))" />
+
+    <img id="imgShow@(ViewBag.i)" class="photo150x150" src="~/Upload/PhotosMembres/@Model.nomFichierPhoto" alt="">
+
+*@

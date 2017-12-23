@@ -1,0 +1,71 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT L'AFFICHAGE DES ERREURS SI ON EST ADMINISTRATEUR (PLUS DE DÉTAILS)
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+<!DOCTYPE html>
+@using Microsoft.AspNet.Identity
+@using System.Security.Claims
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Club Contact</title>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")  <!-- validation côté client  -->
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @*@Scripts.Render("~/bunbles/jqueryglobalize")*@
+</head>
+<body>
+    @{
+        var querystring = ViewContext.RouteData.Values["urlerreur"] + "";
+        this.Layout = null; // Si l'erreur se produit dans le layout il faut l'afficher...
+    }
+    <div class="list-header clearfix">
+        <h3> @ViewBag.Title</h3>
+    </div>
+    <div class="alert alert-error">
+        <p>
+            <b>Exception:</b> @Model.Exception.Message <br />
+            <b>Querystring:</b> @querystring <br />
+            <b>Targetsite:</b> @Model.Exception.TargetSite <br />
+            @if (HttpContext.Current.IsDebuggingEnabled)
+            {
+                <b>Stacktrace:</b>
+                <pre style="font-size: 0.6em;">
+                            @Model.Exception.StackTrace 
+                </pre>
+                <br />
+            }
+        </p>
+    </div>
+
+    @{
+        var lexception = Model.Exception.InnerException;
+        while (lexception != null && HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="alert alert-error">
+                <p>
+                    <b>Innerexception, Message:</b>           @lexception.Message     <br />
+                    <b>Innerexception, TargetSite:</b>        @lexception.TargetSite  <br />
+                    <b>Innerexception, StackTrace:</b>
+                    <pre style="font-size: 0.6em;">      @lexception.StackTrace  </pre><br />
+                </p>
+            </div>
+
+            lexception = lexception.InnerException;
+        }
+    }
+    <br />
+    <a href="~/Elmah.axd">Liste des erreurs (Elmah)</a>
+    @Html.ActionLink("Retour à la page principale (home)", "Gestion", "Admin")
+</body>
+
+</html>

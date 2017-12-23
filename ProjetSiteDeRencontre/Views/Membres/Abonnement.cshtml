@@ -1,0 +1,180 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT L'AFFICHAGE DES DÉTAILS DES ABONNEMENTS POSSIBLES, ET QUI AFFICHE AUSSI 
+    L'ABONNEMENT ACTUEL S'IL Y EN A UN
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@  
+
+@model ProjetSiteDeRencontre.ViewModel.OptionsCompteViewModel
+@Styles.Render("~/Content/Options.css")
+
+@using ProjetSiteDeRencontre.Models
+
+@using (Html.BeginForm("ChoisirAbonnementVersInformationsPaiement", "Membres", FormMethod.Post, new { @id = "formAbonnement" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(Model => Model.noMembre)
+
+    <div class="pageOptionsAbonnement">
+        @if (ViewBag.dateDeFinAbonnement != null)
+        {
+            <div class="titreAbonnement">
+                <p>Votre abonnement actuel</p>
+            </div>
+            <div class="dejaAbonnee">
+                <p>Vous avez présentement un abonnement actif.</p>
+                <p>Cet abonnement prend fin le @(((DateTime)ViewBag.dateDeFinAbonnement).ToLongDateString())@* à @(((DateTime)ViewBag.dateDeFinAbonnement).ToShortTimeString())*@</p>
+                <p>Vous pouvez acheter tout de suite un nouvel abonnement, et celui-ci commencera automatiquement à la fin de votre abonnement actuel.</p>
+            </div>
+
+            <div class="divOptions2">
+                <h3 class="texteAbonnement">Abonnement Premium</h3>
+                <h4 class="texteAbonnement">Prolonger votre abonnement et profitez de rabais allant jusqu'à 40%!</h4>
+            </div>
+        }
+        else
+        {
+            <div class="divOptions2">
+                <h3 class="texteAbonnement">Abonnement Premium</h3>
+                <h4 class="texteAbonnement">Devenez Premium et profitez de rabais allant jusqu'à 40%!</h4>
+            </div>
+        }
+
+        <div class="optionsAbonnements">
+            <div class="UNmois">
+                @{ 
+                    int nbMois = 1;
+                    ForfaitPremium leForfait = ((List<ForfaitPremium>)ViewBag.forfaitsPremium).Where(m => m.nbMoisAbonnement == nbMois).FirstOrDefault();
+                }
+                <img class="image" src="~/Photos/un.png" />
+                <div class="troisBout">
+                    <h5>@(nbMois) mois</h5>
+                    <h4>@(leForfait.prixParMois)$/mois</h4>
+                    <h3 id="prix">@(leForfait.prixTotal)$ + taxes</h3>
+                </div>
+                <div class="economie">
+                </div>
+
+                @if (ViewBag.dateDeFinAbonnement != null)
+                {
+                    <div class="conteneur1mois">
+                        <input id="btn1mois" class="boutonAbonnement" type="submit" value="Ajouter ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                    </div>
+                }
+                else
+                {
+                    <div class="conteneur1mois">
+                        <input id="btn1mois" class="boutonAbonnement" type="submit" value="Choisir ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                    </div>
+                }
+
+            </div>
+            <div class="SIXmois">
+                @{
+                    nbMois = 6;
+                    leForfait = ((List<ForfaitPremium>)ViewBag.forfaitsPremium).Where(m => m.nbMoisAbonnement == nbMois).FirstOrDefault();
+                }
+                <p class="banderole2">Le plus populaire</p>
+                <img class="image" src="~/Photos/six.png" />
+                <div class="troisBout">
+                    <h5>@(nbMois) mois</h5>
+                    <h4>@(leForfait.prixParMois)$/mois</h4>
+                    <h3 id="prix">@(leForfait.prixTotal)$ + taxes</h3>
+                </div>
+                <div class="economie">
+                    <h5>UNE ÉCONOMIE DE</h5>
+                    <p>@(leForfait.pourcentageDeRabais) %</p>
+                    <h5>par mois</h5>
+                </div>
+
+                @if (ViewBag.dateDeFinAbonnement != null)
+                {
+                    <div class="conteneur6mois">
+                        <input id="btn6mois" class="boutonAbonnement" type="submit" value="Ajouter ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                    </div>
+                }
+                else
+                {
+                    <div class="conteneur6mois">
+                        <input id="btn6mois" class="boutonAbonnement" type="submit" value="Choisir ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                    </div>
+                }
+            </div>
+
+            <div class="DOUZEmois">
+                @{
+                    nbMois = 12;
+                    leForfait = ((List<ForfaitPremium>)ViewBag.forfaitsPremium).Where(m => m.nbMoisAbonnement == nbMois).FirstOrDefault();
+                }
+                <img class="image" src="~/Photos/12.png" />
+                <div class="troisBout">
+                    <h5>@(nbMois) mois</h5>
+                    <h4>@(leForfait.prixParMois)$/mois</h4>
+                    <h3 id="prix">@(leForfait.prixTotal)$ + taxes</h3>
+                </div>
+                <div class="economie">
+                    <h5>UNE ÉCONOMIE DE</h5>
+                    <p>@(leForfait.pourcentageDeRabais) %</p>
+                    <h5>par mois</h5>
+                </div>
+
+                @if (ViewBag.dateDeFinAbonnement != null)
+                {
+                    <div class="conteneur12mois">
+                        <input id="btn12mois" class="boutonAbonnement" type="submit" value="Ajouter ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                        <div class="banderole">
+                            <p>La meilleure valeur</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="conteneur12mois">
+                        <input id="btn12mois" class="boutonAbonnement" type="submit" value="Choisir ce forfait" formaction="@Url.Action("ChoisirAbonnementVersInformationsPaiement", "Membres", new { id = Model.noMembre, nbMois = nbMois })" />
+                        <div class="banderole">
+                            <p>La meilleure valeur</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="rectangleDroite">
+            <div>
+                <p class="titreRectangle">Avantages premium</p>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Organiser des activités</p>
+                <p class="textePetitRectangle">Seul les premiums peuvent créer des activités</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Avoir plus de photos</p>
+                <p class="textePetitRectangle">Les premiums ont droit à 12 photos au lieu de 5</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Possibilité de voir toute les photos sur un profil</p>
+                <p class="textePetitRectangle">Les membres gratuits ne peuvent pas voir toutes les photos sur le profil de quelqu'un, contrairement aux membres premiums</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Être dans les premiers résultats de recherche</p>
+                <p class="textePetitRectangle">Les membres premiums sont les profils qui sortent en premier dans les recherches</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Recherche plus précise</p>
+                <p class="textePetitRectangle">Les premiums ont la chance de pouvoir mettre plus de critères de recherche</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Plus d'émojis disponibles</p>
+                <p class="textePetitRectangle">Dans les choix pour envoyer un cadeau</p>
+            </div>
+            <div>
+                <p class="texteRectangle"><img src="~/Photos/fleche1.png" />Savoir qui a été voir votre profil</p>
+                <p class="textePetitRectangle">Les membres premiums ont l'option de savoir quels membres sont allés voir leur profil récemment</p>
+            </div>
+        </div>
+    </div>
+}
+

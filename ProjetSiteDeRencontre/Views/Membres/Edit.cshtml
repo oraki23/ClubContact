@@ -1,0 +1,253 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE DE BASE PERMETTANT LA MODIFICATION D'UN MEMBRE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using Newtonsoft.Json;
+
+@using (Html.BeginForm("Edit", "Membres", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formBase" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div id="partie1" style="display:block;">
+        <div id="formulaireInscription">
+
+            @Html.Partial("MembreInformationPartial")
+
+            <div class="formulaireBouton alignRight">
+                @if(!ViewBag.Create)
+                {
+                    <input id="suitePartie2" type="button" value="Suite" class="bouton" />
+                }
+                else
+                {
+                    <input type="submit" value="S'inscrire" class="bouton" />
+                }
+
+            </div>
+
+            <input type="hidden" id="raisonsSiteJSON" name="raisonsSiteJSON" />
+
+        </div>
+    </div>
+    
+    if (!ViewBag.Create)
+    {
+        <div id="partie2" style="display:none;">
+            <div id="formulaireInscription">
+
+                <h1 class="titreInterets">Je suis intéressé dans...</h1>
+
+                @Html.Partial("HobbiesMembrePartial")
+
+                <div class="formulaireBouton alignRight">
+                    <input id="retourPartie1" type="button" value="Retour" class="boutonRetour" />
+                    <input id="soumettreHobbies" type="submit" value="@ViewBag.bouton" class="bouton" />
+                </div>
+
+                <input id="hobbiesJSON" type="hidden" name="hobbiesJSON" />
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //Activation de SumoSelect
+            var mySelect = $('.raisonsSite').SumoSelect();
+
+            //Selection des raisons sur Site dans sumoSelect
+            var raisonsSite = $.parseJSON(@(Html.Raw(JsonConvert.SerializeObject(TempData["raisonsSurSite"]))));
+
+            for(x = 0; x < Object.keys(raisonsSite).length; x++)
+            {
+                $('.raisonsSite')[0].sumo.selectItem(raisonsSite[x]);
+            }
+
+            verifierRaisonSiteExclusif('@(ViewBag.noRaisonSansButPrecis)',
+                    parseInt('@(ViewBag.nbRaisonsSurSite)'),
+                    $('.raisonsSite').val());
+
+            $('.raisonsSite').on('change', function(e){
+                verifierRaisonSiteExclusif('@(ViewBag.noRaisonSansButPrecis)',
+                    parseInt('@(ViewBag.nbRaisonsSurSite)'),
+                    $('.raisonsSite').val());
+            });
+
+            //Envoie dans le champ caché la valeur des raisonsSurSite
+            $('.formulaireBouton').click(function () {
+                $('#raisonsSiteJSON').val(JSON.stringify($('.raisonsSite').val()));
+            });
+
+            //Remplissage de la ville au début
+            if($('#noProvince').val() != 0)
+            {
+                RemplirVillesDebut(@Model.noVille, '@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+            }
+
+            //Lorsqu'on change de province, on met à jour la liste de villes
+            $(document).on('change',  '#noProvince', function(){
+                RemplirVilles('@Url.Action("TrouverVillesAPartirDeNoProvince", "Utilitaire")');
+            });
+
+            //Vérification des mot de passes
+            $('#formBase').submit(function(e){
+                $('#maxPhotosErrorMessage').hide();
+
+                var mdpValide = validerMDP(
+                    "#formBase",
+                    ('@(ViewBag.Create)'.toLowerCase() == 'true' ? true : false),
+                    '@Url.Action("ValiderAncienMDP", "Utilitaire")',
+                    parseInt('@Model.noMembre'),
+                    $('#motDePasseOLD').val(),
+                    $('#motDePasse1').val(),
+                    $('#motDePasse').val());
+
+                return mdpValide;
+            });
+
+            //Pour le formulaire en 2 parties
+            $('#suitePartie2').click(function(){
+                $('#maxPhotosErrorMessage').hide();
+
+                @*var mdpValide = validerMDP(
+                    "#formBase",
+                    ('@(ViewBag.Create)'.toLowerCase() == 'true' ? true : false),
+                    '@Url.Action("ValiderAncienMDP", "Utilitaire")',
+                    parseInt('@Model.noMembre'),
+                    $('#motDePasseOLD').val(),
+                    $('#motDePasse1').val(),
+                    $('#motDePasse').val()
+                    );*@
+
+                //if(mdpValide){
+                    $('#formBase').validate();
+                    if($('#formBase').valid())
+                    {
+                        $('#partie1').hide();
+                        $('#partie2').show();
+                        $('html, body').animate({scrollTop : 0},800);
+                    }
+                //}
+            })
+
+            $('#retourPartie1').click(function(){
+                $('#partie1').show();
+                $('#partie2').hide();
+                $('html, body').animate({scrollTop : 0},800);
+            })
+
+            //Lors de la soumission des Hobbies
+            $('#soumettreHobbies').click(function() {
+                var list = [];
+
+                $('.colonne3 input:checked').each(function() {
+                    list.push(this.name);
+                });
+
+                $('#hobbiesJSON').val(JSON.stringify(list));
+            });
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
+
+            afficheNbPhotoUtiliserSurRestante('@Model.premium');
+
+            $(".ajouterPhotos").on("click", function() {
+
+                var nbMaxPhotos = 5;
+                var premium = '@(Model.premium)'.toLowerCase();
+                var nbDePhotos = parseInt($('#nbPhotos').val());
+
+                if(premium == 'true')
+                {
+                    nbMaxPhotos = 12;
+                }
+
+                if(nbDePhotos < nbMaxPhotos)
+                {
+                    var EstIlACocher = $("input:radio[name='selectionPhotoProfil']").is(":checked");
+                    console.log(EstIlACocher);
+                    var nextIndex = $(".conteneurPhotos .lignePhoto").length
+                    //console.log(nextIndex);
+                    $.ajax({
+                        url: '@Url.Action("AjouteLignePhoto", "Membres")',
+                        type: 'POST',
+                        data: { index: nextIndex, noMembre: @Model.noMembre, aCocher : !EstIlACocher },
+                        async:false,
+                        success: function(results){
+                            $(".conteneurPhotos").append(results);
+                            nbDePhotos++;
+                            $('#nbPhotos').val(nbDePhotos);
+                            $('#nbPhotosAffiche').text(nbDePhotos + "/" + nbMaxPhotos);
+                            resetValidator();
+                        }
+                    });
+                }
+                else
+                {
+                    var validator = $("#formBase").validate();
+                    if(premium == 'true')
+                    {
+                        $('#maxPhotosErrorMessage').text("Vous ne pouvez pas téléverser plus de " + nbMaxPhotos + " photos.");
+                        $('#maxPhotosErrorMessage').show();
+                    }
+                    else
+                    {
+                        $('#maxPhotosErrorMessage').text("Vous ne pouvez pas téléverser plus de " + nbMaxPhotos + " photos, car vous n'êtes pas un membre premium.");
+                        $('#maxPhotosErrorMessage').show();
+                    }
+                }
+            });
+        });
+
+        $(document).ajaxComplete(function(){
+            $(".deletePhotos").off('click');
+
+            $(".deletePhotos").click(function(){
+                var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette photo?");
+                if(supprimerConfirmation == true)
+                {
+                    supprimerPhoto('@Model.premium', this);
+                }
+            });
+        });
+
+        $(".deletePhotos").click(function(){
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette photo?");
+            if(supprimerConfirmation == true)
+            {
+                supprimerPhoto('@Model.premium', this);
+            }
+        });
+
+        $(function(){
+            $('input').keydown(function(e){
+                if (e.keyCode == 13) {
+                    $("#soumettreHobbies").focus().click();
+                    return false;
+                }
+            });
+        });
+
+        function resetValidator(){
+            $("#formBase").removeData("validator");
+            $("#formBase").removeData("unobstrusiveValidation");
+            $.validator.unobtrusive.parse("#formBase");
+            $("#formBase").validate();
+        }
+    </script>
+}

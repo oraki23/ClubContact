@@ -1,0 +1,76 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LA PHOTO ET LE SURNOM D'UN MEMBRE LORS DE L'AFFICHAGE DANS
+    LA LISTE DE FAVORIS OU LA LISTE NOIRE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using ProjetSiteDeRencontre.Models
+
+@{ 
+    int i = ViewBag.i;
+}
+
+<div class="membreListe">
+
+    <div class="infoMembre" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;">
+        <div class="photoProfilMembreListeDiv">
+            @{
+                Photo photoProfil = Model.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+            }
+
+            @if (photoProfil != null)
+            {
+                <img class="photoProfilMembreListe" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" />
+            }
+            else
+            {
+                if (Model.homme)
+                {
+                    <img class="photoProfilMembreListe" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" />
+                }
+                else
+                {
+                    <img class="photoProfilMembreListe" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id =Model.noMembre })';return false;" />
+                }
+            }
+        </div>
+
+        @Html.HiddenFor(m => m.noMembre)
+        @Html.HiddenFor(m => m.courriel)
+        @Html.HiddenFor(m => m.dateNaissance)
+
+        <p>@Html.DisplayFor(m => m.surnom)</p>
+
+        @*@if (ViewBag.favoris)
+        {
+            @Html.HiddenFor(m => m.noMembre)
+            @Html.HiddenFor(m => m.courriel)
+            @Html.HiddenFor(m => m.dateNaissance)
+
+            <p>@Html.DisplayFor(m => m.surnom)</p>
+        }
+        else
+        {
+            @Html.HiddenFor(m => m.listeNoire[i].noMembre)
+            @Html.HiddenFor(m => m.listeNoire[i].courriel)
+            @Html.HiddenFor(m => m.listeNoire[i].dateNaissance)
+
+            <p>@Html.DisplayFor(m => m.listeNoire[i].surnom)</p>
+        }*@
+    </div>
+
+    <div class="deleteButton photo30x30">
+        <input type="hidden" id="removeMembre[@i]" name="removeMembre[@i]" value="false" />
+        <a class="removeMembre photo30x30">
+            <img src="~/Photos/ico/deletePicture.png" title="Supprimer de ma liste de personnes rejetées" class="photo30x30" />
+        </a>
+    </div>
+</div>
+

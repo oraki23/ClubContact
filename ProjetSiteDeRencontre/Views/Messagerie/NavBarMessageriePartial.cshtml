@@ -1,0 +1,24 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LA BARRE DE NAVIGATION POUR SE DÉPLACER DANS NOS BOÎTES DE MESSAGE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+<div class="barreNavMessage">
+    <div class="titreBarreNavMessage">
+        <p>Boîtes de messagerie</p>
+    </div>
+    <div class="inbox unElement @(ViewBag.boiteDeMessage == "inbox" ? "elementActuel" : "")" onclick="location.href = '@Url.Action("Inbox", "Messagerie", new { categorie = "inbox" })'; return false;">
+        <p id="boiteDeReceptionNbMessage">Boîte de réception</p>
+    </div>
+    <div class="sent unElement @(ViewBag.boiteDeMessage == "sent" ? "elementActuel" : "")" onclick="location.href = '@Url.Action("Inbox", "Messagerie", new { categorie = "sent" })'; return false;">
+        <p id="sentNbMessage">Messages Envoyés</p>
+    </div>
+    <div class="deleted unElement @(ViewBag.boiteDeMessage == "deleted" ? "elementActuel" : "")" onclick="location.href = '@Url.Action("Inbox", "Messagerie", new { categorie = "deleted" })'; return false;">
+        <p id="deletedNbMessage">Messages Supprimés</p>
+    </div>
+</div>

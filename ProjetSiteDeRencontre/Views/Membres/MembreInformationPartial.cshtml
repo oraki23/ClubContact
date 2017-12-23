@@ -1,0 +1,278 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LES INFORMATIONS D'UN MEMBRE LORS DE LA MODIFICATION
+    OU LA CRÉATION D'UN PROFIL
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@Styles.Render("~/Content/cssMembre")
+
+@Html.ValidationSummary(true, "", new { @class = "messageErreur" })
+@Html.ValidationMessage("nomFichierPhoto", new { @class = "validationMessage messageErreur" })
+
+<div class="section">
+    <a class="barreSection" href="#jeMePresente" data-toggle="collapse">
+        <h3>Je me présente...</h3>
+    </a>
+
+    <div id="jeMePresente" class="refermable collapse in">
+
+        @Html.HiddenFor(m => m.noMembre)
+        @Html.HiddenFor(m => m.premium)
+        @Html.HiddenFor(m => m.dateInscription)
+        @Html.HiddenFor(m => m.emailConfirme)
+
+        @Html.Partial("InformationsBasePartial")
+
+        @if(ViewBag.Create)
+        {
+            @Html.Partial("NouveauMDPPartial");
+        }
+
+        @if (!ViewBag.Create)
+        {
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.TextAreaFor(model => model.description, new { @class = "editeurs longTexte", @placeholder = "Vous pouvez décrire votre personnalité, vos passions, n'importe quoi qui pourrait aider les autres à mieux vous connaître..." })
+                </div>
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "messageErreur" })
+            </div>
+        }
+    </div>
+</div>
+
+@if (!ViewBag.Create)
+{
+    <div class="section">
+        <a class="barreSection" href="#photos" data-toggle="collapse">
+            <h3>Mes photos</h3>
+        </a>
+        <div id="photos" class="alignCenter refermable collapse in">
+            <h4>L'ajout de photos n'est pas obligatoire, mais recommandé</h4>
+            <a class="ajouterPhotos photo30x30">
+                <img src="~/Photos/ico/addPictures.png" alt="Ajouter des photos" class="w100h100" />
+            </a>
+            <p id="nbPhotosAffiche"></p>
+            <div class="conteneurPhotos">
+                <span class="messageErreur" id="maxPhotosErrorMessage" style="display:none;"></span>
+                @for (int i = 0; i < Model.listePhotosMembres.Count(); i++)
+                {
+                    ViewBag.i = i;
+                    @Html.EditorFor(m => m.listePhotosMembres[i])
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.listePhotosMembres[0].photoProfil)
+        </div>
+        <input id="nbPhotos" type="hidden" name="nbPhotos" value="@ViewBag.nbDePhotos" />
+    </div>
+}
+
+@*@if (!ViewBag.Create)
+{
+    <div class="section">
+        <a class="barreSection" href="#infoConnexion" data-toggle="collapse">
+            <h3>Changer les informations de connexion</h3>
+        </a>
+        @Html.Partial("NouveauMDPPartial")
+
+    </div>
+}*@
+
+<div class="section">
+    <a class="barreSection" href="#jhabiteA" data-toggle="collapse">
+        <h3>J'habite à...</h3>
+    </a>
+    <div id="jhabiteA" class="refermable collapse in">
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.province, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noProvince, (SelectList)ViewBag.listeProvince, "Veuillez choisir...", new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noProvince, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.ville, htmlAttributes: new { @class = "" }) <p>*</p>
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noVille, Enumerable.Empty<SelectListItem>(), new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noVille, "", new { @class = "messageErreur" })
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                @Html.LabelFor(model => model.origine, htmlAttributes: new { @class = "" })
+            </div>
+            <div class="editeur">
+                @Html.DropDownListFor(model => model.noOrigine, (SelectList)ViewBag.listeOrigine, "", new { @class = "editeurs" })
+            </div>
+            @Html.ValidationMessageFor(model => model.noOrigine, "", new { @class = "messageErreur" })
+        </div>
+    </div>
+</div>
+
+@if (!ViewBag.Create)
+{
+    <div class="section">
+        <a class="barreSection" href="#jeMeDecrit" data-toggle="collapse">
+            <h3>Je me décris...</h3>
+        </a>
+        <div id="jeMeDecrit" class="refermable collapse in">
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.yeuxCouleur, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noYeuxCouleur, (SelectList)ViewBag.listeYeuxCouleur, "", new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noYeuxCouleur, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.cheveuxCouleur, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noCheveuxCouleur, (SelectList)ViewBag.listeCheveuxCouleur, "", new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noCheveuxCouleur, "", new { @class = "messageErreur" })
+            </div>
+
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.taille, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noTaille, (SelectList)ViewBag.listeTaille, "", new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noTaille, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.silhouette, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noSilhouette, (SelectList)ViewBag.listeSilhouette, "", new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noSilhouette, "", new { @class = "messageErreur" })
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <a class="barreSection" href="#informationsSupp" data-toggle="collapse">
+            <h3>Informations supplémentaires</h3>
+        </a>
+
+        <div id="informationsSupp" class="refermable collapse in">
+            <div class="champ">
+                <div class="labels">
+                    <p>J'ai</p>
+                </div>
+                <div class="editeurDifferent">
+                    @Html.EditorFor(model => model.nbEnfants, new { htmlAttributes = new { @class = "editeurs" } })
+                </div>
+                <p id="enfants"> enfants.</p>
+                @Html.ValidationMessageFor(model => model.nbEnfants, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    <p>J'ai</p>
+                </div>
+                <div class="editeurDifferent">
+                    @Html.EditorFor(model => model.nbAnimaux, new { htmlAttributes = new { @class = "editeurs" } })
+                </div>
+                <p id="animaux"> animaux.</p>
+                @Html.ValidationMessageFor(model => model.nbAnimaux, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    Est-ce que je désire avoir des enfants dans le futur?
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noDesirEnfant, (SelectList)ViewBag.listeDesirEnfant, "", htmlAttributes: new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noDesirEnfant, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.fumeur, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.fumeur, (List<SelectListItem>)ViewBag.estFumeur, "", htmlAttributes: new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.fumeur, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.religion, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noReligion, (SelectList)ViewBag.listeReligion, "", new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noReligion, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.occupation, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noOccupation, (SelectList)ViewBag.listeOccupation, "", htmlAttributes: new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noOccupation, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.situationFinanciere, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noSituationFinanciere, (SelectList)ViewBag.listeSituationFinanciere, "", htmlAttributes: new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noSituationFinanciere, "", new { @class = "messageErreur" })
+            </div>
+
+            <div class="champ">
+                <div class="labels">
+                    @Html.LabelFor(model => model.niveauEtude, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="editeur">
+                    @Html.DropDownListFor(model => model.noNiveauEtude, (SelectList)ViewBag.listeNiveauEtude, "", htmlAttributes: new { @class = "editeurs" })
+                </div>
+                @Html.ValidationMessageFor(model => model.noNiveauEtude, "", new { @class = "messageErreur" })
+            </div>
+        </div>
+    </div>
+
+    @*<div class="section">
+        <a class="barreSection" href="#supprimer" data-toggle="collapse">
+            <h3>Supprimer mon compte...</h3>
+        </a>
+        <div id="supprimer" class="refermable collapse">
+            <input id="btnSupp" class="bouton" type="submit" value="Supprimer" formaction="@Url.Action("Delete", "Membres", new { id =  Model.noMembre})" />
+        </div>
+    </div>*@
+        
+    }

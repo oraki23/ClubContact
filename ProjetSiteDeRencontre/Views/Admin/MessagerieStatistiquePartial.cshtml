@@ -1,0 +1,23 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE PERMETTANT L'AFFICHAGE DE CERTAINES STATISTIQUES DES MESSAGES ENVOYÉS SUR LE SITE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.StatistiqueViewModel
+
+<div class="statistiqueMessagerie">
+    @Html.Partial("RechercheParDateStatPartial")
+
+    <div class="affichageStatistiques">
+        <h3>Nombre de messages envoyés dans cette période:</h3>
+        <p>@Model.nbMessagesEnvoyes messages</p>
+
+        <h3>Nombre de cadeaux envoyés dans cette période:</h3>
+        <p>@Model.nbCadeauxEnvoyes cadeaux</p>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE QUI PERMET LA MODIFIATION ET L'AFFICHAGE DE LA LISTE DE FAVORIS D'UN MEMBRE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@Styles.Render("~/Content/ListeNoireStyle.css")
+
+@using (Html.BeginForm("ListeFavoris", "Membres", FormMethod.Post, new { @id = "frmListeFavoris" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.noMembre)
+    @Html.HiddenFor(m => m.courriel)
+    @Html.HiddenFor(m => m.dateNaissance)
+
+    <h2 class="titreListe">Ta liste de favoris</h2>
+
+    <p class="messageConfirmationListe">@TempData["Confirmation"]</p>
+
+    {
+        TempData.Remove("Confirmation");
+    }
+
+    <div class="conteneurMembresListe">
+
+        @if (Model.listeFavoris != null)
+        {
+            if (Model.listeFavoris.Count() > 0)
+            {
+                for (int i = 0; i < Model.listeFavoris.Count(); i++)
+                {
+                    ViewBag.i = i;
+                    @Html.Partial("MembresListePartial", Model.listeFavoris[i]);
+                }
+
+                <button class="boutonSauvegarderListeNoireFavoris" type="submit">Sauvegarder</button>
+            }
+            else
+            {
+                <p class="messageSiVideListe">Votre liste de favoris est vide.<br />Pour ajouter un membre à cette liste, veuillez appuyez sur le bouton<br /> correspondant sur le profil du membre en question.</p>
+            }
+        }
+    </div>
+}
+
+@section Scripts {
+    @*On a pas besoin de validation Ici!*@
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    <script type="text/javascript">
+
+        $(document).ajaxComplete(function(){
+            $(".removeMembre").off('click');
+
+            $(".removeMembre").click(function () {
+                var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette personne de votre liste de favoris?");
+                if(supprimerConfirmation == true)
+                {
+                    suppressionListeNoire(this);
+                }
+            });
+        })
+
+        $(".removeMembre").click(function () {
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette personne de votre liste de favoris?");
+            if(supprimerConfirmation == true)
+            {
+                suppressionListeNoire(this);
+            }
+        });
+
+    </script>
+}
+
+
+
+

@@ -1,0 +1,93 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE CONTENANT LE COURRIEL QUI SERA ENVOYÉ APRÈS L'ACHAT D'UN ABONNEMENT PREMIUM
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@  
+
+@model ProjetSiteDeRencontre.Models.Abonnement
+
+@{
+    ViewBag.Title = "Abonnement Premium Club Contact";
+}
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    <h2>Félicitation pour votre abonnement premium à Club Contact!</h2>
+    <br />
+    <p>Vous êtes maintenant un membre premium sur Club Contact jusqu'au @Model.dateFin.ToLongDateString()!
+    <p>Profitez au maximum de vos privilèges et n'hésitez pas à nous contacter en cas de questions.
+    <div class="factureDetailleeAbonnements">
+        <h3>Détails de la facturation</h3>
+        <table>
+            <tr>
+                <td>Date de la facture:</td>
+                <td>@Model.datePaiement</td>
+            </tr>
+            <tr>
+                <td>Prénom:</td>
+                <td>@Model.prenomSurCarte</td>
+            </tr>
+            <tr>
+                <td>Nom:</td>
+                <td>@Model.nomSurCarte</td>
+            </tr>
+            <tr>
+                <td>Quatre derniers chiffres sur la carte:</td>
+                <td>************@Model.quatreDerniersChiffres</td>
+            </tr>
+            <tr>
+                <td>Type de la carte:</td>
+                <td>@Model.typeCarte</td>
+            </tr>
+            <tr>
+                <td>Adresse:</td>
+                <td>@Model.adresseFacturation</td>
+            </tr>
+            <tr>
+                <td>Ville:</td>
+                <td>@Model.villeFacturation</td>
+            </tr>
+            <tr>
+                <td>Province:</td>
+                <td>@Model.provinceFacturation.nomProvince</td>
+            </tr>
+            <tr>
+                <td>Code postal:</td>
+                <td>@Model.codePostalFacturation</td>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Coût avant taxes:</td>
+                <td>@string.Format("{0:0.00}", Model.coutTotal) $</td>
+            </tr>
+            <tr>
+                <td>TPS:</td>
+                <td>@string.Format("{0:0.00}", Model.prixTPS) $</td>
+            </tr>
+            @if (Model.prixTVQ != null && Model.prixTVQ != 0.00)
+            {
+                <tr>
+                    <td>TVQ:</td>
+                    <td>@string.Format("{0:0.00}", Model.prixTVQ) $</td>
+                </tr>
+            }
+            <tr>
+                <td>Coût total:</td>
+                <td>@(string.Format("{0:0.00}", (Model.coutTotal + Model.prixTPS + (Model.prixTVQ ?? 0.00)))) $</td>
+            </tr>
+        </table>     
+        
+    </div>
+    <a href="@Url.Action("Home", "Home", null, Request.Url.Scheme)">Accéder au site</a>
+</body>
+</html>
+

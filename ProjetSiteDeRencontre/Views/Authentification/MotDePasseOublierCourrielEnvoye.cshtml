@@ -1,0 +1,28 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE ENVOYÉE PAR COURRIEL AVEC UN LIEN PERMETTANT D'ALLER FAIRE UN RESET DE MOT DE PASSE 
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model int
+
+@{
+    ViewBag.Title = "Réinitialiser mot de passe Club Contact";
+}
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    <h2>Réinitialisation de votre mot de passe Club Contact</h2>
+    <br />
+    <p>Une demande a été fait pour réinitialiser votre mot de passe</p>
+    <p>Veuillez cliquer sur le lien suivant pour réinitialiser votre mot de passe:</p>
+    <a href="@Url.Action("ResetMotDePasse", "Authentification", new { noMembre = Model }, Request.Url.Scheme)">Réinitialisation mot de passe</a>
+</body>
+</html>

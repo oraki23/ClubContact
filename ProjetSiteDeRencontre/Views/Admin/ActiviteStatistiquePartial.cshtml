@@ -1,0 +1,137 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE PERMETTANT L'AFFICHAGE DES ORGANISATEURS DES ACTIVITÉS DE MÊME QUE DIVERSES
+    STATISTIQUES À CE NIVEAU
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.StatistiqueViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+<div class="statistiqueMessagerie">
+    <div class="rechercheActiviteStat">
+        @Html.Partial("RechercheParDateStatPartial")
+
+        <div>
+            <div class="titreGauche">
+                <p>Coût:</p>
+                <p>@Html.DropDownListFor(m => m.activitePayante, new SelectList(ViewBag.payant, "Value", "Text", Model.activitePayante), "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+            <div class="titreGauche">
+                <p>Province:</p>
+                <p>@Html.DropDownListFor(m => m.noProvince, (SelectList)ViewBag.province, "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+            <div class="titreGauche">
+                <p>Ville:</p>
+                <p>@Html.DropDownListFor(m => m.noVille, Enumerable.Empty<SelectListItem>(), "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+            <div class="titreGauche">
+                <p>Thème:</p>
+                <p>@Html.DropDownListFor(m => m.noThemeRecherche, (SelectList)ViewBag.themes, "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+        </div>
+        <div class="afficherMembresDesactiver">
+            <label>Afficher les organisateurs désactivés</label>
+            @Html.EditorFor(m => m.afficherMembresDesactiver)
+        </div>
+    </div>
+    
+
+    <div class="affichageStatActivite">
+        <label>Nombre d'activités organisés dans cette période:</label>
+        <p>@Model.nbActivitesOrganisesTrouves activités</p>
+
+        <label>Nombre d'activités annulées dans cette période:</label>
+        <p>@Model.nbActivitesAnnuleeTrouves activités</p>
+
+        <label>Nombre de participants dans ces activités au total:</label>
+        <p>@Model.nbParticipantsTrouves participants</p>
+
+        @*<label>Nombre d'organisateur dans ces activités au total:</label>
+        <p>@Model.listeOrganisateurs.Count organisateur</p>*@
+    </div>
+
+    <div class="listeOrganisateur">
+        <h3>Liste des organisateurs de ces activités</h3>
+        <div class="headerListeMembre">
+            <div class="premiumMembre">
+
+            </div>
+            <div class="surnomMembre">
+                Surnom
+            </div>
+            <div class="nomMembre">
+                Nom
+            </div>
+            <div class="prenomMembre">
+                Prénom
+            </div>
+            <div class="courrielMembre">
+                Courriel
+            </div>
+            <div class="dateInscriptionMembre alignLeft">
+                Date inscription
+            </div>
+            <div class="dateDerniereConnexion alignLeft">
+                Dernière Connexion
+            </div>
+            <div class="sexeMembre">
+                Sexe
+            </div>
+            <div class="ageMembre">
+                Âge
+            </div>
+            <div class="raisonSurSiteMembre">
+                Raisons site
+            </div>
+            <div class="habitationMembre">
+                Ville, Province
+            </div>
+        </div>
+        @foreach(Membre m in Model.listeOrganisateurs)
+        {
+            @Html.Partial("UnMembreListePartial", m)
+        }
+    </div>
+
+    <!-- pager -->
+    <div class="pagi">
+        <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+        @if (ViewBag.EndPage > 1)
+        {
+            <ul class="page">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li>
+                        @Html.ActionLink("Premier", "Statistique", "Admin", new { vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Précédent", "Statistique", "Admin", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1 }, new { @class = "backPage" })
+                    </li>
+                }
+
+                @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                {
+                    <li>
+                        @Html.ActionLink((string)(page.ToString()), "Statistique", "Admin", new { page = page, vientDePagination = 1 }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                    </li>
+                }
+
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li>
+                        @Html.ActionLink("Suivant", "Statistique", "Admin", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Dernier", "Statistique", "Admin", new { page = ViewBag.TotalPages, vientDePagination = 1 }, null)
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

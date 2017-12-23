@@ -1,0 +1,89 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT DE VOIR QUI A VU NOTRE PROFIL
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+@using System.Security.Claims
+@using ProjetSiteDeRencontre.Models
+
+@Styles.Render("~/Content/cssHome")
+
+@{
+    bool adminConnecter = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier).Value == "admin" ? true : false;
+
+}
+
+@using (Html.BeginForm())
+{
+    if (!adminConnecter)
+    {
+        if (Model.premium == true)
+        {
+            <div class="dernieresVisiteSurSonProfil">
+                <h2>Les dernières visites de votre profil par les autres membres</h2>
+                @if (Model.listeDeVisitesDeMonProfil.Count == 0)
+                {
+                    <p class="aucuneVisiteP">Vous n'avez eu aucune visite sur votre profil récemment</p>
+                }
+                else
+                {
+                    <div class="dateVisiteDivider">
+                        <label>Dernière visite</label>
+                        <div class="videProfil"></div>
+                    </div>
+
+                    foreach (Visite v in Model.listeDeVisitesDeMonProfil.OrderByDescending(m => m.dateVisite).GroupBy(m => m.noMembreVisiteur).Select(g => g.First()).ToList())
+                    {
+                        <div class="uneVisite">
+                            <div class="dateVisite">
+                                @if (v.dateVisite.Date == DateTime.Today)
+                                {
+                                    <p>Aujourd'hui à @v.dateVisite.ToLongTimeString()</p>
+                                }
+                                else if (v.dateVisite.Date == DateTime.Today.AddDays(-1))
+                                {
+                                    <p>Hier à @v.dateVisite.ToLongTimeString()</p>
+                                }
+                                else
+                                {
+                                    <p>@v.dateVisite</p>
+                                }
+
+                            </div>
+
+                            <div class="photoProfilVuProfil">
+                                @{
+                                    Photo photoProfil = v.membreVisiteur.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                                }
+                                @if (photoProfil != null)
+                                {
+                                    <img class="" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" />
+                                }
+                                else
+                                {
+                                    if (v.membreVisiteur.homme)
+                                    {
+                                        <img class="" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                                    }
+                                    else
+                                    {
+                                        <img class="" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                                    }
+                                }
+                            </div>
+                            <div class="laPersonneLien">
+                                <a onclick="location.href='@Url.Action("RetirerDeVisitePuisDetails", "Membres", new { id = v.noMembreVisiteur })';return false;">@v.membreVisiteur.surnom</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    }
+}

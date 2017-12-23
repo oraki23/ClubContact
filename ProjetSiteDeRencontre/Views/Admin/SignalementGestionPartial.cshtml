@@ -1,0 +1,271 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE PERMETTANT L'AFFICHAGE ET LA GESTION DES SIGNALEMENTS DE MÊME QUE DIVERSES
+    STATISTIQUES À CE NIVEAU
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.ViewModel.GestionViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+<div class="sectionSignalement">
+
+    <div class="legendeEtatsSignalements">
+        <h3>Légende des états de plaintes</h3>
+        <p><b>Nouveau:</b> La plainte vient d'être reçue mais n'a pas encore été traitée.</p>
+        <p><b>Assigné:</b> La plainte est assigné à un administrateur mais aucune action n'a encore été faite. (Changer l'état d'un plainte à "Assigné" assigne la plainte à l'administrateur actuel)</p>
+        <p><b>En suivi:</b> Une action a été faite sur la plainte (Un avertissement a été envoyé au membre) et la plainte est en attente de la fin du délai laissé à l'usager pour remédier à la situation (7 jours).</p>
+        <p><b>À traiter:</b> Le délai pour remédier à la situation accordé à l'usager est passé. Une vérification est nécessaire.</p>
+        <p><b>Traité:</b> La plainte a été traitée en intégralité et aucune action n'est nécessaire.</p>
+    </div>
+
+    <h3>Gestion des signalements</h3>
+    <div class="nbPlainteRecuChiffres">
+        <div class="nbPlaintesRecuSite">
+            <h4>Nombre de signalement reçu au total:</h4>
+            <p>@Model.nbSignalementTotalRecuSite signalements</p>
+        </div>
+        <div class="nbPlaintesNouveau">
+            <h4>Nombre de nouveaux signalements:</h4>
+            <p>@Model.nbSignalementTotalNouveau signalements</p>
+        </div>
+        <div class="nbPlaintesTraites">
+            <h4>Nombre de signalement qui ont été traités:</h4>
+            <p>@Model.nbSignalementTotalTraites signalements</p>
+        </div>
+    </div>
+    <div class="recherchePlaintes">
+        <label>État plainte</label>
+        @Html.DropDownListFor(m => m.noEtatSignalementRecherche, new SelectList(ViewBag.listeEtatSignalementPlainte, "noEtatSignalement", "nomEtatSignalement", Model.noEtatSignalementRecherche), "", new { @class = "editeurEtatPlainte" })
+        <button type="submit">Rechercher</button>
+    </div>
+    <div class="titreListePlaintes">
+        <div class="nomContreQuiEstPlainte">
+            Membre signalé
+        </div>
+        <div class="nomEnvoyeurPlainte">
+            Membre plaignant
+        </div>
+        <div class="traiteParHeader">
+            Traité par
+        </div>
+        <div class="etatPlainte">
+            État
+        </div>
+        <div class="datePlainte">
+            Date
+        </div>
+    </div>
+    <div class="listeDesPlaintes">
+        @for (int i = 0; i < Model.lesSignalement.Count; i++)
+        {
+            @Html.HiddenFor(m => m.lesSignalement[i].noSignalement)
+            @Html.HiddenFor(m => m.lesSignalement[i].dateSignalement)
+            @Html.HiddenFor(m => m.lesSignalement[i].noMembreFaisantPlainte)
+            @Html.HiddenFor(m => m.lesSignalement[i].noMembreContreQuiEstPlainte)
+            @Html.HiddenFor(m => m.lesSignalement[i].raisonDeLaPlainte)
+            @Html.HiddenFor(m => m.lesSignalement[i].noMessageJoint)
+
+            @Html.HiddenFor(m => m.lesSignalement[i].noCompteAdmin)
+            @Html.HiddenFor(m => m.lesSignalement[i].dateSuiviNecessaire)
+
+            <div class="sectionSignalementGestion">
+                <a class="barreSectionSignalementGestion" href="#signalement@(i)" data-toggle="collapse">
+                    <div class="nomContreQuiEstPlainte">
+                        @Model.lesSignalement[i].membreContreQuiEstPlainte.surnom
+                    </div>
+                    <div class="nomEnvoyeurPlainte">
+                        @Model.lesSignalement[i].membreFaisantPlainte.surnom
+                    </div>
+                    <div class="traiteParHeader">
+                        @if (Model.lesSignalement[i].adminQuiTraite != null)
+                        {
+                            @Model.lesSignalement[i].adminQuiTraite.nomCompte
+                        }
+                        else
+                        {
+                            @:<em>(Aucun)</em>
+                        }
+                    </div>
+                    <div class="etatPlainte">
+                        @Model.lesSignalement[i].etatSignalementActuel.nomEtatSignalement
+                    </div>
+                    <div class="datePlainte">
+                        @Model.lesSignalement[i].dateSignalement
+                    </div>
+                </a>
+                <div id="signalement@(i)" class="sectionRefermable refermable collapse">
+                    @{ 
+                        List<TraitementSignalement> lesTraitementsSignalement = Model.lesSignalement[i].lesTraitementsSurCeSignalement.OrderByDescending(m => m.dateTraitementSignalement).ToList();
+                    }
+
+                    @foreach (TraitementSignalement ts in lesTraitementsSignalement)
+                    {
+                        <div class="traitementEffectue">
+                            @if (ts.actionTraitement.nomActionTraitement == "Avertissement envoyé")
+                            {
+                                <em>Traitement par @ts.compteAdminTraiteur.nomCompte le @(ts.dateTraitementSignalement). Action: @Html.ActionLink(ts.actionTraitement.nomActionTraitement, "MessageAdmin", "Messagerie", new { id = ts.noMessageLie, noSignalement = ts.noSignalementLie }, null)</em>
+                            }
+                            else
+                            {
+                                <em>Traitement par @ts.compteAdminTraiteur.nomCompte le @(ts.dateTraitementSignalement). Action: @ts.actionTraitement.nomActionTraitement</em>
+                            }
+                        </div>
+                    }
+
+                    
+                    
+                    <div class="raisonPlainte">
+                        <h3>Raison de la plainte</h3>
+                        @if (Model.lesSignalement[i].raisonDeLaPlainte == "" || Model.lesSignalement[i].raisonDeLaPlainte == null)
+                        {
+                            <p><em>(Aucune raison spécifiée)</em></p>
+                        }
+                        else
+                        {
+                            <p>@Model.lesSignalement[i].raisonDeLaPlainte</p>
+                        }
+                    </div>
+                    @if (Model.lesSignalement[i].messageJoint != null)
+                    {
+                        <div class="messageJoint">
+                            <h3>Message Joint</h3>
+                            <div class="objetMessageJointPlainte">
+                                <label>Objet:</label>
+                                <h4>@Model.lesSignalement[i].messageJoint.sujetMessage</h4>
+                            </div>
+                            <div class="sujetMessageJointPlainte">
+                                <label>Message:</label>
+                                <p>@Model.lesSignalement[i].messageJoint.contenuMessage</p>
+                            </div>
+                        </div>
+                    }
+                    <div class="actionsSurPlainte">
+                        <div class="voirProfilPlainte" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.lesSignalement[i].noMembreContreQuiEstPlainte })';return false;">
+                            <a>Voir le profil du membre contre qui est la plainte</a>
+                        </div>
+                        @if (Model.lesSignalement[i].etatSignalementActuel.nomEtatSignalement != "Traité")
+                        {
+                            <div class="envoyerMessagePlainte" onclick="location.href='@Url.Action("Send", "Messagerie", new { id = Model.lesSignalement[i].noMembreContreQuiEstPlainte, noSignalementLie = Model.lesSignalement[i].noSignalement })';return false;">
+                                <a>Envoyer un message au membre fautif</a>
+                            </div>
+                            <div class="desactiverCompte" onclick="desactiverCompteSignalement(@Model.lesSignalement[i].noMembreContreQuiEstPlainte, @(Model.lesSignalement[i].noSignalement))">
+                                <a>Bloquer le compte</a>
+                            </div>
+                        }
+                        <div class="changerEtatPlainte">
+                            <h3>État de la plainte</h3>
+                            @Html.DropDownListFor(m => m.lesSignalement[i].noEtatSignalementActuel, new SelectList(ViewBag.listeEtatSignalementPlainte, "noEtatSignalement", "nomEtatSignalement", Model.lesSignalement[i].noEtatSignalementActuel), new { @class = "editeurEtatPlainte" })
+                            <button type="submit" name="btnSubmit" value="ChangerEtatPlainte@(Model.lesSignalement[i].noSignalement)">Sauvegarder</button>
+                        </div>
+                        <div class="ajoutCommentaire">
+                            @{
+                                int lastIndexPlusOne = 0;
+                                List<CommentaireSignalement> commentairesTrier = Model.lesSignalement[i].lesCommentairesSurCeSignalement.OrderByDescending(m => m.dateCommentaire).ToList();
+                            }
+                            @if (commentairesTrier.Count > 1)
+                            {
+                                <h3>Liste des commentaires sur la plainte</h3>
+
+                                <div class="header">
+                                    <div class="envoyeurCommentaire">
+                                        Administrateur
+                                    </div>
+                                    <div class="leCommentaire">
+                                        Commentaire
+                                    </div>
+                                    <div class="dateEnvoieCommentaire">
+                                        Date
+                                    </div>
+                                </div>
+                            }
+                            
+                            @for (int j = 0; j < commentairesTrier.Count - 1; j++)
+                            {
+                                {
+                                    lastIndexPlusOne = j + 1;
+                                }
+
+                                @Html.HiddenFor(m => Model.lesSignalement[i].lesCommentairesSurCeSignalement[j].noCommentaireSignalement)
+                                @Html.HiddenFor(m => Model.lesSignalement[i].lesCommentairesSurCeSignalement[j].noSignalementLie)
+                                @Html.HiddenFor(m => Model.lesSignalement[i].lesCommentairesSurCeSignalement[j].noCompteAdminEnvoyeur)
+                                @Html.HiddenFor(m => Model.lesSignalement[i].lesCommentairesSurCeSignalement[j].commentaireSignalement)
+                                @Html.HiddenFor(m => Model.lesSignalement[i].lesCommentairesSurCeSignalement[j].dateCommentaire)
+                                <div class="unCommentaire">
+                                    <div class="envoyeurCommentaire">
+                                        @commentairesTrier[j].compteAdminEnvoyeur.nomCompte
+                                    </div>
+                                    <div class="leCommentaire">
+                                        @commentairesTrier[j].commentaireSignalement
+                                    </div>
+                                    <div class="dateEnvoieCommentaire">
+                                        @commentairesTrier[j].dateCommentaire
+                                    </div>
+                                </div>
+                            }
+
+                            @Html.HiddenFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].noCommentaireSignalement)
+                            @Html.HiddenFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].dateCommentaire)
+                            @Html.HiddenFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].noCompteAdminEnvoyeur)
+                            @Html.HiddenFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].noSignalementLie)
+                            <div class="nouveauCommentaire">
+                                <p>Ajouter un commentaire</p>
+                                <div class="envoyeurCommentaire">
+                                    @Model.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].compteAdminEnvoyeur.nomCompte
+                                </div>
+                                <div class="textAreaCommentaire">
+                                    @Html.TextAreaFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].commentaireSignalement, new { @class = "ajoutCommentaireTextArea" })
+                                </div>
+                                <div class="divBoutonEnvoyerCommentaire">
+                                    <button type="submit" value="commentaireSignalement@(i)" name="btnSubmit" class="boutonAjouterCommentaire">Ajouter</button>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.lesSignalement[i].lesCommentairesSurCeSignalement[lastIndexPlusOne].commentaireSignalement, "", new { @class = "messageErreurCommentaire" })
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- pager -->
+    <div class="pagi">
+        <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+        @if (ViewBag.EndPage > 1)
+        {
+            <ul class="page">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li>
+                        @Html.ActionLink("Premier", "Gestion", "Admin", new { vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Précédent", "Gestion", "Admin", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1 }, new { @class = "backPage" })
+                    </li>
+                }
+
+                @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                {
+                    <li>
+                        @Html.ActionLink((string)(page.ToString()), "Gestion", "Admin", new { page = page, vientDePagination = 1 }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                    </li>
+                }
+
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li>
+                        @Html.ActionLink("Suivant", "Gestion", "Admin", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Dernier", "Gestion", "Admin", new { page = ViewBag.TotalPages, vientDePagination = 1 }, null)
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

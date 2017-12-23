@@ -1,0 +1,102 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE ÉTANT DANS LA DERNIÈRE PARTIE DU PROCESSUS D'ACHAT D'ABONNEMENT, QUI AFFICHE
+    LES DÉTAILS DE LA COMMANDE ET LA CONFIRMATION DE L'ACHAT
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.PaiementViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+@using (Html.BeginForm("Facture", "Membres", FormMethod.Post, new { @id = "formPaiement" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="passerAPremium">
+
+        <p class="messageErreurPaiementNonFonctionne">@TempData["MessagePaiementErreur"]</p>
+        @{
+            TempData.Remove("MessagePaiementErreur");
+        }
+
+        <h3>Passer à Premium</h3>
+
+        <div class="informationsPaiement">
+            <h4>Résumé de la commande</h4>
+
+            @Html.HiddenFor(model => model.nbMois)
+
+            <div class="factureDetaillee">
+                <div class="nbMois">
+                    <p>Nombre de mois : </p>
+                    <p>Prix par mois : </p>
+                    <p>Prix total avant taxes : </p>
+                    <p>TPS (5%) : </p>
+                    @if (Model.provinceFacturation.nomProvince == "Québec")
+                    {
+                        <p>TVQ (9.975%) : </p>
+                    }
+                    <br />
+                    <p>Prix total à payer : </p>
+                </div>
+                <div class="prixFacture">
+                    <p>@Model.nbMois</p>
+                    @{ 
+                        double prixParMois = ((List<ForfaitPremium>)ViewBag.forfaitsPremium).Where(m => m.nbMoisAbonnement == Model.nbMois).Select(m => m.prixParMois).FirstOrDefault();
+                        double prixTotal = ((List<ForfaitPremium>)ViewBag.forfaitsPremium).Where(m => m.nbMoisAbonnement == Model.nbMois).Select(m => m.prixTotal).FirstOrDefault();
+                    }
+
+                    @Html.HiddenFor(m => m.TPS)
+                    @Html.HiddenFor(m => m.TVQ)
+
+                    <p>@(prixParMois)$</p>
+                    <p>@(prixTotal)$</p>
+                    <p>@string.Format("{0:0.00}", Model.TPS)$</p>
+                    @if (Model.provinceFacturation.nomProvince == "Québec")
+                    {
+                        <p>@string.Format("{0:0.00}", Model.TVQ)$</p>
+                    }
+                    <br />
+                    <p>@(string.Format("{0:0.00}", (prixTotal + Model.TPS + (Model.provinceFacturation.nomProvince == "Québec" ? Model.TVQ : 0))))$</p>
+                </div>
+            </div>
+
+            @{
+                if(ViewBag.disabled == null)
+                {
+                    ViewBag.disabled = true;
+                }
+            }
+            @Html.Partial("InformationsCarteCreditPartial")
+
+            <div class="divBtnPaiement">
+                <input type="button" onclick="submitForm()" value="Confirmer le paiement" class="btnPaiement" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', true);
+            });
+        });
+
+        function submitForm() {
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', false);
+                return true;
+            });
+            $('#formPaiement').submit();
+        }
+    </script>
+}

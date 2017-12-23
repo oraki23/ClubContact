@@ -1,0 +1,339 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE LAYOUT PRINCIPALE DU SITE, CONTENANT LA BARRE DE NAVIGATION AINSI QUE LE FOOTER
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@using System.Security.Claims
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="@Url.Content("~/Photos/logo.png")" type="image/x-icon" />
+    <title>@ViewBag.Title - Club Contact</title>
+    @Styles.Render("~/Content/cssGeneral")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/utilitaire")
+    @RenderSection("Scripts", required: false)
+
+    @if (Request.IsAuthenticated)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                afficherPhotoProfil('@(((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier).Value)', '@Url.Action("TrouverNomFichierPhotoProfil", "Utilitaire")')
+            })
+        </script>
+    }
+
+    @{
+        bool adminConnecter = false;
+        if (Request.IsAuthenticated)
+        {
+            adminConnecter = User.IsInRole("Admin") ? true : false;
+        }
+    }
+    
+    <script type="text/javascript">
+        @{
+            bool aLogger = false;
+        }
+        @if(Request.Cookies["AnalyticsCC"] != null)
+        {
+            if(Request.Cookies["AnalyticsCC"]["dejaEnregistrer"] == null)
+            {
+                aLogger = true;
+            }
+        }
+        else
+        {
+            aLogger = true;
+        }
+
+        @if(aLogger == true)
+        {
+            <text>
+            $(document).ready(function () {
+            @if(Request.IsAuthenticated && !adminConnecter)
+            {
+            <text>
+            $.ajax({
+                url: '@Url.Action("AjouterConnexionSite", "Utilitaire")',
+                type: 'POST',
+                data: { visiteur: false },
+                success: function (results) {
+                    console.log("Réussi");
+                }
+            });
+            </text>
+
+            }
+            else if(!adminConnecter)
+            {
+                <text>
+            $.ajax({
+                url: '@Url.Action("AjouterConnexionSite", "Utilitaire")',
+                type: 'POST',
+                data: { visiteur: true },
+                success: function (results) {
+                    console.log("Réussi");
+                }
+            });
+                </text>
+            }
+        });
+            </text>
+        }
+
+    </script>
+</head>
+<body onmouseup="HideMenu('contextMenu')" onmousedown="HideMenu('contextMenu')">
+
+    <div class="contenuSansFooter">
+
+        <div id="barreHaut">
+            <a href='@Url.Action("Home", "Home")' id="lienLogo">
+                <img src='@Url.Content("~/Photos/logo.png")' alt="Club Contact" class="logo" />
+            </a>
+            <div class="titreSite">
+                <p>Club Contact</p>
+            </div>
+
+            <nav>
+                <ul id="menu">
+                    <li>
+                        <a href='@Url.Action("Index", "Membres")'>
+                            <img src='@Url.Content("~/Photos/ico/recherche.png")' alt="Rechercher" class="icones" />
+                            <p class="texteMenu">Recherche</p>
+                        </a>
+                        @if (Request.IsAuthenticated)
+                        {
+                            if (Request.Cookies["SiteDeRencontre"] != null)
+                            {
+                                if (Request.Cookies["SiteDeRencontre"]["premium"] == "true")
+                                {
+                                    <ul>
+                                        <li>
+                                            <a href='@Url.Action("Index", "Membres")'>
+                                                <p class="lienDropdown">Simple</p>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href='@Url.Action("Index", "Membres", new { rechercheAvancee = true })'>
+                                                <p class="lienDropdown">Avancée</p>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                }
+                            }
+                        }
+                    </li>
+                    @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href='@Url.Action("Inbox", "Messagerie")'>
+                                <img src='@Url.Content("~/Photos/ico/messagerie.svg")' alt="Messagerie" class="icones" />
+                                <p class="texteMenu">Messagerie</p>
+                            </a>
+                        </li>
+                    }
+
+                    <li>
+                        <a href='@Url.Action("Index", "Activites")'>
+                            <img src='@Url.Content("~/Photos/ico/activite.svg")' alt="Activité" class="icones" />
+                            <p class="texteMenu">Activités</p>
+                        </a>
+
+                        <ul>
+                            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+                            {
+                                if (Request.Cookies["SiteDeRencontre"]["premium"].ToString().ToLower() == "true")
+                                {
+                                    <li>
+                                        <a href='@Url.Action("Create", "Activites")'>
+                                            @*À modifier*@
+                                            <p class="lienDropdown">Créer</p>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                    @if (Request.IsAuthenticated && !adminConnecter)
+                    {
+                        <li>
+                            <a href='@Url.Action("ListeFavoris", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })'>
+                                <img src='@Url.Content("~/Photos/ico/favoris.svg")' alt="Favoris" class="icones" />
+                                <p class="texteMenu">Favoris</p>
+                            </a>
+                        </li>
+                    }
+                    @*else
+                        {
+                            <a href='@Url.Action("MyAction", "MyController")'>
+                                <img src='@Url.Content("~/Photos/ico/favoris.svg")' alt="Favoris" class="icones" />
+                                <p class="texteMenu">Favoris</p>
+                            </a>
+                        }*@
+                    @if (Request.IsAuthenticated && !adminConnecter)
+                    {
+                        <li>
+                            <a href='@Url.Action("ListeNoire", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })' )'>
+                                <img src='@Url.Content("~/Photos/ico/favoris.svg")' alt="Personnes rejetées" class="icones" />
+                                <p class="texteMenu">Personnes rejetées</p>
+                            </a>
+                        </li>
+                    }
+                    @*else
+                        {
+                            <a href='@Url.Action("MyAction", "MyController")'>
+                                <img src='@Url.Content("~/Photos/ico/favoris.svg")' alt="Personnes rejetées" class="icones" />
+                                <p class="texteMenu">Personnes rejetées</p>
+                            </a>
+                        }*@
+                    @if (Request.IsAuthenticated && !adminConnecter)
+                    {
+                        if (Request.Cookies["SiteDeRencontre"]["premium"] == "true")
+                        {
+                            <li>
+                                <a href='@Url.Action("VuProfil", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })' )'>
+                                    <img src='@Url.Content("~/Photos/ico/eye.png")' alt="Qui a vu mon profil" class="icones" />
+                                    <p class="texteMenu">Qui a vu mon profil?</p>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                    <li>
+                        @*If logged*@
+
+                        @if (Request.IsAuthenticated)
+                        {
+                            ClaimsIdentity claimIdentity = (ClaimsIdentity)User.Identity;
+                            if (claimIdentity != null)
+                            {
+                                var userName = claimIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                                if (/*Request.Cookies["SiteDeRencontre"] != null*/ !User.IsInRole("Admin"))
+                                {
+                                    <a title="Mon profil" href='@Url.Action("Details", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })'>
+                                        <img id="photoProfilPetit" alt="Photos Profil" class="imgProfil" />
+                                        <p class="texteMenu">@userName</p>
+                                    </a>
+                                }
+                                else
+                                {
+                                <li>
+                                    <a href='@Url.Action("Gestion", "Admin")'>
+                                        @*<img src='@Url.Content("~/Photos/ico/messagerie.svg")' alt="Messagerie" class="icones" />*@
+                                        <p class="texteMenu">@userName</p>
+                                    </a>
+
+                                    <ul id="menuCompte">
+                                        <li>
+                                            <a href='@Url.Action("Logout", "Authentification")'>
+                                            <p class="lienDropdown">Déconnexion</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                }
+
+                                if (!User.IsInRole("Admin"))
+                                {
+                                    <ul id="menuCompte">
+                                        <li>
+                                            <a href='@Url.Action("Edit", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })'>
+                                                <p class="lienDropdown">Modifier mon profil</p>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href='@Url.Action("Options", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })'>
+                                                <p class="lienDropdown">Options</p>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href='@Url.Action("Abonnement", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"].ToString()) })'>
+                                                <p class="lienDropdown">Mon abonnement</p>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href='@Url.Action("Logout", "Authentification")'>
+                                                <p class="lienDropdown">Déconnexion</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+
+                            }
+                        }
+                        @*If not logged*@
+                        else
+                        {
+                            <a href='@Url.Action("Login", "Authentification")'>
+                                <img src='@Url.Content("~/Photos/ico/profil.png")' alt="Photos Profil" class="imgProfil" />
+                                <p class="texteMenu">Connexion</p>
+                            </a>
+                        }
+
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+
+
+        @RenderBody()
+
+    </div>
+
+    <footer>
+        <p>
+            @Html.ActionLink("Aide", "FAQ", "Home")
+            @*@Html.ActionLink("Nous Contacter", "MyAction", "MyController")
+            @Html.ActionLink("Confidentialité", "MyAction", "MyController")
+            @Html.ActionLink("À propos", "MyAction", "MyController")*@
+        </p>
+    </footer>
+</body>
+</html>
+
+@*<div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Nom d'application", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
+                    <li>@Html.ActionLink("À propos de", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>*@

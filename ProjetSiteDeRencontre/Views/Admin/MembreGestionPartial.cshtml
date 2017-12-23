@@ -1,0 +1,146 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE PERMETTANT L'AFFICHAGE DES MEMBRES DU SITE ET PERMET DE FAIRE UNE PETITE RECHERCHE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model ProjetSiteDeRencontre.ViewModel.GestionViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+@{ 
+    //critères de tri
+    List<SelectListItem> triPar = new List<SelectListItem>() {
+        new SelectListItem() { Value = "age", Text = "Âge" },
+        new SelectListItem() { Value = "sexe", Text = "Sexe" },
+        new SelectListItem() { Value = "dateInscription", Text = "Date inscription" },
+        new SelectListItem() { Value = "derniereConnexion", Text = "Dernière Connexion" },
+    };
+}
+
+<div class="membresSection">
+    <h3>Gestion des membres</h3>
+
+    <div class="rechercheMembres">
+        <div class="premiumUniquement">
+            <label>Type de membre</label>
+            @Html.DropDownListFor(m => m.membresPremiumUniquement, (List<SelectListItem>)ViewBag.premiumUniquement, "Tous", new { @class = "editeurRecherche" })
+        </div>
+        <div class="trancheAge">
+            <div class="ageMin">
+                <label>Âge Minimum</label>
+                @Html.EditorFor(m => m.ageMin, new { htmlAttributes = new { @class = "ageMinEtMaxEditeur" } })
+            </div>
+            <div class="ageMax">
+                <label>Âge Maximum</label>
+                @Html.EditorFor(m => m.ageMax, new { htmlAttributes = new { @class = "ageMinEtMaxEditeur" } })
+            </div>
+        </div>
+        <div class="provinceEtVille">
+            <div class="province">
+                <label>Province</label>
+                <p>@Html.DropDownListFor(m => m.noProvince, (SelectList)ViewBag.province, "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+            <div class="ville">
+                <label>Ville</label>
+                <p>@Html.DropDownListFor(m => m.noVille, Enumerable.Empty<SelectListItem>(), "", new { @class = "editeurRechercheStatActivite" })</p>
+            </div>
+        </div>
+        <div class="triMembrePar">
+            <label>Trier les membres par:</label>
+            @Html.DropDownListFor(m => m.triMembrePar, triPar, "", new { @class = "", @onchange = "this.form.submit()" })
+        </div>
+        <div class="membresDesactive">
+            <label>Afficher uniquement les membres désactivés</label>
+            @Html.EditorFor(m => m.afficherMembresDesactiver, new { htmlAttributes = new { @class = "checkBoxMembresDesactiver" } })
+        </div>
+        <button type="submit">Rechercher</button>
+    </div>
+    <div class="nbMembresTotal">
+        <p>@Model.nbMembresTotalTrouves membres trouvés</p>
+    </div>
+    <div class="listeDesMembres">
+        <div class="headerListeMembre">
+            <div class="premiumMembre">
+                
+            </div>
+            <div class="surnomMembre">
+                Surnom
+            </div>
+            <div class="nomMembre">
+                Nom
+            </div>
+            <div class="prenomMembre">
+                Prénom
+            </div>
+            <div class="courrielMembre">
+                Courriel
+            </div>
+            <div class="dateInscriptionMembre alignLeft">
+                Date inscription
+            </div>
+            <div class="dateDerniereConnexion alignLeft">
+                Dernière Connexion
+            </div>
+            <div class="sexeMembre">
+                Sexe
+            </div>
+            <div class="ageMembre">
+               Âge
+            </div>
+            <div class="raisonSurSiteMembre">
+                Raisons site
+            </div>
+            <div class="habitationMembre">
+                Ville, Province
+            </div>
+        </div>
+        <div class="contenuMembres">
+            @foreach (Membre m in Model.lesMembres)
+            {
+                ViewBag.gestion = true;
+                @Html.Partial("UnMembreListePartial", m)
+            }
+        </div>
+    </div>
+
+    <!-- pager -->
+    <div class="pagi">
+        <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+        @if (ViewBag.EndPage > 1)
+        {
+            <ul class="page">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li>
+                        @Html.ActionLink("Premier", "Gestion", "Admin", new { vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Précédent", "Gestion", "Admin", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1 }, new { @class = "backPage" })
+                    </li>
+                }
+
+                @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                {
+                    <li>
+                        @Html.ActionLink((string)(page.ToString()), "Gestion", "Admin", new { page = page, vientDePagination = 1 }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                    </li>
+                }
+
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li>
+                        @Html.ActionLink("Suivant", "Gestion", "Admin", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1 }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Dernier", "Gestion", "Admin", new { page = ViewBag.TotalPages, vientDePagination = 1 }, null)
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

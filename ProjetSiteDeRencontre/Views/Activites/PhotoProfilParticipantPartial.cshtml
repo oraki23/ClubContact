@@ -1,0 +1,42 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE POUR L'AFFICHAGE D'UNE PHOTO DE PROFIL D'UN DES PARTICIPANTS
+    AFFICHE LA PHOTO PAR DÉFAUT DÉPENDAMMENT DU SEXE SI LE MEMBRE N'A AUCUNE PHOTO PAR DÉFAUT
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@using ProjetSiteDeRencontre.Models
+
+@{
+    Photo photoProfilParticipant = Model.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+    int i = ViewBag.i;
+    int j = ViewBag.j;
+    int nbMembresAffiche = 5;
+
+    string title = Model.surnom + ", " + (Model.homme ? "Homme" : "Femme") + ", " + Model.age + " ans"; 
+}
+
+<div id="photoUnParticipantActivite@(i)Membre@(j)" class="photoUnParticipant" style="@(j >= nbMembresAffiche ? "display:none" : "")">
+    @if (photoProfilParticipant != null)
+    {
+        <img title="@title" class="photoOrganisateur" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfilParticipant.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" />
+    }
+    else
+    {
+        if (Model.homme)
+        {
+            <img title="@title" class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" />
+        }
+        else
+        {
+            <img title="@title" class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.noMembre })';return false;" />
+        }
+    }
+</div>
+

@@ -1,0 +1,91 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE CONTENANT SES CONTACTS AINSI QUE DIVERSES OPTIONS PAR RAPPORT À CEUX-CI
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model List<ProjetSiteDeRencontre.Models.Membre>
+
+@using ProjetSiteDeRencontre.Models
+@using System.Data.Entity
+
+@*Dans Layout.cshtml: <body onmouseup="HideMenu('contextMenu')" onmousedown="HideMenu('contextMenu')">*@
+@if (Model.Count != 0)
+{
+    <div class="listeContacts">
+        <h4>Contacts</h4>
+
+        @foreach (Membre m in Model)
+        {
+        <div class="unContact" oncontextmenu="ShowMenu('contextMenu', event, @(m.noMembre)); return false;" onclick="location.href='@Url.Action("Send", "Messagerie", new { id = m.noMembre })';return false;">
+            <div class="photoProfilContact">
+                @{
+                    Photo photoProfil = m.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                }
+
+                @if (photoProfil != null)
+                {
+                    <img class="photoContact" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                }
+                else
+                {
+                    if (m.homme)
+                    {
+                        <img class="photoContact" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                    }
+                    else
+                    {
+                        <img class="photoContact" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                    }
+                }
+            </div>
+            <div class="nomContact">
+                <p>@m.surnom</p>
+            </div>
+        </div>
+
+        <div style="display:none; " id="contextMenu@(m.noMembre)" class="contextMenu">
+            <table border="0" cellpadding="0" cellspacing="0"
+                   style="border: thin solid #808080; cursor: default;" width="200px" bgcolor="White">
+                <tr>
+                    <td>
+                        <div class="ContextItem" onmousedown="location.href='@Url.Action("Send", "Messagerie", new { id = m.noMembre })';return false;">Envoyer un message</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ContextItem" onmousedown="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;">Voir le profil</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @{ 
+                            ClubContactContext db = new ClubContactContext();
+                            int noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]);
+                            Membre membreCo = db.Membres.Where(mem => mem.noMembre == noMembreCo).Include(mem => mem.listeFavoris).FirstOrDefault();
+                        }
+                        @if (membreCo.listeFavoris.Select(mem => mem.noMembre).Contains(m.noMembre))
+                        {
+                            <div class="ContextItem" onmousedown="location.href='@Url.Action("SupprimerDeListeFavoris", "Membres", new { id = m.noMembre, noMessageOrigine = -1 })';return false;">Retirer des favoris</div>
+                        }
+                        else
+                        {
+                            <div class="ContextItem" onmousedown="location.href='@Url.Action("AjouterAListeFavoris", "Membres", new { id = m.noMembre, noMessageOrigine = -1 })';return false;">Ajouter aux favoris</div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ContextItem" onmousedown="supprimerContactAJAX(@(m.noMembre), @int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]),'@Url.Action("SupprimerContactsAJAX", "Messagerie")');return false;">Retirer des contacts</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        }
+
+    </div>
+}

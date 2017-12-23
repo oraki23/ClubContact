@@ -1,0 +1,24 @@
+﻿@*------------------------------------------------------------------------------------
+
+    EDITOR TEMPLATE D'UN MEMBRE, QUE JE PENSE EST INUTILISÉ, MAIS NON SUPPRIMÉ PAR PRÉCAUTION
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+
+<div class="membreListe">
+    @Html.HiddenFor(model => model.noMembre)
+
+    @Html.DisplayFor(m => m.surnom)
+    <div class="deleteButton">
+        <input type="hidden" id="removeMembre[@ViewBag.i]" name="removeMembre[@ViewBag.i]" value="false" />
+        <a class="RemoveMembre">
+            <img src="~/Photos/ico/deletePicture.png" alt="Enlever le membre" class="photo30x30" />
+        </a>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE D'AFFICHAGE D'UN EMOTICON, AVEC UN HOVER LORSQU'ON VEUT VOIR LES DÉTAILS DE L'EMOTICON (GIFT)
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@   
+
+@model List<ProjetSiteDeRencontre.Models.Gift>
+
+@using ProjetSiteDeRencontre.Models;
+
+@{
+    string idEmoticon = (ViewBag.CadeauPremium ? "emoticonPremiumRecu" : "emoticonGratuitRecu");
+    string classEmoticon = (ViewBag.CadeauPremium ? "unEmoticonPremium" : "unEmoticonGratuit");
+
+    int nbEmoticonAffiche = (ViewBag.CadeauPremium ? 3 : 5);
+    int i = ViewBag.i;
+}
+
+<div id="@(idEmoticon + i)" class="@classEmoticon emoticonGeneral" style=@(i >= nbEmoticonAffiche ? "display:none" : "")>
+    <input type="hidden" value="@Model[i].emoticonEnvoye.noEmoticon" />
+    <img src="@(Url.Content("~/Photos/emoticon/" + Model[i].emoticonEnvoye.nomFichierEmoticon))" />
+    <div class="hoverDunCadeau">
+        <div class="quandEtQui">
+            <div class="qui">
+                <div class="photoProfilEnvoyeur">
+                    @{
+                        Photo photoProfilEnvoyeurCadeau = Model[i].membreEnvoyeur.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                    }
+                    @if (photoProfilEnvoyeurCadeau != null)
+                    {
+                        <img class="" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfilEnvoyeurCadeau.nomFichierPhoto)" />
+                    }
+                    else
+                    {
+                        if (Model[i].membreEnvoyeur.homme)
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                        }
+                        else
+                        {
+                            <img class="" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                        }
+                    }
+                </div>
+                <div class="nomEnvoyeur">
+                    <p>@Model[i].membreEnvoyeur.surnom</p>
+                </div>
+            </div>
+            <div class="quand">
+                @if (Model[i].dateEnvoi.Date == DateTime.Now.Date)
+                {
+                    <p>Envoyé aujourd'hui à @Model[i].dateEnvoi.ToShortTimeString()</p>
+                }
+                else
+                {
+                    <p>Envoyé le: @Model[i].dateEnvoi.ToShortDateString() à @Model[i].dateEnvoi.ToShortTimeString()</p>
+                }
+            </div>
+        </div>
+        <div class="actions">
+            <div class="voirProfil" onclick="location.href = '@Url.Action("Details", "Membres", new { id = Model[i].noMembreEnvoyeur })'; return false;">
+                <p>Voir le profil</p>
+            </div>
+            <input type="hidden" value="@Model[i].membreEnvoyeur.noMembre" />
+            <input type="hidden" value="@Model[i].noGift" />
+            <div class="supprimer supprimerLEmoticon">
+                <p>Supprimer</p>
+            </div>
+        </div>
+    </div>
+</div>
+

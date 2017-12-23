@@ -1,0 +1,79 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE QUI PERMET LA MODIFICATION DU MOT DE PASSE D'UN ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@
+
+@model ProjetSiteDeRencontre.Models.CompteAdmin
+
+@using (Html.BeginForm("ModifierMotDePasse", "CompteAdmin", FormMethod.Post, new { @id = "formModifierMDP" }))
+{
+
+    @Html.HiddenFor(m => m.noCompteAdmin)
+    @Html.HiddenFor(m => m.nomCompte)
+    @Html.HiddenFor(m => m.noPermission)
+
+    <div id="changerMDPAdmin">
+        <h1>Changer le mot de passe</h1>
+
+        <p class="messageConfirmationMotDePasse">@TempData["motDePasseAdminSauvegarder"]</p>
+        
+        @{ 
+            TempData.Remove("motDePasseAdminSauvegarder");
+        }
+        
+        <div class="champ">
+            <div class="labels">
+                Votre mot de passe actuel
+            </div>
+            <div class="editeur">
+                <input type="password" id="motDePasseOLD" name="motDePasseOLD" class="editeurs" />
+            </div>
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                Votre nouveau mot de passe
+            </div>
+            <div class="editeur">
+                <input type="password" id="motDePasse1" name="motDePasse1" class="editeurs" />
+            </div>
+        </div>
+
+        <div class="champ">
+            <div class="labels">
+                Confirmer le mot de passe
+            </div>
+            <div class="editeur">
+                @Html.EditorFor(model => model.motDePasse, new { htmlAttributes = new { @class = "editeurs" } })
+            </div>
+        </div>
+        @Html.ValidationMessageFor(model => model.motDePasse, "", new { @class = "messageErreurMotDePasseAdmin" })
+        <button type="submit">Sauvegarder</button>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        //Vérification des mot de passes
+        $(document).ready(function () {
+            $('#formModifierMDP').submit(function (e) {
+                var mdpValide = validerMDP(
+                    "#formModifierMDP",
+                    false,
+                    '@Url.Action("ValiderAncienMDPAdmin", "Utilitaire")',
+                    parseInt('@Model.noCompteAdmin'),
+                    $('#motDePasseOLD').val(),
+                    $('#motDePasse1').val(),
+                    $('#motDePasse').val());
+
+                return mdpValide;
+            });
+        });
+    </script>    
+}

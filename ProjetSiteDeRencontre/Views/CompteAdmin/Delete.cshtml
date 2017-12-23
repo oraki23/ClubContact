@@ -1,0 +1,42 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT LA SUPPRESSION D'UN COMPTE ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.Models.CompteAdmin
+
+<h3>Voulez-vous vraiment supprimer ce compte administrateur?</h3>
+<div>
+    @using (Html.BeginForm("DeleteConfirmed", "CompteAdmin", FormMethod.Post, new { @id = "formCompteAdmin" }))
+    {
+        @Html.AntiForgeryToken()
+
+        ViewBag.disabled = true;
+        <h4>CompteAdmin</h4>
+        <hr />
+
+        @Html.Partial("InfoCompteAdmin")
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Supprimer le compte" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.disableddiv').find('input, textarea, button, select').each(function () {
+                $(this).prop('disabled', true);
+            });
+        });
+
+    </script>
+}

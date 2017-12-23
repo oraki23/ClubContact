@@ -1,0 +1,73 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT LA CONNEXION D'UN ADMINISTRATEUR
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model LoginViewModel
+
+@Styles.Render("~/Content/Login.css")
+
+<div>
+    @using (Html.BeginForm("LoginAdmin", "Authentification", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="contenu">
+            <div class="centre">
+                <p class="messageInscription">@Html.Raw(TempData["Message"])</p>
+
+                @{ 
+                    TempData.Remove("Message");
+                }
+
+                <h3>Se connecter</h3>
+
+                <div id="carre">
+                    <div class="champ">
+                        <br />
+                        <div class="labels">
+                            <label>Nom du compte:</label>
+                        </div>
+                        <div class="editeur">
+                            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "editeurs" } })
+                        </div>
+                    </div>
+
+                    <div class="champ">
+                        <div class="labels">
+                            @Html.LabelFor(model => model.Password)
+                        </div>
+                        <div class="editeur">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "editeurs" } })
+                        </div>
+                    </div>
+
+                    @*<div class="champ">
+                        <div class="labelsCheckBox">
+                            @Html.LabelFor(model => model.seSouvenirDeMoi, htmlAttributes: new { @class = "labelCheckBoxPasBold" })
+                        </div>
+                        <div class="divCheckBoxEditeur">
+                            @Html.EditorFor(model => model.seSouvenirDeMoi, new { htmlAttributes = new { @class = "checkBoxEditeur" } })
+                        </div>
+                    </div>*@
+                    <br />
+                    @Html.ValidationSummary(false, "", new { @class = "messageErreur" })
+
+                </div>
+
+                <div class="conteneurBouton">
+                    <input type="submit" value="Se connecter" id="btn" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+}

@@ -1,0 +1,85 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT DE MODIFIER ET DE LISTER LES FORFAITS PREMIUM
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@  
+
+@model List<ProjetSiteDeRencontre.Models.ForfaitPremium>
+
+@using ProjetSiteDeRencontre.Models
+
+@using (Html.BeginForm("Index", "ForfaitsPremium", FormMethod.Post, new { @id = "formForfaitsPremium" }))
+{
+    <div class="lesForfaits">
+        <h1>Changer les prix des forfaits premium</h1>
+
+        <p class="reussiMessage">@TempData["messageReussiteSauvegarde"]</p>
+        @{ 
+            TempData.Remove("messageReussiteSauvegarde");
+        }
+
+        <div class="lesForfaitsDetails">
+            <div class="headerForfaits">
+                <div class="nbMoisAbonnementForfaitPremium">
+                    Nombre de mois
+                </div>
+                <div class="prixParMoisForfaitPremium">
+                    Prix par mois affiché
+                </div>
+                <div class="prixTotalForfaitPremium">
+                    Prix total du forfait
+                </div>
+                <div class="pourcentageDeRabais">
+                    Pourcentage de rabais affiché
+                </div>
+            </div>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                @Html.HiddenFor(m => m[i].noForfaitPremium)
+                <div class="unForfait">
+                    <div class="nbMoisAbonnementForfaitPremium">
+                        @Html.HiddenFor(m => m[i].nbMoisAbonnement)
+                        @Model[i].nbMoisAbonnement mois
+                    </div>
+                    <div class="prixParMoisForfaitPremium">
+                        @Html.EditorFor(m => m[i].prixParMois, new { htmlAttributes = new { @class = "editeursForfait" } }) $/mois
+                    </div>
+                    <div class="prixTotalForfaitPremium">
+                        @Html.EditorFor(m => m[i].prixTotal, new { htmlAttributes = new { @class = "editeursForfait" } }) $
+                    </div>
+                    <div class="pourcentageDeRabais">
+                        @if (Model[i].nbMoisAbonnement != 1)
+                        {
+                            @:@Html.EditorFor(m => m[i].pourcentageDeRabais, new { htmlAttributes = new { @class = "editeursForfait" } }) %
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model[i].prixParMois, "", new { @class = "messageErreurForfait" })
+                    @Html.ValidationMessageFor(model => model[i].prixTotal, "", new { @class = "messageErreurForfait" })
+                    @Html.ValidationMessageFor(model => model[i].pourcentageDeRabais, "", new { @class = "messageErreurForfait" })
+                </div>
+            }
+        </div>
+        <div class="boutonSauvegarderForfaitsAbonnement">
+            <button type="submit">Sauvegarder</button>
+        </div>
+    </div>
+}
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        /*Ca a de l'air de bien fonctionner, solution prise en ligne pour les parametres double*/
+        $.validator.methods.range = function (value, element, param) {
+            var globalizedValue = value.replace(",", ".");
+            return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+        }
+
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        }
+    </script>
+}

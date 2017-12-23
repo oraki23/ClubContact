@@ -1,0 +1,102 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE QUI PERMET À UN MEMBRE DE CHANGER LES OPTIONS DE SON COMPTE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.OptionsCompteViewModel
+@Styles.Render("~/Content/Options.css")
+
+
+@using (Html.BeginForm("Options", "Membres", FormMethod.Post, new { @id = "formOptions" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(Model => Model.noMembre)
+
+    <div class="pageOptions">
+        <div class="navigationOptions">
+            <h3>Options du compte</h3>
+
+            <a href="#optionsMDP" class="lienVersPages">Paramètres du mot de passe</a>
+            <a href="#optionSupprimerCompte" class="lienVersPages">Supprimer le compte</a>
+            
+        </div>
+
+        <div class="lesOptions">
+
+            <div id="optionsMDP" class="divOptions">
+                <h3>Changer le mot de passe</h3>
+
+                <p class="confirmationMDPModifier">@TempData["confirmationMDPModifier"]</p>
+                @{
+                    TempData.Remove("confirmationMDPModifier");
+                }
+                <div class="champOPT">
+                    <div class="labelsOPT">
+                        Votre mot de passe actuel
+                    </div>
+                    <div class="editeurOPT">
+                        <input type="password" id="motDePasseOLD" name="motDePasseOLD" class="editeursOPT" />
+                    </div>
+                </div>
+
+                <div class="champOPT">
+                    <div class="labelsOPT">
+                        Votre nouveau mot de passe
+                    </div>
+                    <div class="editeurOPT">
+                        <input type="password" id="motDePasse1" name="motDePasse1" class="editeursOPT" />
+                    </div>
+                </div>
+
+                <div class="champOPT">
+                    <div class="labelsOPT">
+                        Confirmer le mot de passe
+                    </div>
+                    <div class="editeurOPT">
+                        @Html.EditorFor(model => model.motDePasse, new { htmlAttributes = new { @class = "editeursOPT" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.motDePasse, "", new { @class = "messageErreur" })
+                </div>
+
+                <button type="submit" class="boutonMDP">Sauvegarder</button>
+            </div>
+
+            <div id="optionSupprimerCompte" class="divOptions">
+                <h3>Supprimer le compte</h3>
+                <p>
+                    Si vous supprimez votre compte, vous ne pourrez plus utiliser votre compte pour faire des rencontres.
+                    Vous n'aurez plus accès aux services de Club Contact. Tous les activités que vous avez organisés qui n'ont pas
+                    encore eu lieu seront supprimés. Cette action n'est pas réversible
+                </p>
+                <div>
+                    <input id="btnSupp" class="boutonSupp" type="submit" value="Supprimer mon compte" formaction="@Url.Action("Delete", "Membres", new { id =  Model.noMembre})" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#formOptions').submit(function (e) {
+                var mdpValide = validerMDP(
+                    "#formOptions",
+                    false,
+                    '@Url.Action("ValiderAncienMDP", "Utilitaire")',
+                    parseInt('@Model.noMembre'),
+                    $('#motDePasseOLD').val(),
+                    $('#motDePasse1').val(),
+                    $('#motDePasse').val());
+                return mdpValide;
+            });
+        });
+    </script>    
+}

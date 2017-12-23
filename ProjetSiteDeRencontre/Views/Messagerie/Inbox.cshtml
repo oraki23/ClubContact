@@ -1,0 +1,309 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT DE VOIR SES MESSAGES
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model List<ProjetSiteDeRencontre.Models.Message>
+
+@using ProjetSiteDeRencontre.Models
+
+
+
+@using (Html.BeginForm("Inbox", "Messagerie", FormMethod.Post, new { @id = "formMessage" }))
+{
+    <h1 class="titreMessagerie">Messagerie Club Contact</h1>
+
+    <input type="hidden" name="categorie" value="@ViewBag.boiteDeMessage" />
+
+    <input type="hidden" name="page" value="@ViewBag.CurrentPage" />
+
+    <div class="boutonsMessageCocher">
+        @if (ViewBag.boiteDeMessage == "inbox")
+        {
+            <div class="boutonRepondreInbox">
+                <button type="submit" name="actionInbox" value="repondre" class="boutonRepondreButton"><img src="@Url.Content("~/Photos/ico/replyBlanche.png")" />Répondre</button>
+            </div>
+        } 
+        
+        @if (ViewBag.boiteDeMessage == "inbox")
+        {
+            <div class="boutonMarquerCommeLuInbox">
+                <button type="submit" name="actionInbox" value="marquerCommeLu" class="boutonMarquerCommeLuBouton">Marquer comme lu</button>
+            </div>
+        }
+        @if (ViewBag.boiteDeMessage == "deleted")
+        {
+            <div class="boutonRecupererInbox">
+                <button type="submit" name="actionInbox" value="recuperer" class="boutonRecupererBouton">Récupérer</button>
+            </div>
+        }
+        <div class="boutonSupprimerInbox">
+            @if (ViewBag.boiteDeMessage == "deleted")
+            {
+                <button type="button" onclick="supprimerDefinitivementMessage()" name="actionInbox" value="supprimer" class="boutonSupprimerBouton"><img src="@Url.Content("~/Photos/ico/poubelleBlanche.png")" />Supprimer définitivement</button>
+            }
+            else
+            {
+                <button type="submit" name="actionInbox" value="supprimer" class="boutonSupprimerBouton"><img src="@Url.Content("~/Photos/ico/poubelleBlanche.png")" />Supprimer</button>
+            }
+        </div>
+        @if (ViewBag.boiteDeMessage == "deleted")
+        {
+            <div class="boutonToutSupprimer">
+                <button type="button" onclick="deleteMessages()">Supprimer tous les messages</button>
+            </div>
+        }
+    </div>
+    
+
+    <div class="divPrincipalMessage">
+
+        <div class="sideBar">
+            @Html.Partial("NavBarMessageriePartial")
+            @Html.Partial("ListeDeContactsPartial", ViewData["listeContacts"])
+        </div>
+        
+
+        <div class="lesMessagesEtActions">
+            <div class="lesMessages">
+                <div class="tousLesTitre">
+                    <div class="cocherTous">
+                        <input class="selectionnerTousLesMessagesCheckbox" type="checkbox" id="cocherTous" value="" />
+                    </div>
+                    <div class="titreListeMessage">
+                        <div class="senderTitle">
+                            <label>Destinataire</label>
+                        </div>
+                        <div class="objetTitle">
+                            <label>Objet</label>
+                        </div>
+                        <div class="dateEnvoieTitle">
+                            <label>Date de réception</label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+
+                @if (Model.Count() == 0)
+                {
+                    if (ViewBag.boiteDeMessage == "sent")
+                    {
+                        <p class="boiteVide">Votre boîte de messages envoyés est vide</p>
+                    }
+                    else if (ViewBag.boiteDeMessage == "inbox")
+                    {
+                        <p class="boiteVide">Votre boîte de réception est vide</p>
+                    }
+                    else if (ViewBag.boiteDeMessage == "deleted")
+                    {
+                        <p class="boiteVide">Votre boîte de messages supprimés est vide</p>
+                    }
+                }
+                else
+                {
+                    <input type="hidden" id="nbMessagesACocher" value="@Model.Count()" />
+                    for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <div class="unSeulMessage">
+                            <div class="cocher">
+                                <input class="selectionnerMessageCheckbox" type="checkbox" name="checker[@(i)]" id="cocher" value="@Model[i].noMessage" />
+                                <input type="hidden" name="checker[@(i)]" value="-1" />
+                            </div>
+                            <div class="unMessage @(ViewBag.boiteDeMessage != "sent" && ViewBag.boiteDeMessage != "deleted" ? (Model[i].lu ? "lu" : "nonLu") : "lu")" onclick="location.href='@Url.Action("InboxMessage", "Messagerie", new { id = Model[i].noMessage })';return false;">
+                                <div class="sender">
+                                    @if (ViewBag.boiteDeMessage == "sent" || Model[i].noMembreEnvoyeur == int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                    {
+                                        <p>@Model[i].membreReceveur.surnom</p>
+                                    }
+                                    else
+                                    {
+                                        if (Model[i].membreEnvoyeur != null)
+                                        {
+                                            <p>@Model[i].membreEnvoyeur.surnom</p>
+                                        }
+                                        else
+                                        {
+                                            <p>Administrateurs Club Contact</p>
+                                        }
+                                    }
+                                </div>
+                                <div class="objet">
+                                    @if (Model[i].sujetMessage == "" || Model[i].sujetMessage == null)
+                                    {
+                                        <p><i>(Sans objet)</i></p>
+                                    }
+                                    else
+                                    {
+                                        <p>@Model[i].sujetMessage</p>
+                                    }
+
+                                </div>
+                                <div class="dateEnvoie">
+                                    @if (Model[i].dateEnvoi.Date == DateTime.Today)
+                                    {
+                                        <p>Aujourd'hui à @Model[i].dateEnvoi.ToShortTimeString()</p>
+                                    }
+                                    else if (Model[i].dateEnvoi.Date == DateTime.Today.AddDays(-1))
+                                    {
+                                        <p>Hier à @Model[i].dateEnvoi.ToShortTimeString()</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Le @Model[i].dateEnvoi</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- pager -->
+                    <div style="margin-top:50px;" class="pagi">
+
+                        <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+                        @if (ViewBag.EndPage > 1)
+                        {
+                            <ul class="page">
+                                @if (ViewBag.CurrentPage > 1)
+                                {
+                                    <li>
+                                        @Html.ActionLink("Premier", "Inbox", "Messagerie", new { categorie = ViewBag.boiteDeMessage }, null)
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Précédent", "Inbox", "Messagerie", new { categorie = ViewBag.boiteDeMessage, page = ViewBag.CurrentPage - 1 }, new { @class = "backPage" })
+                                    </li>
+                                }
+
+                                @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                                {
+                                    <li>
+                                        @Html.ActionLink((string)(page.ToString()), "Inbox", "Messagerie", new { categorie = ViewBag.boiteDeMessage, page = page }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                                    </li>
+                                }
+
+                                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                {
+                                    <li>
+                                        @Html.ActionLink("Suivant", "Inbox", "Messagerie", new { categorie = ViewBag.boiteDeMessage, page = ViewBag.CurrentPage + 1 }, null)
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Dernier", "Inbox", "Messagerie", new { categorie = ViewBag.boiteDeMessage, page = ViewBag.TotalPages }, null)
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        function deleteMessages() {
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer TOUS les messages de votre corbeille?");
+            if (supprimerConfirmation == true)
+            {
+                location.href = '@Url.Action("ToutSupprimerMessagesCorbeille", "Messagerie")'; return false;
+            }
+        }
+
+        function supprimerDefinitivementMessage(){
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer tous les messages sélectionnées?");
+            if (supprimerConfirmation == true)
+            {
+                var input = $("<input>")
+                       .attr("type", "hidden")
+                       .attr("name", "actionInbox").val("supprimer");
+                $('#formMessage').append($(input));
+                $('#formMessage').submit();
+            }
+        }
+        $(document).ready(function () {
+            disableAndEnableButtons();
+
+            getNbMessageDansBoite("inbox", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+            getNbMessageDansBoite("deleted", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+
+
+            $('.selectionnerTousLesMessagesCheckbox').on('click', function(){
+                if($('.selectionnerTousLesMessagesCheckbox').is(':checked'))
+                {
+                    $('.selectionnerMessageCheckbox').prop('checked', true);
+                }
+                else
+                {
+                    $('.selectionnerMessageCheckbox').prop('checked', false);
+                }
+
+                disableAndEnableButtons();
+            });
+
+            $('.selectionnerMessageCheckbox').on('click', function(){
+                var checkedNum = $('.selectionnerMessageCheckbox:checked').length;
+
+                var totalMessages = $('#nbMessagesACocher').val();
+
+                if(totalMessages == checkedNum)
+                {
+                    $('#cocherTous').prop('checked', true);
+                }
+                else
+                {
+                    $('#cocherTous').prop('checked', false);
+                }
+
+                disableAndEnableButtons();
+            });
+        });
+
+        function disableAndEnableButtons()
+        {
+            var checkedNum = $('.selectionnerMessageCheckbox:checked').length;
+
+            if(checkedNum == 0)
+            {
+                $('.boutonRepondreButton').prop('disabled', true);
+                $('.boutonSupprimerBouton').prop('disabled', true);
+                $('.boutonMarquerCommeLuBouton').prop('disabled', true);
+                $('.boutonRecupererBouton').prop('disabled', true);
+            }
+            else
+            {
+                $('.boutonRepondreButton').prop('disabled', false);
+                $('.boutonSupprimerBouton').prop('disabled', false);
+                $('.boutonMarquerCommeLuBouton').prop('disabled', false);
+                $('.boutonRecupererBouton').prop('disabled', false);
+            }
+
+            if(checkedNum == 1)
+            {
+                $('.boutonRepondreButton').prop('disabled', false);
+            }
+            else
+            {
+                $('.boutonRepondreButton').prop('disabled', true);
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        //$(document).ready(function(){
+        //    $('.unContact').mousedown(function(event){
+        //        switch(event.which)
+        //        {
+        //            case 3:
+        //                alert("allo");
+        //                break;
+        //        }
+        //    });
+        //});
+    </script>
+}

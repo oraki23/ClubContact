@@ -1,0 +1,81 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE QUI PERMET D'ENVOYER UN MESSAGE À UN AUTRE MEMBRE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.Models.Message
+
+@using ProjetSiteDeRencontre.Models
+
+
+@using (Html.BeginForm("Send", "Messagerie", FormMethod.Post, new { @id = "formSendMessage" }))
+{
+    <h1 class="titreMessagerie">Messagerie Club Contact</h1>
+
+    <div class="divPrincipalMessage">
+
+        <div class="sideBar">
+            @if (Model.membreEnvoyeur != null)
+            {
+                @Html.Partial("NavBarMessageriePartial")
+                @Html.Partial("ListeDeContactsPartial", ViewData["listeContacts"])
+            }
+            else
+            {
+                <input type="hidden" name="noSignalementLie" value="@ViewBag.noSignalementLie" />
+            }
+        </div>
+
+        @Html.HiddenFor(model => model.noMessage)
+        @Html.HiddenFor(model => model.noMembreEnvoyeur)
+        @Html.HiddenFor(model => model.noMembreReceveur)
+        <div class="divEnvoyerMessageAvecActions" style="@(Model.membreEnvoyeur == null ? "display:block;width:97%;margin:0 auto;" : "")">
+            <div class="envoyerMessage">
+                <h3>Envoyer un message à @Model.membreReceveur.surnom</h3>
+                <div class="sujetMessage">
+                    <div class="labelEtEditeur">
+                        @Html.LabelFor(model => model.sujetMessage)
+                        @Html.EditorFor(model => model.sujetMessage, new { htmlAttributes = new { @class = "editeurSujet" } })
+                    </div>
+                </div>
+                <div class="contenuMessage">
+                    <div class="labelEtEditeur">
+                        @Html.TextAreaFor(model => model.contenuMessage, new { @class = "contenuMessageTextArea", @placeholder = "Le message à envoyer (Maximum 300 caractères)..." })
+                    </div>
+                </div>
+                <div class="validationSummary">
+                    @Html.ValidationMessageFor(model => model.sujetMessage, "", new { @class = "messageErreur" })
+                    @Html.ValidationMessageFor(model => model.contenuMessage, "", new { @class = "messageErreur" })
+                </div>
+            </div>
+            <div class="lesBoutonsMessagerie">
+                <div class="boutonEnvoyer">
+                    <button type="submit"><img src="@Url.Content("~/Photos/ico/send.png")" />Envoyer</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        @if (Model.membreEnvoyeur != null)
+        {
+            <text>
+        $(document).ready(function () {
+            getNbMessageDansBoite("inbox", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+            getNbMessageDansBoite("deleted", '@Url.Action("CompterNombreDeMessages", "Messagerie")', @(int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"])));
+        });
+            </text>
+        }
+    
+    </script>    
+    
+}

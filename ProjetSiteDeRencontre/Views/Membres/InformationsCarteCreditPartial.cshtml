@@ -1,0 +1,101 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE QUI CONTIENT LES INFORMATIONS DE CARTE DE CRÉDIT D'UN MEMBRE LORS DE L'ACHAT
+    D'UN ABONNEMENT
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@ 
+
+@model ProjetSiteDeRencontre.ViewModel.PaiementViewModel
+
+<div class="informationsPaiement @(ViewBag.disabled == true ? "disableddiv" : "")">
+    <h4>Informations de paiement</h4>
+    @Html.ValidationSummary(true, "", new { @class = "messageErreur" })
+
+    @Html.HiddenFor(m => m.noMembre)
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.prenomSurCarte, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.prenomSurCarte, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.prenomSurCarte, "", new { @class = "messageErreurPaiement" })
+    </div>
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.nomSurCarte, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.nomSurCarte, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.nomSurCarte, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.typeCarte, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.DropDownListFor(model => model.typeCarte, (SelectList)ViewBag.listeCartes, "", htmlAttributes: new { @class = "editeurPaiement" })
+        </div>
+        @Html.ValidationMessageFor(model => model.typeCarte, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.noCarteCredit, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.noCarteCredit, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.noCarteCredit, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.codeVerification, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.codeVerification, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.codeVerification, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        <label class="labelPaiement">Date d'expiration</label>
+        <div class="divEditeurPaiement">
+            @Html.DropDownListFor(model => model.carteMoisExpiration, (SelectList)ViewBag.listeMois, "Mois", htmlAttributes: new { @class = "editeurMoisDateExpirationPaiement" })
+            <p class="separationDateExpiration">/</p>
+            @Html.DropDownListFor(model => model.carteAnneeExpiration, (SelectList)ViewBag.listeAnnees, "Année", htmlAttributes: new { @class = "editeurAnneeDateExpirationPaiement" })
+        </div>
+        @Html.ValidationMessageFor(model => model.carteMoisExpiration, "", new { @class = "messageErreurPaiement" })
+        @Html.ValidationMessageFor(model => model.carteAnneeExpiration, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.adresseFacturation, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.adresseFacturation, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.adresseFacturation, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.villeFacturation, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.villeFacturation, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.villeFacturation, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.provinceFacturation, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.DropDownListFor(model => model.noProvince, (SelectList)ViewBag.listeProvince, "", htmlAttributes: new { @class = "editeurPaiement" })
+        </div>
+        @Html.ValidationMessageFor(model => model.noProvince, "", new { @class = "messageErreurPaiement" })
+    </div>
+
+    <div class="divLabelPaiement">
+        @Html.LabelFor(model => model.codePostalFacturation, htmlAttributes: new { @class = "labelPaiement" })
+        <div class="divEditeurPaiement">
+            @Html.EditorFor(model => model.codePostalFacturation, new { htmlAttributes = new { @class = "editeurPaiement" } })
+        </div>
+        @Html.ValidationMessageFor(model => model.codePostalFacturation, "", new { @class = "messageErreurPaiement" })
+    </div>
+</div>

@@ -1,0 +1,155 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE D'ACCUEIL POUR LES GENS CONNECTÉS
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@  
+
+@model ProjetSiteDeRencontre.Models.Membre
+
+@Styles.Render("~/Content/cssHome")
+
+@using ProjetSiteDeRencontre.Models
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="ligne1">
+        <div class="entete">
+            <h1>CLUB CONTACT</h1>
+            <img src="~/Photos/logo.png" alt="Logo Club Contact" />
+            @if (((List<Membre>)ViewBag.selectionDuMois).Count > 0)
+            {
+                <h2>La sélection du moment!</h2>
+            }
+        </div>
+    </div>
+
+    <div class="ligne2Photos">
+        <div class="photoHomeProfil">
+            @foreach (Membre m in ViewBag.selectionDuMois)
+            {
+                Photo photoProfilParticipant = m.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+
+                <div class="box">
+                    @if (photoProfilParticipant != null)
+                    {
+                        <img class="photoOrganisateur" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfilParticipant.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                    }
+                    else
+                    {
+                        if (m.homme)
+                        {
+                            <img src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = m.noMembre })';return false;" />
+                        }
+                    }
+                    <p class="textPhoto">@m.surnom, @m.ville.nomVille, <br /> @m.age ans</p>
+                </div>
+            }
+            @*<div class="box">
+                <img src="~/Photos/ico/PhotoHome/Lise.jpg" />
+                <p class="textPhoto">Lise, Montréal, 54 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Ian.png" />
+                <p class="textPhoto">Ian, Sutton, 32 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Mike.png" />
+                <p class="textPhoto">Mike, Trois-Rivières, 28 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Anne.png" />
+                <p class="textPhoto">Anne, Québec, 43 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Marc.png" />
+                <p class="textPhoto">Marc, Brigham, 34 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/May.png" />
+                <p class="textPhoto">May, Sutton, 25 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Claudine.png" />
+                <p class="textPhoto">Claudine, Granby, 42 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Anthony.png" />
+                <p class="textPhoto">Anthony, Québec, 26 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Tony.png" />
+                <p class="textPhoto">Tony, Montréal, 50 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Audrey.png" />
+                <p class="textPhoto">Audrey, Granby, 22 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Yves.png" />
+                <p class="textPhoto">Yves, Québec, 29 ans</p>
+            </div>
+            <div class="box">
+                <img src="~/Photos/ico/PhotoHome/Paulette.png" />
+                <p class="textPhoto">Paulette, Cowansville, 31 ans</p>
+            </div>*@
+        </div>
+    </div>
+
+    <div class="ligne3Activites">
+        <h2>De nouvelles activités chaque mois!</h2>
+        <div class="categories">
+            <img src="~/Photos/ico/Home/sportives.png" alt="Sportives" />
+            <img src="~/Photos/ico/Home/restaurants.png" alt="Restaurants" />
+            <img src="~/Photos/ico/Home/sociales.png" alt="Sociales" />
+            <img src="~/Photos/ico/Home/culturels.png" alt="Culturels" />
+        </div>
+    </div>
+        <div class="photoActivite">
+            <div id="imageSport">
+                <img src="~/Photos/ico/ActivitesHome/sport1.jpg" alt="Golf" />
+                <img src="~/Photos/ico/ActivitesHome/Sportive2.jpg" alt="Soccer" />
+            </div>
+            <div id="imageRestaurant">
+                <img src="~/Photos/ico/ActivitesHome/Restaurant1.jpg" alt="Restaurant" />
+                <img src="~/Photos/ico/ActivitesHome/Restaurant2.jpg" alt="Restaurant" />
+            </div>
+            <div id="imageSocial">
+                <img src="~/Photos/ico/ActivitesHome/Sociale1.jpg" alt="Jeux de société" />
+                <img src="~/Photos/ico/ActivitesHome/Social2.jpg" alt="Sortie entre amis" />
+            </div>
+            <div id="imageCulturel">
+                <img src="~/Photos/ico/ActivitesHome/culturel1.jpg" alt="Opéra" />
+                <img src="~/Photos/ico/ActivitesHome/Culturel2.jpg" alt="Musée" />
+            </div>
+        </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*<script type="text/javascript">
+                $(document).ready(function () {
+                    $('.raisonsSite').SumoSelect();
+
+                    $('#soumettrePreInscription').click(function () {
+                        $('#raisonsSiteJSON').val(JSON.stringify($('.raisonsSite').val()));
+                    });
+
+                    $('.raisonsSite').on('change', function (e) {
+                        verifierRaisonSiteExclusif('@(ViewBag.noRaisonSansButPrecis)',
+                            parseInt('@(ViewBag.nbRaisonsSurSite)'),
+                            $('.raisonsSite').val());
+                    });
+                })
+    </script>*@
+}

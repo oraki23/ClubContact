@@ -1,0 +1,206 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE PERMETTANT L'AFFICHAGE DES ABONNEMENTS DE MÊME QUE DIVERSES
+    STATISTIQUES À CE NIVEAU
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.ViewModel.GestionViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+<div class="sectionAbonnement">
+    @Html.Partial("rechercheParDate")
+
+    <div class="statistiquesNbAbonnements">
+        <h3>Nombre d'abonnements pour cette période</h3>
+        <label>1 mois:</label>
+        <p>@Model.nbAbonnements1Mois abonnements</p>
+        <label>6 mois:</label>
+        <p>@Model.nbAbonnements6Mois abonnements</p>
+        <label>12 mois:</label>
+        <p>@Model.nbAbonnements12Mois abonnements</p>
+    </div>
+
+    <div class="nbDesabonnement">
+        <h3>Nombre de désabonnement dans cette période</h3>
+        <p>@Model.nbDesabonnementTotal désabonnements</p>
+    </div>
+
+    <div class="revenuTotal">
+        <h3>Revenu Total pour cette période</h3>
+        <p>@string.Format("{0:0.00}", Model.revenuTotal) $</p>
+    </div>
+
+    <div class="revenuTotal">
+        <h3>TPS et TVQ Total pour cette période</h3>
+        <div class="partieTPS">
+            <label>TPS</label>
+            <p>@string.Format("{0:0.00}", Model.TPSTotal) $</p>
+        </div>
+        <div class="partieTVQ">
+            <label>TVQ</label>
+            <p>@string.Format("{0:0.00}", Model.TVQTotal) $</p>
+        </div>
+    </div>
+
+    <div class="listeDesFactures">
+        <h3>Toutes les transactions</h3>
+        <div class="headerAbonnements">
+            <div class="surnomAbonnement">
+                Surnom
+            </div>
+            <div class="nomMembreAbonnement">
+                Nom
+            </div>
+            <div class="prenomMembreAbonnement">
+                Prénom
+            </div>
+            <div class="typeAbonnement">
+                Nombre de mois
+            </div>
+            <div class="datePaiement">
+                Date de paiement
+            </div>
+            <div class="dateDebut">
+                Date de début d'abonnement
+            </div>
+            <div class="dateFin">
+                Date de fin d'abonnement
+            </div>
+            <div class="coutTotal">
+                Coût
+            </div>
+        </div>
+        @for(int i = 0; i < Model.listeDesAbonnements.Count; i++)
+        {
+            <div class="section sectionAbonnementBackground">
+                <a class="unAbonnement" href="#abonnement@(i)" data-toggle="collapse">
+                    <div class="surnomAbonnement">
+                        @Model.listeDesAbonnements[i].membre.surnom
+                    </div>
+                    <div class="nomMembreAbonnement">
+                        @Model.listeDesAbonnements[i].membre.nom
+                    </div>
+                    <div class="prenomMembreAbonnement">
+                        @Model.listeDesAbonnements[i].membre.prenom
+                    </div>
+                    <div class="typeAbonnement">
+                        @Model.listeDesAbonnements[i].typeAbonnement mois
+                    </div>
+                    <div class="datePaiement">
+                        @Model.listeDesAbonnements[i].datePaiement.ToShortDateString()
+                    </div>
+                    <div class="dateDebut">
+                        @Model.listeDesAbonnements[i].dateDebut.ToShortDateString()
+                    </div>
+                    <div class="dateFin">
+                        @Model.listeDesAbonnements[i].dateFin.ToShortDateString()
+                    </div>
+                    <div class="coutTotal coutTotalAffiche">
+                        @string.Format("{0:0.00}", Model.listeDesAbonnements[i].coutTotal) $
+                    </div>
+                </a>
+                <div id="abonnement@(i)" class="alignCenter factureDetailleeAbonnements refermable collapse">
+                    <h3>Détails de la facturation</h3>
+                    <div class="detailsFacture">
+                        <label>Date de la facture</label>
+                        <p>@Model.listeDesAbonnements[i].datePaiement</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Prénom</label>
+                        <p>@Model.listeDesAbonnements[i].prenomSurCarte</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Nom</label>
+                        <p>@Model.listeDesAbonnements[i].nomSurCarte</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Quatre derniers chiffres sur la carte</label>
+                        <p>************@Model.listeDesAbonnements[i].quatreDerniersChiffres</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Type de la carte</label>
+                        <p>@Model.listeDesAbonnements[i].typeCarte</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Adresse</label>
+                        <p>@Model.listeDesAbonnements[i].adresseFacturation</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Ville</label>
+                        <p>@Model.listeDesAbonnements[i].villeFacturation</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Province</label>
+                        <p>@Model.listeDesAbonnements[i].provinceFacturation.nomProvince</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>Code postal</label>
+                        <p>@Model.listeDesAbonnements[i].codePostalFacturation</p>
+                    </div>
+                    <hr />
+                    <div class="detailsFacture">
+                        <label>Coût avant taxes</label>
+                        <p class="unCout">@string.Format("{0:0.00}", Model.listeDesAbonnements[i].coutTotal) $</p>
+                    </div>
+                    <div class="detailsFacture">
+                        <label>TPS</label>
+                        <p class="unCout">@string.Format("{0:0.00}", Model.listeDesAbonnements[i].prixTPS) $</p>
+                    </div>
+                    @if (Model.listeDesAbonnements[i].prixTVQ != null && Model.listeDesAbonnements[i].prixTVQ != 0.00)
+                    {
+                        <div class="detailsFacture">
+                            <label>TVQ</label>
+                            <p class="unCout">@string.Format("{0:0.00}", Model.listeDesAbonnements[i].prixTVQ) $</p>
+                        </div>
+                    }
+                    <div class="detailsFacture">
+                        <label>Coût total</label>
+                        <p class="unCout">@(string.Format("{0:0.00}", (Model.listeDesAbonnements[i].coutTotal + Model.listeDesAbonnements[i].prixTPS + (Model.listeDesAbonnements[i].prixTVQ ?? 0.00)))) $</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- pager -->
+        <div class="pagi">
+            <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+            @if (ViewBag.EndPage > 1)
+            {
+                <ul class="page">
+                    @if (ViewBag.CurrentPage > 1)
+                {
+                        <li>
+                            @Html.ActionLink("Premier", "Gestion", "Admin", new { vientDePagination = 1 }, null)
+                        </li>
+                        <li>
+                            @Html.ActionLink("Précédent", "Gestion", "Admin", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1 }, new { @class = "backPage" })
+                        </li>
+                    }
+
+                    @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                {
+                        <li>
+                            @Html.ActionLink((string)(page.ToString()), "Gestion", "Admin", new { page = page, vientDePagination = 1 }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                        </li>
+                    }
+
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                        <li>
+                            @Html.ActionLink("Suivant", "Gestion", "Admin", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1 }, null)
+                        </li>
+                        <li>
+                            @Html.ActionLink("Dernier", "Gestion", "Admin", new { page = ViewBag.TotalPages, vientDePagination = 1 }, null)
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>

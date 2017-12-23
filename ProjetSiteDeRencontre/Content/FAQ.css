@@ -1,0 +1,53 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    FAQ DU CONTRÔLEUR HOME
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+.versionImprimableLien{
+    text-align:right;
+    display:inline-block;
+    width:90%;
+    margin:30px 0 0px 0;
+    font-size:20px;
+}
+
+.titreFAQ{
+    text-align:center;
+    color:#881983;
+}
+
+.FAQ{
+    width:90%;
+    margin:0 auto;
+}
+
+.FAQ h2{
+    text-align:center;
+    color:#881983;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+
+.section{
+    font-size:20px;
+}
+
+.section img{
+    margin:15px;
+}
+
+.section h3{
+    color:#C826C8;
+    text-decoration:none;
+}
+
+.question10 img{
+    margin:0px;
+}

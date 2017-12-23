@@ -1,0 +1,41 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PARTIELLE ENVOYÉ PAR COURRIEL LORS DE LA MODIFICATION D'UNE ACTIVITÉ À LAQUELLE UN
+    MEMBRE PARTICIPE
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.Models.Activite
+
+@{
+    ViewBag.Title = "Notification d'activité";
+}
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    @if (Model.annulee == true)
+    {
+        <h2>Annulation d'une des activités à laquelle vous participiez!</h2>
+        <br />
+        <p>L'activité "@(Model.nom)" à laquelle vous participiez à été annulée!</p>
+        <a href="@Url.Action("Home", "Home", null, Request.Url.Scheme)">Accéder au site</a>
+    }
+    else
+    {
+        <h2>Changement dans une des activités à laquelle vous participez!</h2>
+        <br />
+        <p>L'activité "@(Model.nom)" à laquelle vous participez à été modifiée!</p>
+        <p>Connectez-vous sur Club Contact pour voir les modifications!</p>
+        <a href="@Url.Action("Home", "Home", null, Request.Url.Scheme)">Accéder au site</a>
+    }
+    
+</body>
+</html>
+

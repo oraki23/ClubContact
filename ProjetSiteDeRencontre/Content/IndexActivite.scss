@@ -1,0 +1,611 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LA PAGE:
+    INDEX DU CONTRÔLEUR ACTIVITÉ
+SEULEMENT
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+
+$vertLime: #f6ffc7;
+$couleurBoutonMauve: #C826C8;
+$couleurMauvePlusFonce:#881983;
+
+.messageErreurCommentaire{
+    color:red;
+    margin-top: 10px;
+    display:block;
+}
+
+.messageErreurPhotosAvis{
+    display:block;
+    color:red;
+    text-align:center;
+    margin-bottom: 15px;
+}
+.cursorPointer{
+    cursor:pointer;
+}
+
+.indexPrincipalActivite{
+    border:5px solid $couleurMauvePlusFonce;
+    border-radius:6px;
+    margin-right:10px;
+    margin-left:10px;
+    margin-bottom:10px;
+
+    vertical-align:top;
+    width:77%;
+    display:inline-block;
+
+    .divBoutonCreerNouvelActivite{
+        float:right;
+        display:inline-block;
+        width:20%;
+        margin: 20px 40px 0 0;
+        button{
+            margin: 0 auto;
+            width:100%;
+            display:block;
+            text-align:center;
+            height:47px;
+            border-radius:10px;
+            color:white;
+            text-shadow:none;
+            font-size:16px;
+            background-color:$couleurBoutonMauve;
+        }
+    }
+
+}
+
+    .tabsActivite{
+        display:inline-block;
+        width:50%;
+
+        margin:10px 0 0 100px;
+        .tabs{
+            display:inline-block;
+            background-color:$couleurBoutonMauve;
+            padding:10px 30px;
+            cursor:pointer;
+            border-top-left-radius:10px;
+            border-top-right-radius:10px;
+            a{
+                color:white;
+                &:hover{
+                    text-decoration:none;
+                }
+            }
+            &:hover{
+                
+                background-color:$couleurBoutonMauve;
+            }
+        }
+
+        .selectedTabActivite{
+            font-weight:bold;
+            background-color:$couleurMauvePlusFonce;
+        }
+    }
+
+.borderActivite{
+    vertical-align: top;
+    display: inline-block;
+    padding-bottom: 9999px;
+    margin-bottom: -9999px;
+    width: 1px;
+    border: 1px dotted #881983;
+    background-repeat: repeat;
+}
+
+.detailsActivite{
+    overflow:hidden;
+    margin:15px 0 0 0;
+    width:100%;
+    .proprietesActivite, .membresActivite{
+        margin: 0 2%;
+        font-size:16px;
+    }
+
+    .proprietesActivite{
+        width:45%;
+        vertical-align:top;
+        display:inline-block;
+        
+        label{
+            display:inline-block;
+            font-weight:bold;
+            font-size:17px;
+        }
+        .coutActivite{
+            display:inline-block;
+        }
+    }
+    .membresActivite{
+        vertical-align:top;
+        display:inline-block;
+        width:45%;
+        .organiserPar{
+            width:100%;
+            margin: 0 0 15px 0;
+
+            h4{
+                display:inline-block;
+            }
+            img{
+                width:100px;
+                height:100px;
+            }
+        }
+        .participants{
+            margin: 0 0 15px 0;
+            .photoUnParticipant{
+                display:inline-block;
+                cursor:pointer;
+            }
+            h4{
+                margin-bottom:15px;
+            }
+            img{
+                max-width:60px;
+                max-height:60px;
+            }
+        }
+        h4{
+            margin:0 6% 0 0;
+            padding:0;
+            font-size:20px;
+            font-weight:bold;
+        }
+    }
+}
+
+.boutonParticiper{
+    height:65px;
+    margin:20px 20px;
+    button{
+        float:right;
+        width:25%;
+        margin: 0;
+        display:block;
+        text-align:center;
+        height:40px;
+        border-radius:10px;
+        color:white;
+        text-shadow:none;
+        font-size:17px;
+        background-color:$couleurBoutonMauve;
+    }
+}
+
+
+.ui-datepicker{
+    width:98%;
+    margin:1% 1% 5% 1%;
+}
+
+.boutonEffacerDate{
+    width:68%;
+    margin: 0 auto;
+    display:block;
+    text-align:center;
+    height:30px;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:16px;
+    background-color:$couleurBoutonMauve;
+}
+
+.nbResultatsRechercheActivite{
+    h3{
+        text-align:center;
+        margin:20px 0;
+    }
+}
+
+.listeActivite{
+    position:relative;
+    width:100%;
+}
+
+$hauteurResumeActivite: 170px;
+
+.listeMembresParticipants{
+    text-align:center;
+    width:100%;
+}
+
+$taillePhotoActivite: 162px;
+
+.photosActiviteDiv{
+    h3{
+        font-weight:bold;
+        margin:20px 10px;
+    }
+}
+
+.titreOrganiseActivite{
+    margin:0 !important;
+    padding:25px 0;
+}
+
+.listePhotosActivite{
+    text-align:center;
+    width:100%;
+    .photoUnePhotoApres{
+        margin:0 0.5%;
+        display:inline-block;
+        width:$taillePhotoActivite;
+        height:$taillePhotoActivite;
+        img{
+            max-height:$taillePhotoActivite;
+            max-width:$taillePhotoActivite;
+        }
+    }
+}
+
+.boutonPlus{
+    width:100%;
+    margin-left:70%;
+}
+
+.activiteCetteJournee{    
+    a{
+        font-weight:bold !important;
+        background-color:lightblue !important;
+    }
+    
+}
+
+/*Début Une Activité*/
+.uneActivite{
+    border-radius:2px;
+    width:98%;
+    background-color: $vertLime;
+
+    margin:0 auto 30px auto;
+
+    .barreSection{
+        color:black;
+        &:hover{
+            text-decoration:none;
+        }
+        &:focus{
+            text-decoration:none;
+        }
+    }
+
+    .resumeActivite{
+        height:$hauteurResumeActivite;
+        border-bottom:1pxs solid $couleurMauvePlusFonce;
+    }
+
+    .imageProfilActivite{
+        vertical-align:top;
+        display:inline-block;
+        width:150px;
+        height:150px;
+        margin:10px 10px;
+        text-align:center;
+        img{
+            max-width:150px;
+            max-height:150px;
+        }
+    }
+    .informationsBaseResume{
+        font-size:18px;
+        vertical-align:top;
+        display:inline-block;
+        width:45%;
+        height:100%;
+        padding: 25px 0 0 0;
+    }
+    .nombreParticipants{
+        font-size:20px;
+        vertical-align:top;
+        text-align:center;
+        position:relative;
+        width:30%;
+        min-height:100%;
+        display:inline-block;
+
+        .annulee{
+            font-size:30px;
+            font-weight:bold;
+            color:red;
+            transform:rotate(10deg);
+        }
+    }
+
+    .nombreParticipants p{
+        line-height:$hauteurResumeActivite;
+        margin:0;
+        padding:0;
+    }
+
+}
+
+/*Début Commentaire Cote*/
+.commentairesCote{
+    margin: 20px 0 0 0;
+    padding: 0 0 20px 0;
+    h3{
+        margin:20px 10px;
+        font-weight:bold;
+    }
+}
+
+.monAvisAMoi{
+    h3{
+        font-weight:bold;
+        margin:20px 10px;
+    }
+
+    .avisMembreCo{
+        @extend .avisActiviteGeneral;
+    }
+
+    .commentaireActiviteAEntrer{
+        vertical-align:middle;
+        display:inline-block;
+        width:50%;
+        height:100%;
+
+        .textAreaAvisCommentaire{
+            width:100%;
+            resize:none;
+            margin:10px 0;
+            border-radius:5px;
+        }
+    }
+
+    .coteActiviteAEntrer{
+        @extend .etoileGeneral;
+    }
+}
+
+.boutonProprieteGenerales{
+    width:70%;
+    margin: 3% auto;
+    display:block;
+    text-align:center;
+    height:40px;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+}
+
+.boutonConfirmer{
+    margin:10px 0 50px 0;
+    display:block;
+    width:100%;
+    button{
+        float:right;
+        width:20%;
+        margin-left:15px;
+        display:inline-block;
+        text-align:center;
+        height:40px;
+        border-radius:10px;
+        color:white;
+        text-shadow:none;
+        background-color:$couleurBoutonMauve;
+    }
+}
+
+.laPersonne{
+        height:100%;
+        vertical-align:middle;
+        display:inline-block;
+        width:25%;
+        .photoProfilAvis{
+            display:inline-block;
+            margin:10px;
+            height:50px;
+            width:50px;
+            img{
+                max-width:50px;
+                max-height:50px;
+            }
+        }
+        .surnom{
+            display:inline-block;
+            font-size:18px;
+            padding:0;
+            p{
+                margin:0;
+                padding:0;
+            }
+        }
+}
+
+.boutonDisabledParticiper{
+    background-color:grey !important;
+}
+
+.etoileGeneral{
+    height:100%;
+    vertical-align:middle;
+    display:inline-block;
+    width:14%;
+    min-width:120px;
+    margin-left:3%;
+    .uneEtoile{
+        display:inline-block;
+        width:20px;
+        height:100%;
+        cursor:pointer;
+    }
+    .uneEtoileNonCursor{
+        cursor:default !important;
+    }
+    img{
+        margin-top:25px;
+        width:20px;
+        height:20px;
+    }
+}
+
+.avisActiviteGeneral{
+    margin:10px 20px;
+    height:70px;
+    border:0.5px solid $couleurMauvePlusFonce;
+    border-radius:4px;
+}
+
+.unAvisActivite{
+    @extend .avisActiviteGeneral;
+
+    .commentaireActivite{
+        height:100%;
+        vertical-align:middle;
+        display:inline-block;
+        width:50%;
+        padding:5px 0;
+    }
+
+    .coteActivite{
+        @extend .etoileGeneral;
+    }
+}
+/*Fin Commentaire Cote*/
+
+/*Fin Une Activité*/
+
+.rechercheActivites {
+  vertical-align: top;
+  width: 20%;
+  display: inline-block;
+  border: 5px solid #881983;
+  border-radius: 6px;
+  text-align:center;
+}
+
+.divBoutonRechercheActivite button{
+    height:45px;
+    width:160px;
+    background-color: #C826C8;
+    border-radius: 10px;
+    color: white;
+    text-shadow: none;
+    font-size: 16px;
+    margin-bottom:4%;
+}
+
+.promotionPremium{
+    background-color:#22b8ee;
+    margin-left:5%;
+    margin-right:5%;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.promotionPremium h3{
+     padding-top:20px;
+     padding-bottom:20px;
+     padding-left:20px;
+     padding-right:20px;
+     color:white;
+     font-weight:bold;
+}
+
+/*RECHJERCHe*/
+
+.uploadPhotoActivite{
+    margin-top:70px;
+}
+
+.divEditeurMotCle, .divEditeurTheme{
+    
+}
+.divEditeurMotCle{
+
+}
+.divEditeurTheme{
+
+}
+
+.editeurMotCle, .editeurTheme{
+    width:100%;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+
+    border-radius:5px;
+    border:1px solid black;
+}
+
+.rechercheAvecCritere{
+    margin:20px 15px;
+}
+
+.motCle,
+.theme,
+.activitesQueJeParticipe,
+.activitesQueJorganise{
+    margin-bottom:10%;
+    text-align:left;    
+
+    label{
+        text-align:left;
+        font-size:16px;
+        margin-bottom:10px;
+    }
+}
+
+.editeurUniquementActivitesQueJeParticipe,
+.editeurOrganiserParMoi{
+    width:18px;
+    height:18px;
+    text-align:center !important;
+    margin-left:10px !important;
+}
+
+.indexPrincipalActivite{
+    .uploadPhotoActivite{
+        margin: 20px 20px 0 20px;
+    }
+    .lignePhoto{
+        text-align:center;
+    }
+    .divBoutonSauvegarderPhotos{
+        text-align:right;
+        display:inline-block;
+        width:100%;
+        .sauvegarderPhotos{
+            display:inline-block;
+            width:25%;
+            margin:0;
+            text-align:center;
+            height:40px;
+            border-radius:10px;
+            color:white;
+            text-shadow:none;
+            background-color:$couleurBoutonMauve;
+        }
+    }
+            
+    .ajouterPhotos{
+        width:100%;
+        margin:0 auto;
+        img{
+            width:30px;
+            height:30px;
+        }
+    }
+}
+
+.nbPhotosAffiche{
+    text-align:center;
+}
+
+.marginTopGros{
+    margin-top:65px !important;
+}

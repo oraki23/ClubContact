@@ -1,0 +1,894 @@
+﻿@*------------------------------------------------------------------------------------
+
+    VUE PERMETTANT L'AFFICHAGE DE LA LISTE DES ACTIVITÉS, DE MÊME QUE L'AJOUT DE COMMENTAIRES SUR 
+    LES ACTIVITÉS PASSÉS OU ENCORE L'AJOUTE DE MAX 5 PHOTOS APRÈS L'ACTIVITÉ
+
+        --------------------------------------------------------------------------------------
+        Par: Anthony Brochu et Marie-Ève Massé
+        Novembre 2017
+        Club Contact
+        ------------------------------------------------------------------------------------*@    
+
+@model ProjetSiteDeRencontre.ViewModel.RechercheActiviteViewModel
+
+@using ProjetSiteDeRencontre.Models
+
+@using (Html.BeginForm("Index", "Activites", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formRechercheActivite" }))
+{
+    <p style="color:red;">@TempData["messageErreur"]</p>
+    { 
+        TempData.Remove("messageErreur");
+    }
+
+        @Html.HiddenFor(model => model.activiteFuturs, htmlAttributes: new { @class = "hiddenActiviteFutur" })
+        <div class="barDuHaut">
+            <div class="tabsActivite">
+                <div class="tabs @(Model.activiteFuturs == false ? "selectedTabActivite" : "")" onclick="submitActivitePasseFutur(false)">
+                    <a>Passés</a>
+                </div>
+                <div class="tabs @(Model.activiteFuturs == true ? "selectedTabActivite" : "")" onclick="submitActivitePasseFutur(true)">
+                    <a>Futurs</a>
+                </div>
+            </div>
+            @*@if (Request.IsAuthenticated && User.Identity.Name != "admin")
+            {
+                if (Request.Cookies["SiteDeRencontre"]["premium"].ToString().ToLower() == "true")
+                {
+                    <div class="divBoutonCreerNouvelActivite">
+                        <button class="boutonCreerNouvelActivite" type="button" onclick="location.href='@Url.Action("Create", "Activites")';return false;">Créer une activité</button>
+                    </div>
+                }
+            }*@
+            
+        </div>
+
+        <div class="indexPrincipalActivite">
+            <div class="nbResultatsRechercheActivite">
+                <h3>@(Model.nbActivitesTrouvesTotal) activités trouvées pour vous</h3>
+            </div>
+            <div class="listeActivite">
+                @{
+                    DateTime now = DateTime.Now;
+                }
+                @for (int i = 0; i < Model.resultatsActivite.Count; i++)
+                {
+                    <div class="uneActivite">
+                        <input type="hidden" name="fichiersPhotos.Index" value="@i" />
+
+                        @for (int x = 0; x < 5; x++)
+                        {
+                            <input type="hidden" name="fichiersPhotos[@(i)].Index" value="@x" />
+                        }
+
+                        <input type="hidden" name="deletePhotos.Index" value="@i" />
+
+                        @*for (int x = 0; x < Model.resultatsActivite[i].listePhotosActivites.Count; x++)
+                        {
+                            <input type="hidden" name="deletePhotos[@(i)].Index" value="@x" />
+                        }*@
+
+                        @Html.HiddenFor(model => model.resultatsActivite[i].noActivite)
+                        <input type="hidden" name="noActivite" value="@Model.resultatsActivite[i].noActivite" />
+                        <a class="barreSection" href="#activite@(i)" data-toggle="collapse">
+                            <div class="resumeActivite">
+                                <div class="imageProfilActivite">
+                                    @{
+                                        ClubContactContext db = new ClubContactContext();
+                                        int noActivite = Model.resultatsActivite[i].noActivite;
+                                        PhotosActivite photoPrincipale = db.PhotosActivites.Where(p => p.noActivite == noActivite && p.photoPrincipale == true).FirstOrDefault();
+                                    }
+                                    @if (photoPrincipale != null)
+                                    {
+                                        @Html.HiddenFor(model => photoPrincipale.noPhotoActivite)
+                                        @Html.HiddenFor(model => photoPrincipale.noActivite)
+                                        @Html.HiddenFor(model => photoPrincipale.photoPrincipale)
+                                        @Html.HiddenFor(model => photoPrincipale.nomFichierPhoto)
+                                        @Html.HiddenFor(model => photoPrincipale.noMembreQuiPublie)
+                                        <img class="imgPhotoPrincipaleActivite" src="@Url.Content("~/Upload/PhotosActivites/" + photoPrincipale.nomFichierPhoto)" />
+                                    }
+                                    else
+                                    {
+                                        <img class="imgPhotoPrincipaleActivite" src="@Url.Content("~/Photos/DefaultActivite/" + Model.resultatsActivite[i].theme.theme + ".png")" />
+                                    }
+                                </div>
+                                <div class="informationsBaseResume">
+                                    <p class="titreActivite">@Model.resultatsActivite[i].nom</p>
+                                    <p class="dateActivite">@Model.resultatsActivite[i].date.ToLongDateString() à @Model.resultatsActivite[i].date.ToShortTimeString()</p>
+                                    <p class="lieuActivite">@Model.resultatsActivite[i].adresse, @Model.resultatsActivite[i].ville.nomVille, @Model.resultatsActivite[i].province.nomProvince</p>
+                                </div>
+
+
+                                <div class="nombreParticipants">
+                                    @if (Model.resultatsActivite[i].annulee != true)
+                                    {
+                                        if (Model.resultatsActivite[i].nbParticipantsMax != null)
+                                        {
+                                            <p><p id="nbMembresParticipants@(Model.resultatsActivite[i].noActivite)" style="display:inline-block">@Model.resultatsActivite[i].membresParticipants.Count()</p>&nbsp;/ @Model.resultatsActivite[i].nbParticipantsMax participants</p>
+                                        }
+                                        else
+                                        {
+                                            <p><p id="nbMembresParticipants@(Model.resultatsActivite[i].noActivite)" style="display:inline-block">@(Model.resultatsActivite[i].membresParticipants.Count())</p>&nbsp;participants</p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="annulee">ANNULÉE</p>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+
+                        <div id="activite@(i)" class="refermable collapse">
+                            @*in*@
+                            <div class="detailsActivite">
+                                <div class="proprietesActivite">
+                                    @if (Model.resultatsActivite[i].description != null)
+                                    {
+                                        <div class="descriptionActivite">
+                                            <p>@Model.resultatsActivite[i].description</p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="descriptionActivite">
+                                            <p><em>Aucune description n'a été fourni pour cette activité.</em></p>
+                                        </div>
+                                    }
+
+                                    @if (Model.resultatsActivite[i].cout != null && Model.resultatsActivite[i].cout != 0)
+                                    {
+                                        <label>Coût:</label>
+                                        <p class="coutActivite"> @Model.resultatsActivite[i].cout $</p>
+                                    }
+                                    else
+                                    {
+                                        <label>Coût:</label>
+                                        <p class="coutActivite">Gratuit</p>
+                                    }
+
+                                    @if (Model.resultatsActivite[i].ageMin != null && Model.resultatsActivite[i].ageMax != null)
+                                    {
+                                        <p class="ageMinEtMax">Pour des gens <b>entre @Model.resultatsActivite[i].ageMin et @Model.resultatsActivite[i].ageMax ans</b>.</p>
+                                    }
+
+                                    @if (Model.resultatsActivite[i].hommeSeulement != null)
+                                    {
+                                        if (Model.resultatsActivite[i].hommeSeulement == true)
+                                        {
+                                            <p class="sexeDemande">Seulement pour des <b>hommes</b>.</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="sexeDemande">Seulement pour des <b>femmes</b>.</p>
+                                        }
+                                    }
+                                </div>
+                                <div class="borderActivite"></div>
+                                <div class="membresActivite">
+                                    <div class="organiserPar">
+                                        <h4>Organisé par:</h4>
+                                        @{
+                                            Photo photoProfil = Model.resultatsActivite[i].membreOrganisateur.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                                            string titleOrganisateur = Model.resultatsActivite[i].membreOrganisateur.surnom + ", " + (Model.resultatsActivite[i].membreOrganisateur.homme ? "Homme" : "Femme") + ", " + Model.resultatsActivite[i].membreOrganisateur.age + " ans";
+                                        }
+                                        @if (photoProfil != null)
+                                        {
+                                            <img title="@titleOrganisateur" class="photoOrganisateur" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfil.nomFichierPhoto)" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.resultatsActivite[i].noMembreOrganisateur })';return false;" />
+                                        }
+                                        else
+                                        {
+                                            if (Model.resultatsActivite[i].membreOrganisateur.homme)
+                                            {
+                                                <img title="@titleOrganisateur" class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.resultatsActivite[i].noMembreOrganisateur })';return false;" />
+                                            }
+                                            else
+                                            {
+                                                <img title="@titleOrganisateur" class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" onclick="location.href='@Url.Action("Details", "Membres", new { id = Model.resultatsActivite[i].noMembreOrganisateur })';return false;" />
+                                            }
+                                        }
+                                    </div>
+                                    <div class="participants">
+                                        <h4>Participants:</h4>
+                                        @{
+                                            List<Membre> listeMembresParticipantsActiviteClasser = Model.resultatsActivite[i].membresParticipants.OrderByDescending(m => m.premium).ThenBy(m => m.noMembre).ToList();
+                                        }
+                                        @if (Model.resultatsActivite[i].membresParticipants.Count() > 0)
+                                        {
+                                            <input type="hidden" value="0" id="idNumeroUnParticipantsActivite@(i)" />
+                                            <input type="hidden" value="@Model.resultatsActivite[i].membresParticipants.Count" id="nbMembresParticipantsActivite@(i)" />
+                                            <div class="listeMembresParticipants">
+                                                @for (int j = 0; j < listeMembresParticipantsActiviteClasser.Count; j++)
+                                                {
+                                                    {
+                                                        ViewBag.i = i;
+                                                        ViewBag.j = j;
+                                                    }
+                                                    @Html.Partial("~/Views/Activites/PhotoProfilParticipantPartial.cshtml", listeMembresParticipantsActiviteClasser[j])
+                                                }
+                                                @if (listeMembresParticipantsActiviteClasser.Count > 5)
+                                                {
+                                                    <div class="boutonNavigationEmoticon">
+                                                        <a class="boutonNavReculer retourArriereMembre" onclick="avancerParticipants(-1, @(i))">&#10094;</a>
+                                                        <a class="boutonNavAvancer prochainMembre" onclick="avancerParticipants(1, @(i))">&#10095;</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p><em>Aucun participant pour le moment autre que le membre organisateur, devenez le premier!</em></p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @{
+                                int noMembreCo = 0;
+                                if (Request.IsAuthenticated)
+                                {
+                                    if (Request.Cookies["SiteDeRencontre"] != null)
+                                    {
+                                        noMembreCo = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]);
+                                    }
+                                }
+                            }
+                            @if (Model.resultatsActivite[i].date > now)
+                            {
+                                if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+                                {
+                                    <div class="boutonParticiper">
+                                        @{
+                                            bool membreOrganisateurCo = false;
+                                        }
+                                        @if (Request.IsAuthenticated && User.Identity.Name != "admin")
+                                        {
+                                            if (Model.resultatsActivite[i].annulee == false && Model.resultatsActivite[i].noMembreOrganisateur == int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]))
+                                            {
+                                                membreOrganisateurCo = true;
+                                                <button @*id="boutonParticiper@(Model.resultatsActivite[i].noActivite)"*@ type="button" onclick="location.href='@Url.Action("Edit", "Activites", new { id = Model.resultatsActivite[i].noActivite })';return false;">Modifier</button>
+                                            }
+                                        }
+
+                                        @if (Model.resultatsActivite[i].annulee == false && !membreOrganisateurCo)
+                                        {
+                                            <input type="hidden" id="nombreActivite@(Model.resultatsActivite[i].noActivite)" value="@(Model.resultatsActivite[i].membresParticipants.Count())" />
+                                            if (Model.resultatsActivite[i].membresParticipants.Select(m => m.noMembre).Contains(noMembreCo))
+                                            {
+                                                <button id="boutonParticiper@(Model.resultatsActivite[i].noActivite)" type="button" onclick="participerActivite(@(Model.resultatsActivite[i].noActivite))">Ne plus participer</button>
+                                            }
+                                            else if (Model.resultatsActivite[i].membresParticipants.Count < (Model.resultatsActivite[i].nbParticipantsMax ?? int.MaxValue))
+                                            {
+                                                <button id="boutonParticiper@(Model.resultatsActivite[i].noActivite)" type="button" onclick="participerActivite(@(Model.resultatsActivite[i].noActivite))">Participer</button>
+                                            }
+                                            else
+                                            {
+                                                <button id="boutonParticiper@(Model.resultatsActivite[i].noActivite)" class="boutonDisabledParticiper" title="Cette activité est déjà pleine!" type="button" disabled>Participer</button>
+                                            }
+                                        }
+                                        else if (Model.resultatsActivite[i].annulee == true && !membreOrganisateurCo)
+                                        {
+                                            if (Model.resultatsActivite[i].membresParticipants.Select(m => m.noMembre).Contains(noMembreCo))
+                                            {
+                                                <button style="height:50px;" id="boutonParticiper@(Model.resultatsActivite[i].noActivite)" type="button" onclick="retirerParticipationActiviteAnnulee(@(Model.resultatsActivite[i].noActivite))">Retirer de mes participations</button>
+                                            }
+                                        }
+                                    </div>
+                                  }
+                            }
+
+                            @if (Model.resultatsActivite[i].date < now)
+                            {
+                                <div class="photosActiviteDiv">
+                                    @{
+                                        List<PhotosActivite> photosActivite = Model.resultatsActivite[i].listePhotosActivites.Where(p => p.photoPrincipale == false).ToList();
+                                    }
+                                    @if (photosActivite.Count != 0)
+                                    {
+                                        <h3>Photos de l'activité</h3>
+
+                                        <input type="hidden" value="0" id="idNumeroUnPhotoActivite@(i)" />
+                                        <input type="hidden" value="@photosActivite.Count" id="nbPhotosPhotoActivite@(i)" />
+                                        <div class="listePhotosActivite">
+                                            @for (int j = 0; j < photosActivite.Count; j++)
+                                            {
+                                                //{
+                                                //    ViewBag.i = i;
+                                                //    ViewBag.j = j;
+                                                //}
+                                                <div id="uneImageDActivite@(i)Photo@(j)" class="photoUnePhotoApres" style="@(j >= 4 ? "display:none" : "")">
+                                                    <img title="Mise en ligne par: @photosActivite[j].membreQuiPublie.surnom" src="@Url.Content("~/Upload/PhotosActivites/" + photosActivite[j].nomFichierPhoto)" onclick="javascript:window.open('@(Url.Content("~/Upload/PhotosActivites/" + photosActivite[j].nomFichierPhoto))')" />
+                                                </div>
+                                            }
+                                            @if (photosActivite.Count > 4)
+                                            {
+                                                <div class="boutonNavigationEmoticon">
+                                                    <a class="boutonNavReculer retourArriereMembre" onclick="avancerPhotoActivite(-1, @(i))">&#10094;</a>
+                                                    <a class="boutonNavAvancer prochainMembre" onclick="avancerPhotoActivite(1, @(i))">&#10095;</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="commentairesCote">
+                                    @{
+                                        List<AvisActivite> commentaires = Model.resultatsActivite[i].listeAvisActivite.Where(m => m.noMembreEnvoyeur != noMembreCo).ToList();
+                                    }
+                                    @if (commentaires.Count != 0)
+                                    {
+                                        <h3>Commentaires sur l'activité</h3>
+                                    }
+                                    @foreach (AvisActivite avis in commentaires)
+                                    {
+                                        int indexAvisMembre = Model.resultatsActivite[i].listeAvisActivite.FindIndex(m => m.noMembreEnvoyeur == avis.noMembreEnvoyeur);
+                                        @Html.HiddenFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].noAvisActivite)
+                                        <div class="unAvisActivite">
+                                            <div class="laPersonne" onclick="location.href='@Url.Action("Details", "Membres", new { id = avis.noMembreEnvoyeur })';return false;">
+                                                <div class="photoProfilAvis">
+                                                    @{
+                                                        Photo photoProfilMembreAvis = avis.membreEnvoyeur.listePhotosMembres.Where(p => p.photoProfil == true).FirstOrDefault();
+                                                    }
+                                                    @if (photoProfilMembreAvis != null)
+                                                    {
+                                                        <img class="photoOrganisateur" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfilMembreAvis.nomFichierPhoto)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        if (avis.membreEnvoyeur.homme)
+                                                        {
+                                                            <img class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="surnom">
+                                                    <p>@avis.membreEnvoyeur.surnom</p>
+                                                </div>
+                                            </div>
+                                            <div class="commentaireActivite">
+                                                @if (avis.commentaire != null && avis.commentaire != "")
+                                                {
+                                                    <p>@avis.commentaire</p>
+                                                }
+                                                else
+                                                {
+                                                    <p><em>(Aucun commentaire saisi)</em></p>
+                                                }
+                                            </div>
+                                            <div class="coteActivite">
+
+                                                @if (avis.cote != null)
+                                                {
+                                                    int laCote = (int)avis.cote;
+                                                    int restantCote = 5 - ((int)avis.cote);
+                                                    for (int x = 0; x < laCote; x++)
+                                                    {
+                                                        <div class="uneEtoile uneEtoileNonCursor">
+                                                            <img src="@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")" />
+                                                        </div>
+                                                    }
+                                                    for (int x = 0; x < restantCote; x++)
+                                                    {
+                                                        <div class="uneEtoile uneEtoileNonCursor">
+                                                            <img src="@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")" />
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <div class="uneEtoile">
+                                                        <p><em>(Aucune cote saisie)</em></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                                        }
+                                    @if (Model.resultatsActivite[i].membresParticipants.Select(m => m.noMembre).Contains(noMembreCo))
+                                    {
+                                        <div class="monAvisAMoi">
+                                            <h3>Votre commentaire</h3>
+                                            <div class="avisMembreCo">
+                                                <div class="laPersonne">
+                                                    <div class="photoProfilAvis">
+                                                        @{
+                                                            Membre membreCo = db.Membres.Where(m => m.noMembre == noMembreCo).FirstOrDefault();
+                                                            Photo photoProfilMembreCo = db.Photos.Where(p => p.noMembre == noMembreCo).Where(p => p.photoProfil == true).FirstOrDefault();
+                                                        }
+                                                        @if (photoProfilMembreCo != null)
+                                                        {
+                                                            <img class="photoOrganisateur" src="@Url.Content("~/Upload/PhotosMembres/" + photoProfilMembreCo.nomFichierPhoto)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            if (membreCo.homme)
+                                                            {
+                                                                <img class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultGars.jpg")" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img class="photoOrganisateur" src="@Url.Content("~/Photos/ico/profilDefaultFille.jpg")" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="surnom">
+                                                        <p>@membreCo.surnom</p>
+                                                    </div>
+                                                </div>
+                                                @{
+                                                    //AvisActivite avisDuMembreCo = Model.resultatsActivite[i].listeAvisActivite.Where(m => m.noMembreEnvoyeur == membreCo.noMembre).FirstOrDefault();
+                                                    int indexAvisMembre = Model.resultatsActivite[i].listeAvisActivite.FindIndex(m => m.noMembreEnvoyeur == membreCo.noMembre);
+                                                }
+                                                @Html.HiddenFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].noAvisActivite)
+                                                @Html.HiddenFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].noActiviteAssocie)
+                                                @Html.HiddenFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].noMembreEnvoyeur)
+                                                <div class="commentaireActiviteAEntrer">
+                                                    @Html.TextAreaFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].commentaire, htmlAttributes: new { @class = "textAreaAvisCommentaire", @placeholder = "Décrivez comment vous avez trouvé l'activité..." })
+                                                    @Html.ValidationMessageFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].commentaire, "", new { @class = "messageErreurCommentaire" })
+                                                </div>
+                                                <div class="coteActiviteAEntrer">
+                                                    @Html.HiddenFor(model => model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].cote, htmlAttributes: new { @id = "coteAvisMembreCoHidden" })
+                                                    @if (Model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].cote != null)
+                                                    {
+                                                        int laCote = (int)Model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].cote;
+                                                        int debutFaitPasPartiDeLaCote = laCote + 1;
+
+                                                        for (int x = 1; x <= laCote; x++)
+                                                        {
+                                                            <div class="uneEtoile" id="etoile@(x)" onclick="voteCoteEtoile(@(x))">
+                                                                <img id="imageEtoile@(x)" src="@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")"
+                                                                     @*Un petit plan que j'aurais voulu mettre, mais je n'ai pas le temps... :(
+                                                             onmouseenter="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")'"
+                                                        onmouseleave="this.src='@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")'"*@ />
+                                                            </div>
+                                                        }
+                                                        for (int x = debutFaitPasPartiDeLaCote; x <= 5; x++)
+                                                        {
+                                                            <div class="uneEtoile" id="etoile@(x)" onclick="voteCoteEtoile(@(x))">
+                                                                <img id="imageEtoile@(x)" src="@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")" />
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        for (int x = 1; x <= 5; x++)
+                                                        {
+                                                            <div class="uneEtoile" id="etoile@(x)" onclick="voteCoteEtoile(@(x))">
+                                                                <img id="imageEtoile@(x)" src="@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")" />
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="boutonConfirmer">
+                                                    @*Ajouter un if avec le ViewBag si c'est un nouveau membre*@
+                                                    @if (Model.resultatsActivite[i].listeAvisActivite[indexAvisMembre].noAvisActivite != 0)
+                                                    {
+                                                        <button type="submit" class="soumettreAvisBouton" name="btnAjoutCommentaire" value="@(Model.resultatsActivite[i].noActivite)">Sauvegarder</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="submit" class="soumettreAvisBouton" name="btnAjoutCommentaire" value="@(Model.resultatsActivite[i].noActivite)">Soumettre</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="uploadPhotoActivite">
+                                                <h3>Partager des photos de l'activité</h3>
+                                                <div class="boutonPlus">
+                                                    <a id="ajouterPhotos@(i)" class="ajouterPhotos photo30x30" onclick="ajouterPhoto(@(i), @(Model.resultatsActivite[i].noActivite))">
+                                                        <img src="~/Photos/ico/addPictures.png" alt="Ajouter des photos" class="w100h100" />
+                                                    </a>
+                                                    @{
+                                                        int nbPhotos = Model.resultatsActivite[i].listePhotosActivites.Where(m => m.noMembreQuiPublie == noMembreCo && m.photoPrincipale == false).Count();
+                                                    }
+                                                    <p id="nbPhotosAffiche@(i)">@(nbPhotos + "/5")</p>
+                                                </div>
+                                                
+                                                <div id="conteneurPhotos@(i)" class="conteneurPhotos">
+                                                    <span class="messageErreur messageErreurPhotosAvis" id="maxPhotosErrorMessage@(i)" style="display:none;"></span>
+                                                    @*ICI*@
+                                                    @for (int x = 0; x < Model.resultatsActivite[i].listePhotosActivites.Count; x++)
+                                                    {
+                                                        ViewBag.i = i;
+                                                        ViewBag.x = x;
+                                                        @Html.EditorFor(model => model.resultatsActivite[i].listePhotosActivites[x])
+                                                    }
+                                                </div>
+
+                                                <input id="nbPhotos@(i)" type="hidden" name="nbPhotos" value="@nbPhotos" />
+
+                                                <div class="divBoutonSauvegarderPhotos">
+                                                    <button type="submit" class="sauvegarderPhotos" name="btnAjoutCommentaire" value="photosActivite@(i)">Sauvegarder les photos</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                   }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                  }
+            </div>
+            <!-- pager -->
+            <div class="pagi">
+                <input type="hidden" id="page" name="page" value="@ViewBag.CurrentPage" />
+                @if (ViewBag.EndPage > 1)
+                {
+                    <ul class="page">
+                        @if (ViewBag.CurrentPage > 1)
+                    {
+                            <li>
+                                @Html.ActionLink("Premier", "Index", "Activites", new { vientDePagination = 1 }, null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("Précédent", "Index", "Activites", new { page = ViewBag.CurrentPage - 1, vientDePagination = 1 }, new { @class = "backPage" })
+                            </li>
+                        }
+
+                        @for (var page = ViewBag.StartPage; page <= ViewBag.EndPage; page++)
+                    {
+                            <li>
+                                @Html.ActionLink((string)(page.ToString()), "Index", "Activites", new { page = page, vientDePagination = 1 }, new { @class = (page == ViewBag.CurrentPage ? "activePage" : "") })
+                            </li>
+                        }
+
+                        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                            <li>
+                                @Html.ActionLink("Suivant", "Index", "Activites", new { page = ViewBag.CurrentPage + 1, vientDePagination = 1 }, null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("Dernier", "Index", "Activites", new { page = ViewBag.TotalPages, vientDePagination = 1 }, null)
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+    <div class="rechercheActivites">
+        @Html.HiddenFor(model => model.dateRecherche)
+        <div id="calendrier">
+            
+        </div>
+        <div class="divBoutonEffacerDate">
+            <button type="button" class="boutonEffacerDate">Effacer la date</button>
+        </div>
+        <div class="rechercheAvecCritere">
+            <div class="motCle">
+                @Html.LabelFor(model => model.motCle)
+                <div class="divEditeurMotCle">
+                    @Html.EditorFor(model => model.motCle, new { htmlAttributes = new { @class = "editeurMotCle" } })
+                </div>
+            </div>
+            <div class="theme">
+                @Html.LabelFor(model => model.noTheme)
+                <div class="divEditeurTheme">
+                    @Html.DropDownListFor(model => model.noTheme, (SelectList)ViewBag.listeThemes, "Sans importance", new { @class = "editeurTheme" })
+                </div>
+            </div>
+            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                <div class="theme">
+                    @Html.LabelFor(model => model.uniquementActivitesQueJeParticipe)
+                    <div class="divEditeurTheme">
+                        @Html.EditorFor(model => model.uniquementActivitesQueJeParticipe, new { htmlAttributes = new { @class = "editeurUniquementActivitesQueJeParticipe" } })
+                    </div>
+                </div>
+            }
+            @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                if (Request.Cookies["SiteDeRencontre"]["premium"].ToString().ToLower() == "true")
+                {
+                    <div class="theme">
+                        @Html.LabelFor(model => model.organiseParMoi)
+                        <div class="divEditeurTheme">
+                            @Html.EditorFor(model => model.organiseParMoi, new { htmlAttributes = new { @class = "editeurOrganiserParMoi" } })
+                        </div>
+                    </div>
+                }
+            }
+            <div class="divBoutonRechercheActivite">
+                <button type="submit" class="boutonRechercheActivite" name="btnAjoutCommentaire" value="recherche">Rechercher</button>
+            </div>
+        </div>
+        @if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+        {
+            if (Request.Cookies["SiteDeRencontre"]["premium"].ToLower() == "false")
+            {
+                @*Div va avoir un lien quand on clic dessus vers la page d'Abonnement*@
+                <div onclick="location.href='@Url.Action("Abonnement", "Membres", new { id = int.Parse(Request.Cookies["SiteDeRencontre"]["noMembre"]) })';return false;" class="promotionPremium">
+                    <h3>Devenez Premium dès aujourd'hui pour profiter de la création d'activité!</h3>
+                </div>
+            }
+        }
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        function ajouterPhoto(i, noActivite)
+        {
+            var iString = i.toString();
+
+            var nbMaxPhotos = 5;
+            var nbDePhotos = parseInt($('#nbPhotos' + iString).val());
+
+            if (nbDePhotos < nbMaxPhotos)
+            {
+                var nextIndex = $('#conteneurPhotos' + iString + ' .lignePhoto').length;
+                console.log(nextIndex);
+
+                $.ajax({
+                    url: '@Url.Action("AjouterLignePhotoActivite", "Activites")',
+                    type: 'POST',
+                    data: { i: i, index: nextIndex, noActivite: noActivite },
+                    async: false,
+                    success: function (results) {
+                        $('#conteneurPhotos' + iString).append(results);
+                        nbDePhotos++;
+                        $('#nbPhotos' + iString).val(nbDePhotos);
+                        $('#nbPhotosAffiche' + iString).text(nbDePhotos + "/" + nbMaxPhotos);
+                        resetValidator();
+                    }
+                });
+            }
+            else {
+                var validator = $("#formBase").validate();
+                $('#maxPhotosErrorMessage' + iString).text("Vous ne pouvez pas téléverser plus de " + nbMaxPhotos + " photos.");
+                $('#maxPhotosErrorMessage' + iString).show();
+            }
+
+        }
+
+        function deletePhoto(i) {
+            var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette photo?");
+            if (supprimerConfirmation == true) {
+                supprimerPhotoActivite(this, i);
+            }
+        }
+
+        $(document).ready(function () {
+
+            $('.boutonEffacerDate').on('click', function () {
+                $('#calendrier').datepicker('setDate', null);
+                $('#dateRecherche').val('');
+            });
+
+            @if (Model.datesOuIlYAActivites != null)
+            {
+                <text>
+                    var dates = [];
+                    @foreach(DateTime t in Model.datesOuIlYAActivites)
+                    {
+                        @:dates.push((new Date(@t.Year, @(t.Month -1), @t.Day)).getTime());
+                    }
+                </text>
+            }
+            $('#calendrier').datepicker({
+                dateFormat: 'yy-mm-dd 00:00:00',
+                onSelect: function (dateText, inst) {
+                    var date = $('#calendrier').datepicker({ dateFormat: 'yyyy-mm-dd 00:00:00' }).val();
+
+                    if (date != $('#dateRecherche').val())
+                    {
+                        $('#dateRecherche').val(date);
+                    }
+                }
+            @if(Model.dateRecherche != null)
+            {
+                @:, defaultDate: "@(((DateTime)Model.dateRecherche).Date + " 00:00:00")"
+            }
+            @if(Model.datesOuIlYAActivites != null)
+            {
+                <text>
+                , beforeShowDay: function(date){
+                    if($.inArray(date.getTime(), dates) != -1)
+                    {
+                        console.log("oui");
+                        return [true, 'activiteCetteJournee', ''];
+                    }
+                    else{
+                        console.log("non");
+                        return [true, '', ''];
+                    }
+                }
+                </text>
+            }
+            });
+            //$('#calendrier').datepick({
+            //    dateFormat: 'yyyy-mm-dd',
+            //    onSelect: function (dates) {
+            //        //var date = dates[0];
+            //        var date2 = $('#calendrier').datepick('getDate');
+            //        var date = $.datepick.formatDate(date2);
+            //        console.log(date);
+            //        $('#dateActiviteRecherche').val(date);
+            //    }
+            //});
+
+            //$(document).ajaxComplete(function () {
+            //    $(".deletePhotos").off('click');
+
+            //    $(".deletePhotos").click(function () {
+            //        var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette photo?");
+            //        if (supprimerConfirmation == true) {
+            //            supprimerPhotoActivite(this);
+            //        }
+            //    });
+            //});
+
+            //$(".deletePhotos").click(function () {
+            //    var supprimerConfirmation = confirm("Voulez-vous vraiment supprimer cette photo?");
+            //    if (supprimerConfirmation == true) {
+            //        supprimerPhotoActivite(this);
+            //    }
+            //});
+        });
+
+        function resetValidator() {
+            $("#formRechercheActivite").removeData("validator");
+            $("#formRechercheActivite").removeData("unobstrusiveValidation");
+            $.validator.unobtrusive.parse("#formRechercheActivite");
+            $("#formRechercheActivite").validate();
+        }
+    </script>
+
+    <script type="text/javascript">
+        function avancerParticipants(plusOuMoins, noActivite) {
+            var idBaseMembreProfil = "#photoUnParticipantActivite" + noActivite + "Membre";
+            var nomIdNumeroUn = "#idNumeroUnParticipantsActivite" + noActivite;
+            var nomNbMembresParticipants = "#nbMembresParticipantsActivite" + noActivite;
+            var nbIconeAffiche = 5;
+
+            var nbMembresParticipants = parseInt($(nomNbMembresParticipants).val());
+            var idNumeroUn = parseInt($(nomIdNumeroUn).val());
+            //Avancer
+            if (plusOuMoins > 0) {
+                if (nbMembresParticipants > nbIconeAffiche) {
+                    if (idNumeroUn < (nbMembresParticipants - nbIconeAffiche)) {
+                        var idDivACacher = idBaseMembreProfil + idNumeroUn.toString();
+                        var idDivAMontrer = idBaseMembreProfil + (idNumeroUn + nbIconeAffiche).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) + 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+                //Reculer
+            else if (plusOuMoins < 0) {
+                if (nbMembresParticipants > nbIconeAffiche) {
+                    if (idNumeroUn > 0) {
+                        var idDivACacher = idBaseMembreProfil + (idNumeroUn + (nbIconeAffiche - 1)).toString();
+                        var idDivAMontrer = idBaseMembreProfil + (idNumeroUn - 1).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) - 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+        }
+
+        function avancerPhotoActivite(plusOuMoins, noActivite) {
+            var idBasePhotoProfil = "#uneImageDActivite" + noActivite + "Photo";
+            var nomIdNumeroUn = "#idNumeroUnPhotoActivite" + noActivite;
+            var nomNbMembresParticipants = "#nbPhotosPhotoActivite" + noActivite;
+            var nbIconeAffiche = 4;
+
+            var nbMembresParticipants = parseInt($(nomNbMembresParticipants).val());
+            var idNumeroUn = parseInt($(nomIdNumeroUn).val());
+            //Avancer
+            if (plusOuMoins > 0) {
+                if (nbMembresParticipants > nbIconeAffiche) {
+                    if (idNumeroUn < (nbMembresParticipants - nbIconeAffiche)) {
+                        var idDivACacher = idBasePhotoProfil + idNumeroUn.toString();
+                        var idDivAMontrer = idBasePhotoProfil + (idNumeroUn + nbIconeAffiche).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) + 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+                //Reculer
+            else if (plusOuMoins < 0) {
+                if (nbMembresParticipants > nbIconeAffiche) {
+                    if (idNumeroUn > 0) {
+                        var idDivACacher = idBasePhotoProfil + (idNumeroUn + (nbIconeAffiche - 1)).toString();
+                        var idDivAMontrer = idBasePhotoProfil + (idNumeroUn - 1).toString();
+
+                        $(idDivACacher).toggle();
+                        $(idDivAMontrer).toggle();
+
+                        var nouveauIdNumeroUn = parseInt(idNumeroUn) - 1;
+                        $(nomIdNumeroUn).val(nouveauIdNumeroUn);
+                    }
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function voteCoteEtoile(noEtoileClique)
+        {
+            if (noEtoileClique < 6 && noEtoileClique > 0)
+            {
+                for (i = 1; i <= 5; i++) {
+                    if (i <= noEtoileClique) {
+                        $('#imageEtoile' + i).attr('src', '@Url.Content("~/Photos/etoileFavoris/etoileJaunePleine.png")');
+                    }
+                    else {
+                        $('#imageEtoile' + i).attr('src', '@Url.Content("~/Photos/etoileFavoris/etoileJauneVide.png")');
+                    }
+                }
+                $('#coteAvisMembreCoHidden').val(noEtoileClique);
+            }
+        }
+        function submitActivitePasseFutur(futur)
+        {
+            var input = $('<input>').attr('type', 'hidden').attr('name', 'btnAjoutCommentaire').val('recherche');
+            $('#formRechercheActivite').append($(input));
+
+            $('.hiddenActiviteFutur').val(futur);
+            $('#formRechercheActivite').submit();
+        }
+        function participerActivite(noActivite/*, nbMembresParticipantsActuel*/)
+        {
+            $.ajax({
+                url: '@Url.Action("ParticiperActivite", "Activites")',
+                type: 'POST',
+                data: { noActivite: noActivite },
+                async: false,
+                context:this,
+                success: function (results) {
+                    var nbMembresParticipantsActuel = parseInt($('#boutonParticiper' + noActivite).prev('#nombreActivite' + noActivite).val());
+                    console.log(nbMembresParticipantsActuel);
+                    if (results == "True")
+                    {
+                        $('#nombreActivite' + noActivite).val(nbMembresParticipantsActuel - 1);
+                        $('#nbMembresParticipants' + noActivite).html( (nbMembresParticipantsActuel-1).toString());
+                        $('#boutonParticiper' + noActivite).html("Participer");
+                    }
+                    else if(results == "False")
+                    {
+                        $('#nombreActivite' + noActivite).val(nbMembresParticipantsActuel + 1);
+                        $('#nbMembresParticipants' + noActivite).html((nbMembresParticipantsActuel + 1).toString());
+                        $('#boutonParticiper' + noActivite).html("Ne plus participer");
+                    }
+                }
+            });
+        }
+        function retirerParticipationActiviteAnnulee(noActivite) {
+            $.ajax({
+                url: '@Url.Action("ParticiperActivite", "Activites")',
+                type: 'POST',
+                data: { noActivite: noActivite },
+                async: false,
+                context: this,
+                success: function (results) {
+                    $('#boutonParticiper' + noActivite).remove();
+                    $('#formRechercheActivite').submit();
+                    //if (results == "True") {
+                    //    $('#nombreActivite' + noActivite).val(nbMembresParticipantsActuel - 1);
+                    //    $('#nbMembresParticipants' + noActivite).html((nbMembresParticipantsActuel - 1).toString());
+                        
+                    //}
+                    //else if (results == "False") {
+                    //    $('#nombreActivite' + noActivite).val(nbMembresParticipantsActuel + 1);
+                    //    $('#nbMembresParticipants' + noActivite).html((nbMembresParticipantsActuel + 1).toString());
+                    //    $('#boutonParticiper' + noActivite).html("Ne plus participer");
+                    //}
+                }
+            });
+        }
+    </script>
+}

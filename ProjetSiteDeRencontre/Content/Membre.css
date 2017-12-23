@@ -1,0 +1,232 @@
+﻿/*------------------------------------------------------------------------------------
+
+FEUILLE DE STYLE POUR LE CONTRÔLEUR MEMBRES ET TOUS SES PAGES
+
+--------------------------------------------------------------------------------------
+Par: Anthony Brochu et Marie-Ève Massé
+Novembre 2017
+Club Contact
+------------------------------------------------------------------------------------*/
+
+/*Inscription*/
+#formulaireInscription{
+    margin:auto;
+    padding-top:1%;
+    max-width:800px;
+    background-color:rgba(245, 255, 192, 0.89);/*rgba(248, 255, 169, 0.48)*/
+}
+
+.barreSection{
+    width:90%;
+    margin:0 auto;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px 0 10px 25px;
+    border: 1px solid #2f528f;
+    display:block;
+    margin-bottom:2%;
+    box-shadow:5px 4px #62c3f5;
+    /*vertical-align:middle;*/
+}
+
+
+.barreSection h3{
+    display:inline-block;
+    color:#075aa9;
+    margin:0;
+    font-size:23px;
+    font-weight: bold;
+    vertical-align:middle;
+    text-decoration:none;
+}
+.barreSection:hover, .barreSection:enabled{
+    text-decoration:none;
+    color:inherit;
+}
+
+.labels{
+    color:#84197d;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:30px;
+    font-weight:bold;
+}
+.labels label{
+    margin:0;
+}
+.labels p{
+    font-weight:bold;
+    display:inline-block;
+    margin:0;
+}
+
+.champ{
+    position:relative;
+    width:70%;
+    margin:auto;
+    margin-right:25%;
+    text-align:right;
+}
+
+.editeurs{
+    width:100%;
+    height:34px;
+    border: 1px solid black;
+    border-radius:4px;
+    padding:5px;
+}
+
+.editeurDifferent{
+    width:20%;
+    display:inline-block;
+    margin: .5em 0;
+}
+
+.deletePhotos{
+    cursor:pointer;
+}
+
+.editeur{
+    vertical-align:middle;
+    width:40%;
+    display:inline-block;
+    margin: .5em 0;
+}
+#enfants{
+    margin-left:27px;
+    margin-right:25px;
+    display:inline-block;
+    font-weight:bold;
+    color:#84197d;
+}
+#animaux{
+    margin-left:21px;
+    margin-right:23px;
+    display:inline-block;
+    font-weight:bold;
+    color:#84197d;
+}
+
+.messageErreur{
+    display:block;
+    padding:0px 5px 0px 0px;
+    color:red;
+}
+.validationMessage{
+    margin:2% 7%;
+}
+
+.section{
+    margin-bottom:10px;
+}
+.refermable{
+    /*margin-top:2%;*/
+    margin-bottom:2%;
+    margin-left:auto;
+    margin-right:auto;
+    width:90%;
+}
+.bouton{
+    margin: 2% 10% 2% 0;
+}
+.boutonRetour{
+    margin: 2% 5% 2% 0;
+}
+.bouton, .boutonRetour{
+    text-align:center;
+    width:15%;
+    padding:1%;
+    background-color:#00b0f0;
+    border-radius:10px;
+    color:white;
+    text-shadow:none;
+    font-size:16px;
+}
+
+.longTexte{
+    padding:5px;
+    min-height:115px;
+    resize:vertical;
+}
+
+.optWrapper, .SelectBox{
+    text-align:center;
+}
+
+.SumoSelect{
+    width:100%;
+}
+
+.SelectBox{
+    display:inline-block;
+    width:100%;
+    height:34px;
+}
+
+h4{
+    margin-right:16px;
+    display:inline-block;
+}
+
+/*Hobbies*/
+
+.iconesTitre{
+    height:5%;
+    width:5%;
+    margin-left:1%;
+}
+.iconesLabel{
+    width:22px;
+    height:22px;
+}
+.column-mixed{
+    /*border:dashed 1px red;*/
+    text-align:center;
+    padding: 3% 3% 0 3%;
+    display:inline-block;
+    width:49%;
+}
+
+
+.checkboxHobbies{
+    margin:0 !important;
+    vertical-align:middle;
+    width:16px;
+    height:16px;
+}
+
+.labelHobbies{
+    margin: 0 0 0 0;
+    color:#84197d;
+}
+
+table{
+    border-collapse:separate;
+    border-spacing: 0 1em;
+    width:80%;
+    margin:0 auto;
+}
+
+.colonne1{
+    width:10%;
+}
+
+.colonne2{
+    width:70%;
+}
+.colonne3{
+    width:20%;
+}
+
+.titreInterets{
+    text-align:center;
+    margin:3% 0 4% 0;
+    font-weight:bold;
+    color:#6c00c1;
+}
+
+#nbPhotosAffiche{
+    display:block;
+    text-align:right;
+    margin-right:15%;
+}
